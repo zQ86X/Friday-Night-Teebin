@@ -147,15 +147,15 @@ class PlayState extends MusicBeatState
 
 	private var allUIs:Array<FlxCamera> = [];
 
-	public static var healthDrainCap:Float = 1 / (Math.PI / 2);
-	public static var healthDrain:Float = 1 / 45;
+	public static var healthDrainCap:Float = 1 / 2;
+	public static var healthDrain:Float = 1 / 60;
 
 	// stores the last judgement object
 	public static var lastRating:FlxSprite;
 	// stores the last combo objects in an array
 	public static var lastCombo:Array<FlxSprite>;
 
-	// make the vocals not off sync
+	// make the vocals not off sync and shit lol
 	private var maxDelay = 20;
 
 	private var receptorOffset:Float = Math.PI * (Math.PI / 2);
