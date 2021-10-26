@@ -605,11 +605,9 @@ class PlayState extends MusicBeatState
 			}
 
 			noteCalls();
+			resetEffects();
 
 			var movable = !(paused || Init.trueSettings.get('Reduced Movements'));
-			camHUD.angle = 0;
-
-			for (hud in strumHUD) hud.angle = 0;
 			// do some camera effects
 			// ported from kade engine lua modcharts
 			switch (curSong.toLowerCase())
@@ -630,8 +628,7 @@ class PlayState extends MusicBeatState
 								var hudAngle = beatSine * receptorOffset / 3;
 								camHUD.angle = hudAngle;
 
-								for (hud in strumHUD)
-									hud.angle += hudAngle;
+								for (hud in strumHUD) hud.angle += hudAngle;
 								for (strumline in strumLines)
 								{
 									var members = strumline.receptors.members;
@@ -642,10 +639,10 @@ class PlayState extends MusicBeatState
 										var receptorCalc = (currentBeat + (index * .25)) * Math.PI;
 										var receptorSine = Math.sin(receptorCalc) * receptorOffset;
 
-										receptor.y = receptor.initialY + (spinLength * (Math.cos(receptorCalc) * receptorOffset));
-										receptor.x = receptor.initialX + (spinLength * receptorSine);
+										receptor.y += (spinLength * (Math.cos(receptorCalc) * receptorOffset));
+										receptor.x += (spinLength * receptorSine);
 
-										receptor.angle = .85 * -receptorSine;
+										receptor.angle += .85 * -receptorSine;
 									}
 								}
 							}
@@ -668,6 +665,23 @@ class PlayState extends MusicBeatState
 		}
 	}
 
+	function resetEffects()
+	{
+		// reset any camera effects applied in update
+		camHUD.angle = 0;
+
+		for (hud in strumHUD) hud.angle = 0;
+		for (strumline in strumLines)
+		{
+			for (receptor in strumline.receptors)
+			{
+				receptor.x = receptor.initialX;
+				receptor.y = receptor.initialY;
+
+				receptor.angle = 0;
+			}
+		}
+	}
 	function noteCalls()
 	{
 		// (control stuffs don't go here they go in noteControls(), I just have them here so I don't call them every. single. time. noteControls() is called)

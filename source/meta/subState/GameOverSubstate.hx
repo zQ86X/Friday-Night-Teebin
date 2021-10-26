@@ -3,6 +3,7 @@ package meta.subState;
 import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxSubState;
+import flixel.system.FlxSound;
 import flixel.util.FlxColor;
 import flixel.util.FlxTimer;
 import gameObjects.Boyfriend;
@@ -46,7 +47,11 @@ class GameOverSubstate extends MusicBeatSubState
 		camFollow = new FlxObject(bf.getGraphicMidpoint().x + 20, bf.getGraphicMidpoint().y - 40, 1, 1);
 		add(camFollow);
 
-		FlxG.sound.play(Paths.sound('fnf_loss_sfx$stageSuffix'));
+		// literally why the fuck do i have to do this lol
+		var loss = new FlxSound().loadEmbedded(Paths.sound('fnf_loss_sfx$stageSuffix'));
+		loss.play();
+
+		//FlxG.sound.play(Paths.sound('fnf_loss_sfx$stageSuffix'));
 		Conductor.changeBPM(100);
 
 		// FlxG.camera.followLerp = 1;
