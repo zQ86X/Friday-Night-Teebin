@@ -1,0 +1,29 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TextureAtlas imagePath="Cool_Transition.png">
+	<!-- Created with Adobe Animate version 21.0.9.42677 -->
+	<!-- http://www.adobe.com/products/animate.html -->
+	<SubTexture name="COOL_TRANSITION_ANIMATED0000" x="0" y="0" width="600" height="338"/>
+	<SubTexture name="COOL_TRANSITION_ANIMATED0001" x="600" y="0" width="600" height="338"/>
+	<SubTexture name="COOL_TRANSITION_ANIMATED0002" x="1200" y="0" width="600" height="338"/>
+	<SubTexture name="COOL_TRANSITION_ANIMATED0003" x="1800" y="0" width="600" height="338"/>
+	<SubTexture name="COOL_TRANSITION_ANIMATED0004" x="2400" y="0" width="600" height="338"/>
+	<SubTexture name="COOL_TRANSITION_ANIMATED0005" x="3000" y="0" width="600" height="338"/>
+	<SubTexture name="COOL_TRANSITION_ANIMATED0006" x="0" y="338" width="600" height="338"/>
+	<SubTexture name="COOL_TRANSITION_ANIMATED0007" x="600" y="338" width="600" height="338"/>
+	<SubTexture name="COOL_TRANSITION_ANIMATED0008" x="1200" y="338" width="600" height="338"/>
+	<SubTexture name="COOL_TRANSITION_ANIMATED0009" x="1800" y="338" width="600" height="338"/>
+	<SubTexture name="COOL_TRANSITION_ANIMATED0010" x="2400" y="338" width="600" height="338"/>
+	<SubTexture name="COOL_TRANSITION_ANIMATED0011" x="3000" y="338" width="600" height="338"/>
+	<SubTexture name="COOL_TRANSITION_ANIMATED0012" x="0" y="676" width="600" height="338"/>
+	<SubTexture name="COOL_TRANSITION_ANIMATED0013" x="600" y="676" width="600" height="338"/>
+	<SubTexture name="COOL_TRANSITION_ANIMATED0014" x="1200" y="676" width="600" height="338"/>
+	<SubTexture name="COOL_TRANSITION_ANIMATED0015" x="1800" y="676" width="600" height="338"/>
+	<SubTexture name="COOL_TRANSITION_ANIMATED0016" x="2400" y="676" width="600" height="338"/>
+	<SubTexture name="COOL_TRANSITION_ANIMATED0017" x="3000" y="676" width="600" height="338"/>
+	<SubTexture name="COOL_TRANSITION_ANIMATED0018" x="0" y="1014" width="600" height="338"/>
+	<SubTexture name="COOL_TRANSITION_ANIMATED0019" x="0" y="1014" width="600" height="338"/>
+	<SubTexture name="COOL_TRANSITION_ANIMATED0020" x="0" y="1014" width="600" height="338"/>
+	<SubTexture name="COOL_TRANSITION_ANIMATED0021" x="0" y="1014" width="600" height="338"/>
+	<SubTexture name="COOL_TRANSITION_ANIMATED0022" x="0" y="1014" width="600" height="338"/>
+	<SubTexture name="COOL_TRANSITION_ANIMATED0023" x="0" y="1014" width="600" height="338"/>
+</TextureAtlas>

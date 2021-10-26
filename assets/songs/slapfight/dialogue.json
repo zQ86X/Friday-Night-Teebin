@@ -1,0 +1,20 @@
+{
+    "box": "speech_bubble_talking",
+    "boxState": "normal",
+    "dialogue": [
+        {
+            "portrait": "teeb",
+            "expression": "normal",
+            "text": "thats it."
+        },
+		{
+			"text": "you're going to be mere atoms after\ni'm done with you."
+		},
+		{
+			"text": "literally demolished. eviscerated."
+		},
+		{
+			"text": "say your goodbyes."
+		}
+    ]
+}

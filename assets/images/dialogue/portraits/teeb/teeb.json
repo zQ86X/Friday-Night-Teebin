@@ -1,0 +1,11 @@
+{
+    "name": "bf-pixel",
+    "expressions": {
+        "normal": "Teebicus_Portrait"
+    },
+    "position": "left",
+
+    "sounds": ["pixelText"],
+    "soundChance": 100,
+    "soundPath": "sounds/"
+}
