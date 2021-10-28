@@ -1534,7 +1534,7 @@ class PlayState extends MusicBeatState
 		var curVocalsTime = vocals.time;
 		// dont want to resync vocals if there isnt a need for it
 		var vocalsOutOfSync = (curMusicTime >= curVocalsTime + maxDelay && curVocalsTime < vocals.length) || curMusicTime <= curVocalsTime - maxDelay;
-		if (curMusicTime >= curConductorPos + maxDelay || curMusicTime <= curConductorPos - maxDelay || vocalsOutOfSync)
+		if ((curMusicTime >= curConductorPos + maxDelay || curMusicTime <= curConductorPos - maxDelay || vocalsOutOfSync) && curMusicTime > 0)
 			trace('resync (conductor is at $curConductorPos and vocals are at $curVocalsTime while music time is at $curMusicTime)');
 			resyncShit(vocalsOutOfSync);
 		//*/
