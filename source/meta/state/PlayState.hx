@@ -42,6 +42,7 @@ import openfl.filters.ShaderFilter;
 import openfl.media.Sound;
 import openfl.utils.Assets;
 import sys.io.File;
+import sys.thread.ElasticThreadPool;
 
 using StringTools;
 
@@ -326,7 +327,7 @@ class PlayState extends MusicBeatState
 		add(camFollow);
 
 		// actually set the camera up
-		var camLerp = Main.framerateAdjust(0.04);
+		var camLerp = Main.framerateAdjust(.04);
 		FlxG.camera.follow(camFollow, LOCKON, camLerp);
 		FlxG.camera.zoom = defaultCamZoom;
 		FlxG.camera.focusOn(camFollow.getPosition());
@@ -568,17 +569,14 @@ class PlayState extends MusicBeatState
 					 */
 				}
 			}
-
-			var easeLerp = 0.95;
+			var easeLerp = .95;
 			// camera stuffs
 			FlxG.camera.zoom = FlxMath.lerp(defaultCamZoom + forceZoom[0], FlxG.camera.zoom, easeLerp);
-			for (hud in allUIs)
-				hud.zoom = FlxMath.lerp(1 + forceZoom[1], hud.zoom, easeLerp);
+			for (hud in allUIs) hud.zoom = FlxMath.lerp(1 + forceZoom[1], hud.zoom, easeLerp);
 
 			// not even forcezoom anymore but still
 			FlxG.camera.angle = FlxMath.lerp(0 + forceZoom[2], FlxG.camera.angle, easeLerp);
-			for (hud in allUIs)
-				hud.angle = FlxMath.lerp(0 + forceZoom[3], hud.angle, easeLerp);
+			for (hud in allUIs) hud.angle = FlxMath.lerp(0 + forceZoom[3], hud.angle, easeLerp);
 
 			if (health <= 0 && startedCountdown)
 			{

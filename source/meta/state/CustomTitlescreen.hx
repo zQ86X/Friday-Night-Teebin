@@ -156,7 +156,7 @@ class CustomTitlescreen extends MusicBeatState
 
 	function getIntroTextShit():Array<Array<String>>
 	{
-		var swagGoodArray:Array<Array<String>> = [['no idea what psych engine is', 'vine boom sfx']];
+		var swagGoodArray:Array<Array<String>> = [];
 		if (Assets.exists(Paths.txt('introText')))
 		{
 			var fullText:String = Assets.getText(Paths.txt('introText'));
@@ -176,8 +176,8 @@ class CustomTitlescreen extends MusicBeatState
 		if (FlxG.sound.music != null)
 			Conductor.songPosition = FlxG.sound.music.time;
 		// FlxG.watch.addQuick('amp', FlxG.sound.music.amplitude);
-		logoBl.scale.x = FlxMath.lerp(newLogoScale, logoBl.scale.x, 0.95);
-		logoBl.scale.y = FlxMath.lerp(newLogoScale, logoBl.scale.y, 0.95);
+		logoBl.scale.x = FlxMath.lerp(newLogoScale, logoBl.scale.x, 20 * elapsed);
+		logoBl.scale.y = FlxMath.lerp(newLogoScale, logoBl.scale.y, 20 * elapsed);
 
 		FlxTween.color(backdrop, 1, backdrop.color, FlxColor.BLACK);
 
@@ -281,7 +281,7 @@ class CustomTitlescreen extends MusicBeatState
 				addMoreText('Tsuraran');
 			case 12:
 				addMoreText('FlopDoodle');
-			case 16: 
+			case 16:
 				addMoreText('');
 				addMoreText('PRESENT');
 
