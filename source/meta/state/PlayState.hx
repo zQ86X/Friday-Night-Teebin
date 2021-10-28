@@ -792,6 +792,8 @@ class PlayState extends MusicBeatState
 						if ((daNote.tooLate || !daNote.wasGoodHit) && (daNote.mustPress))
 						{
 							vocals.volume = 0;
+
+							resyncShit();
 							missNoteCheck((Init.trueSettings.get('Ghost Tapping')) ? true : false, daNote.noteData, boyfriend, true);
 							// ambiguous name
 							Timings.updateAccuracy(0);
@@ -919,7 +921,6 @@ class PlayState extends MusicBeatState
 
 				// get the note ms timing
 				var noteDiff:Float = Math.abs(coolNote.strumTime - Conductor.songPosition);
-				trace(noteDiff);
 				// get the timing
 				if (coolNote.strumTime < Conductor.songPosition)
 					ratingTiming = "late";
@@ -1418,11 +1419,7 @@ class PlayState extends MusicBeatState
 
 		if (!paused)
 		{
-			songMusic.play();
-			resyncVocals();
-
-			//vocals.time = Math.min(songMusic.time, vocals.length);
-			//vocals.play();
+			resyncShit();
 
 			var songComplete = endSong;
 			switch (curSong.toLowerCase())
@@ -1513,7 +1510,7 @@ class PlayState extends MusicBeatState
 
 	function sortByShit(Obj1:Note, Obj2:Note):Int
 		return FlxSort.byValues(FlxSort.ASCENDING, Obj1.strumTime, Obj2.strumTime);
-	function resyncVocals(vocalsSync:Bool = true):Void
+	function resyncShit(vocalsSync:Bool = true):Void
 	{
 		// i hate
 		if (vocalsSync) vocals.pause();
@@ -1522,8 +1519,6 @@ class PlayState extends MusicBeatState
 		Conductor.songPosition = songMusic.time;
 		if (vocalsSync)
 		{
-			trace('syncing vocals very importnat');
-
 			vocals.time = Math.min(songMusic.time, vocals.length);
 			vocals.play();
 		}
@@ -1537,17 +1532,23 @@ class PlayState extends MusicBeatState
 
 		var curMusicTime = songMusic.time;
 		var curVocalsTime = vocals.time;
-
-		var vocalsOutOfSync = curMusicTime >= curVocalsTime + maxDelay || curMusicTime <= curVocalsTime - maxDelay;
+		// dont want to resync vocals if there isnt a need for it
+		var vocalsOutOfSync = (curMusicTime >= curVocalsTime + maxDelay && curVocalsTime < vocals.length) || curMusicTime <= curVocalsTime - maxDelay;
 		if (curMusicTime >= curConductorPos + maxDelay || curMusicTime <= curConductorPos - maxDelay || vocalsOutOfSync)
-			trace('step says resync plz (conductor is at $curConductorPos and vocals are at $curVocalsTime while music time is at $curMusicTime)');
-			resyncVocals(vocalsOutOfSync);
+			trace('resync (conductor is at $curConductorPos and vocals are at $curVocalsTime while music time is at $curMusicTime)');
+			resyncShit(vocalsOutOfSync);
 		//*/
 	}
 
 	private function canDance(anim:FlxAnimation)
 	{
-		return anim.name.startsWith('idle') || anim.name.startsWith('dance') || anim.finished;
+		var playable = anim.name.startsWith('idle') || anim.name.startsWith('dance');
+		if (!playable)
+		{
+			if (anim.curFrame >= (anim.numFrames - 1)) { anim.finish(); }
+			playable = anim.finished;
+		}
+		return playable;
 	}
 	private function charactersDance(curBeat:Int)
 	{
@@ -1667,7 +1668,7 @@ class PlayState extends MusicBeatState
 		if (paused)
 		{
 			if (songMusic != null && !startingSong)
-				resyncVocals();
+				resyncShit();
 
 			if ((startTimer != null) && (!startTimer.finished))
 				startTimer.active = true;

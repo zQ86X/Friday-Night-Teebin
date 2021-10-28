@@ -87,7 +87,7 @@ class Main extends Sprite
 		[['Tutorial'], ['gf'], [FlxColor.fromRGB(129, 100, 223)], 'Funky Beginnings'],
 		[
 			['Bopeebo', 'Fresh', 'Dadbattle'],
-			['dad', 'dad', 'dad'],
+			['dad'],
 			[FlxColor.fromRGB(129, 100, 223)],
 			'vs. DADDY DEAREST'
 		],
