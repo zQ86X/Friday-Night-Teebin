@@ -132,6 +132,12 @@ class Main extends Sprite
 			['swagster'],
 			[FlxColor.fromRGB(102, 102, 102)],
 			"Swagster Warriors"
+		],
+		[
+			['Copycat'],
+			['jcom'],
+			[FlxColor.fromRGB(78, 131, 66)],
+			"Teeb...?"
 		]
 	];
 

@@ -78,6 +78,8 @@ class Stage extends FlxTypedGroup<FlxBasic>
 				case 'thorns': 'schoolEvil';
 				case 'magic-hands' | 'amen-breaks' | 'slapfight' | 'true-finale': 'teeb';
 				case 'saturday-swaggin' | 'cool-transition' | 'rap-battle': 'swagster';
+				case 'copycat': 'jcom';
+
 				default: 'stage';
 			}
 
@@ -379,7 +381,7 @@ class Stage extends FlxTypedGroup<FlxBasic>
 				boomSound = new FlxSound().loadEmbedded(Paths.sound('Vine_Boom'));
 				FlxG.sound.list.add(boomSound);
 			}
-			case 'swagster':
+			case 'swagster' | 'jcom':
 			{
 				PlayState.defaultCamZoom = 1.05;
 
@@ -499,16 +501,14 @@ class Stage extends FlxTypedGroup<FlxBasic>
 			case 'tankman':
 				dad.x += 50;
 				dad.y += 200;
-			case 'teeb':
+			case 'teeb' | 'swagster':
 				camPos.y += 270;
 				camPos.x += 270;
 
 				dad.y += 270;
-			case 'swagster':
+			case 'jcom':
 				camPos.y += 200;
-				camPos.x += 270;
-
-				dad.y += 270;
+				dad.y += 200;
 		}
 	}
 
@@ -548,7 +548,7 @@ class Stage extends FlxTypedGroup<FlxBasic>
 				boyfriend.y += 220;
 				gf.x += 180;
 				gf.y += 300;
-			case 'teeb':
+			case 'teeb' | 'jcom':
 				boyfriend.x += 140;
 
 				gf.x -= 50;

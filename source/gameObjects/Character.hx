@@ -481,6 +481,17 @@ class Character extends FNFSprite
 				animation.addByPrefix('singDOWN', 'SWAGSTER_DOWN', 24, false);
 
 				playAnim('idle');
+			case 'jcom':
+				frames = Paths.getSparrowAtlas('characters/Teebjcom_Assets');
+
+				animation.addByPrefix('idle', 'TEEBJCOM_IDLE', 24, false);
+
+				animation.addByPrefix('singUP', 'TEEBJCOM_UP', 24, false);
+				animation.addByPrefix('singLEFT', 'TEEBJCOM_LEFT', 24, false);
+				animation.addByPrefix('singRIGHT', 'TEEBJCOM_RIGHT', 24, false);
+				animation.addByPrefix('singDOWN', 'TEEBJCOM_DOWN', 24, false);
+
+				playAnim('idle');
 			default:
 				// set up animations if they aren't already
 

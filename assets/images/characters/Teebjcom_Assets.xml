@@ -1,0 +1,75 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TextureAtlas imagePath="Teebjcom_Assets.png">
+	<!-- Created with Adobe Animate version 22.0.0.93 -->
+	<!-- http://www.adobe.com/products/animate.html -->
+	<SubTexture name="TEEBJCOM_DOWN0000" x="100" y="100" width="476" height="483" frameX="-39" frameY="-67" frameWidth="515" frameHeight="550"/>
+	<SubTexture name="TEEBJCOM_DOWN0001" x="676" y="100" width="458" height="510" frameX="-32" frameY="-39" frameWidth="515" frameHeight="550"/>
+	<SubTexture name="TEEBJCOM_DOWN0002" x="1234" y="100" width="453" height="528" frameX="-16" frameY="-20" frameWidth="515" frameHeight="550"/>
+	<SubTexture name="TEEBJCOM_DOWN0003" x="1787" y="100" width="450" height="540" frameX="-6" frameY="-8" frameWidth="515" frameHeight="550"/>
+	<SubTexture name="TEEBJCOM_DOWN0004" x="2337" y="100" width="449" height="545" frameX="-1" frameY="-2" frameWidth="515" frameHeight="550"/>
+	<SubTexture name="TEEBJCOM_DOWN0005" x="2886" y="100" width="448" height="547" frameX="0" frameY="0" frameWidth="515" frameHeight="550"/>
+	<SubTexture name="TEEBJCOM_DOWN0006" x="3434" y="100" width="448" height="547" frameX="0" frameY="0" frameWidth="515" frameHeight="550"/>
+	<SubTexture name="TEEBJCOM_DOWN0007" x="3982" y="100" width="448" height="546" frameX="-2" frameY="-2" frameWidth="515" frameHeight="550"/>
+	<SubTexture name="TEEBJCOM_DOWN0008" x="4530" y="100" width="450" height="544" frameX="-3" frameY="-4" frameWidth="515" frameHeight="550"/>
+	<SubTexture name="TEEBJCOM_DOWN0009" x="5080" y="100" width="450" height="542" frameX="-4" frameY="-6" frameWidth="515" frameHeight="550"/>
+	<SubTexture name="TEEBJCOM_DOWN0010" x="5080" y="100" width="450" height="542" frameX="-4" frameY="-6" frameWidth="515" frameHeight="550"/>
+	<SubTexture name="TEEBJCOM_DOWN0011" x="5080" y="100" width="450" height="542" frameX="-4" frameY="-6" frameWidth="515" frameHeight="550"/>
+	<SubTexture name="TEEBJCOM_DOWN0012" x="5080" y="100" width="450" height="542" frameX="-4" frameY="-6" frameWidth="515" frameHeight="550"/>
+	<SubTexture name="TEEBJCOM_DOWN0013" x="5080" y="100" width="450" height="542" frameX="-4" frameY="-6" frameWidth="515" frameHeight="550"/>
+	<SubTexture name="TEEBJCOM_IDLE0000" x="5630" y="100" width="352" height="528" frameX="-2" frameY="-31" frameWidth="364" frameHeight="559"/>
+	<SubTexture name="TEEBJCOM_IDLE0001" x="6082" y="100" width="357" height="540" frameX="-1" frameY="-19" frameWidth="364" frameHeight="559"/>
+	<SubTexture name="TEEBJCOM_IDLE0002" x="6539" y="100" width="361" height="549" frameX="0" frameY="-10" frameWidth="364" frameHeight="559"/>
+	<SubTexture name="TEEBJCOM_IDLE0003" x="7000" y="100" width="362" height="555" frameX="0" frameY="-4" frameWidth="364" frameHeight="559"/>
+	<SubTexture name="TEEBJCOM_IDLE0004" x="7462" y="100" width="363" height="558" frameX="0" frameY="-1" frameWidth="364" frameHeight="559"/>
+	<SubTexture name="TEEBJCOM_IDLE0005" x="100" y="758" width="364" height="559"/>
+	<SubTexture name="TEEBJCOM_IDLE0006" x="564" y="758" width="363" height="559" frameX="0" frameY="0" frameWidth="364" frameHeight="559"/>
+	<SubTexture name="TEEBJCOM_IDLE0007" x="1027" y="758" width="363" height="558" frameX="0" frameY="-1" frameWidth="364" frameHeight="559"/>
+	<SubTexture name="TEEBJCOM_IDLE0008" x="1490" y="758" width="363" height="557" frameX="0" frameY="-2" frameWidth="364" frameHeight="559"/>
+	<SubTexture name="TEEBJCOM_IDLE0009" x="1953" y="758" width="363" height="557" frameX="0" frameY="-2" frameWidth="364" frameHeight="559"/>
+	<SubTexture name="TEEBJCOM_IDLE0010" x="1953" y="758" width="363" height="557" frameX="0" frameY="-2" frameWidth="364" frameHeight="559"/>
+	<SubTexture name="TEEBJCOM_IDLE0011" x="1953" y="758" width="363" height="557" frameX="0" frameY="-2" frameWidth="364" frameHeight="559"/>
+	<SubTexture name="TEEBJCOM_IDLE0012" x="1953" y="758" width="363" height="557" frameX="0" frameY="-2" frameWidth="364" frameHeight="559"/>
+	<SubTexture name="TEEBJCOM_IDLE0013" x="1953" y="758" width="363" height="557" frameX="0" frameY="-2" frameWidth="364" frameHeight="559"/>
+	<SubTexture name="TEEBJCOM_LEFT0000" x="2416" y="758" width="329" height="526" frameX="-32" frameY="-38" frameWidth="361" frameHeight="566"/>
+	<SubTexture name="TEEBJCOM_LEFT0001" x="2845" y="758" width="320" height="543" frameX="-22" frameY="-22" frameWidth="361" frameHeight="566"/>
+	<SubTexture name="TEEBJCOM_LEFT0002" x="3265" y="758" width="318" height="555" frameX="-12" frameY="-11" frameWidth="361" frameHeight="566"/>
+	<SubTexture name="TEEBJCOM_LEFT0003" x="3683" y="758" width="325" height="562" frameX="-5" frameY="-4" frameWidth="361" frameHeight="566"/>
+	<SubTexture name="TEEBJCOM_LEFT0004" x="4108" y="758" width="329" height="565" frameX="-1" frameY="-1" frameWidth="361" frameHeight="566"/>
+	<SubTexture name="TEEBJCOM_LEFT0005" x="4537" y="758" width="330" height="566" frameX="0" frameY="0" frameWidth="361" frameHeight="566"/>
+	<SubTexture name="TEEBJCOM_LEFT0006" x="4967" y="758" width="330" height="566" frameX="0" frameY="0" frameWidth="361" frameHeight="566"/>
+	<SubTexture name="TEEBJCOM_LEFT0007" x="5397" y="758" width="329" height="565" frameX="-1" frameY="-1" frameWidth="361" frameHeight="566"/>
+	<SubTexture name="TEEBJCOM_LEFT0008" x="5826" y="758" width="327" height="564" frameX="-3" frameY="-2" frameWidth="361" frameHeight="566"/>
+	<SubTexture name="TEEBJCOM_LEFT0009" x="6253" y="758" width="327" height="563" frameX="-3" frameY="-3" frameWidth="361" frameHeight="566"/>
+	<SubTexture name="TEEBJCOM_LEFT0010" x="6253" y="758" width="327" height="563" frameX="-3" frameY="-3" frameWidth="361" frameHeight="566"/>
+	<SubTexture name="TEEBJCOM_LEFT0011" x="6253" y="758" width="327" height="563" frameX="-3" frameY="-3" frameWidth="361" frameHeight="566"/>
+	<SubTexture name="TEEBJCOM_LEFT0012" x="6253" y="758" width="327" height="563" frameX="-3" frameY="-3" frameWidth="361" frameHeight="566"/>
+	<SubTexture name="TEEBJCOM_LEFT0013" x="6253" y="758" width="327" height="563" frameX="-3" frameY="-3" frameWidth="361" frameHeight="566"/>
+	<SubTexture name="TEEBJCOM_RIGHT0000" x="6680" y="758" width="483" height="528" frameX="-31" frameY="-23" frameWidth="514" frameHeight="551"/>
+	<SubTexture name="TEEBJCOM_RIGHT0001" x="7263" y="758" width="480" height="538" frameX="-18" frameY="-13" frameWidth="514" frameHeight="551"/>
+	<SubTexture name="TEEBJCOM_RIGHT0002" x="100" y="1424" width="475" height="544" frameX="-9" frameY="-7" frameWidth="514" frameHeight="551"/>
+	<SubTexture name="TEEBJCOM_RIGHT0003" x="675" y="1424" width="472" height="548" frameX="-4" frameY="-3" frameWidth="514" frameHeight="551"/>
+	<SubTexture name="TEEBJCOM_RIGHT0004" x="1247" y="1424" width="470" height="551" frameX="-1" frameY="0" frameWidth="514" frameHeight="551"/>
+	<SubTexture name="TEEBJCOM_RIGHT0005" x="1817" y="1424" width="469" height="551" frameX="0" frameY="0" frameWidth="514" frameHeight="551"/>
+	<SubTexture name="TEEBJCOM_RIGHT0006" x="2386" y="1424" width="469" height="551" frameX="0" frameY="0" frameWidth="514" frameHeight="551"/>
+	<SubTexture name="TEEBJCOM_RIGHT0007" x="2955" y="1424" width="470" height="551" frameX="-1" frameY="0" frameWidth="514" frameHeight="551"/>
+	<SubTexture name="TEEBJCOM_RIGHT0008" x="3525" y="1424" width="471" height="550" frameX="-2" frameY="-1" frameWidth="514" frameHeight="551"/>
+	<SubTexture name="TEEBJCOM_RIGHT0009" x="4096" y="1424" width="472" height="549" frameX="-2" frameY="-2" frameWidth="514" frameHeight="551"/>
+	<SubTexture name="TEEBJCOM_RIGHT0010" x="4096" y="1424" width="472" height="549" frameX="-2" frameY="-2" frameWidth="514" frameHeight="551"/>
+	<SubTexture name="TEEBJCOM_RIGHT0011" x="4096" y="1424" width="472" height="549" frameX="-2" frameY="-2" frameWidth="514" frameHeight="551"/>
+	<SubTexture name="TEEBJCOM_RIGHT0012" x="4096" y="1424" width="472" height="549" frameX="-2" frameY="-2" frameWidth="514" frameHeight="551"/>
+	<SubTexture name="TEEBJCOM_RIGHT0013" x="4096" y="1424" width="472" height="549" frameX="-2" frameY="-2" frameWidth="514" frameHeight="551"/>
+	<SubTexture name="TEEBJCOM_UP0000" x="4668" y="1424" width="371" height="896" frameX="-11" frameY="0" frameWidth="407" frameHeight="897"/>
+	<SubTexture name="TEEBJCOM_UP0001" x="5139" y="1424" width="368" height="897" frameX="-6" frameY="0" frameWidth="407" frameHeight="897"/>
+	<SubTexture name="TEEBJCOM_UP0002" x="5607" y="1424" width="404" height="862" frameX="-3" frameY="-35" frameWidth="407" frameHeight="897"/>
+	<SubTexture name="TEEBJCOM_UP0003" x="6111" y="1424" width="368" height="889" frameX="-1" frameY="-8" frameWidth="407" frameHeight="897"/>
+	<SubTexture name="TEEBJCOM_UP0004" x="6579" y="1424" width="372" height="882" frameX="0" frameY="-15" frameWidth="407" frameHeight="897"/>
+	<SubTexture name="TEEBJCOM_UP0005" x="7051" y="1424" width="390" height="788" frameX="0" frameY="-109" frameWidth="407" frameHeight="897"/>
+	<SubTexture name="TEEBJCOM_UP0006" x="7541" y="1424" width="378" height="738" frameX="0" frameY="-159" frameWidth="407" frameHeight="897"/>
+	<SubTexture name="TEEBJCOM_UP0007" x="100" y="2421" width="371" height="700" frameX="0" frameY="-197" frameWidth="407" frameHeight="897"/>
+	<SubTexture name="TEEBJCOM_UP0008" x="571" y="2421" width="374" height="630" frameX="0" frameY="-267" frameWidth="407" frameHeight="897"/>
+	<SubTexture name="TEEBJCOM_UP0009" x="1045" y="2421" width="380" height="586" frameX="0" frameY="-311" frameWidth="407" frameHeight="897"/>
+	<SubTexture name="TEEBJCOM_UP0010" x="1045" y="2421" width="380" height="586" frameX="0" frameY="-311" frameWidth="407" frameHeight="897"/>
+	<SubTexture name="TEEBJCOM_UP0011" x="1045" y="2421" width="380" height="586" frameX="0" frameY="-311" frameWidth="407" frameHeight="897"/>
+	<SubTexture name="TEEBJCOM_UP0012" x="1045" y="2421" width="380" height="586" frameX="0" frameY="-311" frameWidth="407" frameHeight="897"/>
+	<SubTexture name="TEEBJCOM_UP0013" x="1045" y="2421" width="380" height="586" frameX="0" frameY="-311" frameWidth="407" frameHeight="897"/>
+</TextureAtlas>

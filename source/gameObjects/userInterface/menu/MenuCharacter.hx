@@ -19,8 +19,9 @@ class MenuCharacter extends FlxSprite
 		'mom' => ["Mom Idle BLACK LINES", 24, true, .5, 0, -20],
 		'parents-christmas' => ["Parent Christmas Idle", 24, true, .8, -100, 50],
 		'senpai' => ["SENPAI idle Black Lines", 24, true, .7, -50, 100],
-		'teeb' => ["TEEB_IDLE_BLACK_LINES", 24, true,.7, -80, 30],
+		'teeb' => ["TEEB_IDLE_BLACK_LINES", 24, true, .7, -80, 30],
 		'swagster' => ["SWAGSTER_IDLE_BLACK_LINES", 24, true, .7, -80, 30],
+		'jcom' => ["TEEBJCOM_IDLE_BLACK_LINES", 24, true, .7, -80, 30],
 	];
 
 	var baseX:Float = 0;
@@ -66,9 +67,7 @@ class MenuCharacter extends FlxSprite
 					flipX = false;
 			}
 		}
-		else
-			visible = false;
-
+		else { visible = false; }
 		character = newCharacter;
 	}
 }
