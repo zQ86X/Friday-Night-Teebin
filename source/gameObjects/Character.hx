@@ -547,12 +547,8 @@ class Character extends FNFSprite
 
 		dance();
 
-		if (isPlayer) // fuck you ninjamuffin lmao
-		{
-			flipX = !flipX;
-			if (!curCharacter.startsWith('bf')) flipLeftRight();
-		}
-		else if (curCharacter.startsWith('bf')) flipLeftRight();
+		if (isPlayer) flipX = !flipX;
+		if (!(isPlayer && curCharacter.startsWith('bf'))) flipLeftRight();
 
 		this.x = x;
 		this.y = y;
@@ -583,13 +579,10 @@ class Character extends FNFSprite
 	{
 		if (!curCharacter.startsWith('bf'))
 		{
-			if (animation.curAnim.name.startsWith('sing'))
-			{
-				holdTimer += elapsed;
-			}
+			if (animation.curAnim.name.startsWith('sing')) holdTimer += elapsed;
 
 			var dadVar:Float = 4;
-			if (holdTimer >= Conductor.stepCrochet * dadVar * 0.001)
+			if (holdTimer >= Conductor.stepCrochet * dadVar / 1000)
 			{
 				dance();
 				holdTimer = 0;
@@ -600,10 +593,8 @@ class Character extends FNFSprite
 		switch (curCharSimplified)
 		{
 			case 'gf':
-				if (animation.curAnim.name == 'hairFall' && animation.curAnim.finished)
-					playAnim('danceRight');
-				if ((animation.curAnim.name.startsWith('sad')) && (animation.curAnim.finished))
-					playAnim('danceLeft');
+				if (animation.curAnim.name == 'hairFall' && animation.curAnim.finished) playAnim('danceRight');
+				if (animation.curAnim.name.startsWith('sad') && animation.curAnim.finished) playAnim('danceLeft');
 		}
 
 		// Post idle animation (think Week 4 and how the player and mom's hair continues to sway after their idle animations are done!)
@@ -627,26 +618,26 @@ class Character extends FNFSprite
 	{
 		if (!debugMode)
 		{
+			var curAnimName = animation.curAnim.name;
 			var curCharSimplified:String = simplifyCharacter();
+
 			switch (curCharSimplified)
 			{
 				case 'gf':
-					if ((!animation.curAnim.name.startsWith('hair')) && (!animation.curAnim.name.startsWith('sad')))
+					if (!(curAnimName.startsWith('hair') || curAnimName.startsWith('sad')))
 					{
 						danced = !danced;
-
-						if (danced)
-							playAnim('danceRight', forced);
-						else
-							playAnim('danceLeft', forced);
+						playAnim(danced ? 'danceRight' : 'danceLeft', forced);
 					}
 				default:
 					// Left/right dancing, think Skid & Pump
-					if (animation.getByName('danceLeft') != null && animation.getByName('danceRight') != null)
-						playAnim((animation.curAnim.name == 'danceRight') ? 'danceLeft' : 'danceRight', forced);
-					// Play normal idle animations for all other characters
-					else
-						playAnim('idle', forced);
+					// Plays normal idle animations for all other characters
+					playAnim(
+							(animation.getByName('danceLeft') != null && animation.getByName('danceRight') != null) ?
+							((curAnimName == 'danceRight') ? 'danceLeft' : 'danceRight') :
+							'idle',
+						forced
+					);
 			}
 		}
 	}
@@ -657,13 +648,12 @@ class Character extends FNFSprite
 
 		if (curCharacter == 'gf')
 		{
-			if (AnimName == 'singLEFT')
-				danced = true;
-			else if (AnimName == 'singRIGHT')
-				danced = false;
-
-			if (AnimName == 'singUP' || AnimName == 'singDOWN')
-				danced = !danced;
+			var animLowercase = AnimName.toLowerCase();
+			switch (animLowercase)
+			{
+				case 'singleft' | 'singright': danced = animLowercase == 'singleft';
+				case 'singup' | 'singdown': danced = !danced;
+			}
 		}
 	}
 
