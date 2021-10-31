@@ -44,6 +44,13 @@ class Character extends FNFSprite
 		var tex:FlxAtlasFrames;
 		antialiasing = true;
 
+		var characterAtlas:Map<String, Array<Dynamic>> = [
+			'swagster' => ['Swagster', 'SWAGSTER'],
+			'jcom' => ['Teebjcom', 'TEEBJCOM'],
+
+			'teeb' => ['Teebicus', 'TEEB', true]
+		];
+
 		switch (curCharacter)
 		{
 			case 'gf':
@@ -454,44 +461,46 @@ class Character extends FNFSprite
 				animation.addByPrefix('shoot4', 'Pico shoot 4', 24, false);
 
 				playAnim('shoot1');
-			case 'teeb':
-				frames = Paths.getSparrowAtlas('characters/Teebicus_Assets');
+			// case 'teeb':
+			// 	frames = Paths.getSparrowAtlas('characters/Teebicus_Assets');
 
-				animation.addByIndices('danceRight', 'TEEB_IDLE', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14], "", 24, false);
-				animation.addByIndices('danceLeft', 'TEEB_IDLE', [15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27], "", 24, false);
+			// 	animation.addByIndices('danceRight', 'TEEB_IDLE', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14], "", 24, false);
+			// 	animation.addByIndices('danceLeft', 'TEEB_IDLE', [15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27], "", 24, false);
 
-				animation.addByPrefix('singUP', 'TEEB_UP', 24, false);
-				animation.addByPrefix('singLEFT', 'TEEB_LEFT', 24, false);
-				animation.addByPrefix('singRIGHT', 'TEEB_RIGHT', 24, false);
-				animation.addByPrefix('singDOWN', 'TEEB_DOWN', 24, false);
+			// 	animation.addByPrefix('singUP', 'TEEB_UP', 24, false);
+			// 	animation.addByPrefix('singLEFT', 'TEEB_LEFT', 24, false);
+			// 	animation.addByPrefix('singRIGHT', 'TEEB_RIGHT', 24, false);
+			// 	animation.addByPrefix('singDOWN', 'TEEB_DOWN', 24, false);
 
-				animation.addByPrefix('hey', 'TEEB_POSE', 24, false);
+			// 	animation.addByPrefix('hey', 'TEEB_POSE', 24, false);
 
-				quickDancer = true;
+			// 	quickDancer = true;
 
-				playAnim('danceLeft');
-			case 'swagster':
-				frames = Paths.getSparrowAtlas('characters/Swagster_Assets');
+			// 	playAnim('danceLeft');
+			case 'swagster' | 'jcom' | 'teeb':
+				var atlas = characterAtlas[curCharacter];
 
-				animation.addByPrefix('idle', 'SWAGSTER_IDLE', 24, false);
+				var quick = atlas[2] == true;
+				var alias = atlas[1];
 
-				animation.addByPrefix('singUP', 'SWAGSTER_UP', 24, false);
-				animation.addByPrefix('singLEFT', 'SWAGSTER_LEFT', 24, false);
-				animation.addByPrefix('singRIGHT', 'SWAGSTER_RIGHT', 24, false);
-				animation.addByPrefix('singDOWN', 'SWAGSTER_DOWN', 24, false);
+				var fmt = '${alias}_IDLE';
+				frames = Paths.getSparrowAtlas('characters/${atlas[0]}_Assets');
+				if (quick)
+				{
+					trace('quick dancer $curCharacter (danceLeft/danceRight)');
 
-				playAnim('idle');
-			case 'jcom':
-				frames = Paths.getSparrowAtlas('characters/Teebjcom_Assets');
+					animation.addByIndices('danceLeft', fmt, [15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27], "", 24, false);
+					animation.addByIndices('danceRight', fmt, [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14], "", 24, false);
+				}
+				else { animation.addByPrefix('idle', fmt, 24, false); }
 
-				animation.addByPrefix('idle', 'TEEBJCOM_IDLE', 24, false);
+				animation.addByPrefix('singUP', '${alias}_UP', 24, false);
+				animation.addByPrefix('singLEFT', '${alias}_LEFT', 24, false);
+				animation.addByPrefix('singRIGHT', '${alias}_RIGHT', 24, false);
+				animation.addByPrefix('singDOWN', '${alias}_DOWN', 24, false);
 
-				animation.addByPrefix('singUP', 'TEEBJCOM_UP', 24, false);
-				animation.addByPrefix('singLEFT', 'TEEBJCOM_LEFT', 24, false);
-				animation.addByPrefix('singRIGHT', 'TEEBJCOM_RIGHT', 24, false);
-				animation.addByPrefix('singDOWN', 'TEEBJCOM_DOWN', 24, false);
-
-				playAnim('idle');
+				quickDancer = quick;
+				playAnim(quick ? 'danceLeft' : 'idle');
 			default:
 				// set up animations if they aren't already
 
@@ -541,14 +550,9 @@ class Character extends FNFSprite
 		if (isPlayer) // fuck you ninjamuffin lmao
 		{
 			flipX = !flipX;
-
-			// Doesn't flip for BF, since his are already in the right place???
-			if (!curCharacter.startsWith('bf'))
-				flipLeftRight();
-			//
+			if (!curCharacter.startsWith('bf')) flipLeftRight();
 		}
-		else if (curCharacter.startsWith('bf'))
-			flipLeftRight();
+		else if (curCharacter.startsWith('bf')) flipLeftRight();
 
 		this.x = x;
 		this.y = y;

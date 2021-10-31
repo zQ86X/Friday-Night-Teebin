@@ -6,7 +6,7 @@ import flixel.FlxSubState;
 import flixel.system.FlxSound;
 import flixel.util.FlxColor;
 import flixel.util.FlxTimer;
-import gameObjects.Boyfriend;
+import gameObjects.Character;
 import meta.MusicBeat.MusicBeatSubState;
 import meta.data.Conductor.BPMChangeEvent;
 import meta.data.Conductor;
@@ -16,7 +16,7 @@ import meta.state.menus.*;
 class GameOverSubstate extends MusicBeatSubState
 {
 	//
-	var bf:Boyfriend;
+	var bf:Character;
 	var camFollow:FlxObject;
 	var stageSuffix:String = "";
 
@@ -41,7 +41,7 @@ class GameOverSubstate extends MusicBeatSubState
 
 		Conductor.songPosition = 0;
 
-		bf = new Boyfriend(x, y, daBf);
+		bf = new Character(x, y, daBf, true);
 		add(bf);
 
 		camFollow = new FlxObject(bf.getGraphicMidpoint().x + 20, bf.getGraphicMidpoint().y - 40, 1, 1);
