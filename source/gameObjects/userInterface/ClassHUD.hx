@@ -74,6 +74,7 @@ class ClassHUD extends FlxTypedGroup<FlxBasic>
 				case 'spirit': 0xFFAD0505;
 				case 'teeb': 0xFF666666;
 				case 'swagster': 0xFF333333;
+				case 'jcom': 0xFF4E8342;
 				case 'baseplate': 0xFF5B5B5B;
 
 				default: 0xFFFF0000;
