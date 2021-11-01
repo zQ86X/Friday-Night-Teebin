@@ -134,10 +134,10 @@ class Main extends Sprite
 			"Swagster Warriors"
 		],
 		[
-			['Copycat'],
+			['Copycat', 'Test-Place'],
 			['jcom'],
 			[FlxColor.fromRGB(78, 131, 66)],
-			"Teeb...?"
+			"Teeb(?)"
 		]
 	];
 
