@@ -291,7 +291,7 @@ class Main extends Sprite
 			}
 		}
 
-		errMsg += "\nUncaught Error: " + e.error + "\nPlease report this error to the GitHub page: https://github.com/Yoshubs/Forever-Engine";
+		errMsg += '\nSHIT FUCK WHAT THE FUCK IS ${e.error}\nGO TO https://github.com/zQ86X/Friday-Night-Teebin/issues FUUUUUUUUUUUUUUCK';
 
 		if (!FileSystem.exists("./crash/"))
 			FileSystem.createDirectory("./crash/");
