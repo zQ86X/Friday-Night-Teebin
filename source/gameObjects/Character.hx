@@ -547,8 +547,10 @@ class Character extends FNFSprite
 
 		dance();
 
+		var isBf = curCharacter.startsWith('bf');
+
 		if (isPlayer) flipX = !flipX;
-		if (!(isPlayer && curCharacter.startsWith('bf'))) flipLeftRight();
+		if ((isPlayer && !isBf) || (!isPlayer && isBf)) flipLeftRight();
 
 		this.x = x;
 		this.y = y;
