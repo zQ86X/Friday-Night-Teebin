@@ -47,7 +47,7 @@ class GameOverSubstate extends MusicBeatSubState
 		camFollow = new FlxObject(bf.getGraphicMidpoint().x + 20, bf.getGraphicMidpoint().y - 40, 1, 1);
 		add(camFollow);
 
-		// literally why the fuck do i have to do this lol
+		// literally why the fuck do i have to do this lol - z
 		var loss = new FlxSound().loadEmbedded(Paths.sound('fnf_loss_sfx$stageSuffix'));
 		loss.play();
 
