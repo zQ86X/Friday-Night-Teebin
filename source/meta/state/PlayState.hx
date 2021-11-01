@@ -687,7 +687,7 @@ class PlayState extends MusicBeatState
 			}
 		}
 	}
-	function doEffects(character:Character)
+	function doEffects(character:Character, note:Note)
 	{
 		// do some effects
 		if (!Init.trueSettings.get('Reduced Movements'))
@@ -954,7 +954,7 @@ class PlayState extends MusicBeatState
 
 			characterPlayAnimation(coolNote, character);
 
-			if (!character.isPlayer) doEffects(character);
+			if (!character.isPlayer) doEffects(character, coolNote);
 			if (characterStrums.receptors.members[coolNote.noteData] != null)
 				characterStrums.receptors.members[coolNote.noteData].playAnim('confirm', true);
 
