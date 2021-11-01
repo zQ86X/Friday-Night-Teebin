@@ -579,10 +579,21 @@ class Character extends FNFSprite
 
 	override function update(elapsed:Float)
 	{
-		if (!curCharacter.startsWith('bf'))
-		{
-			if (animation.curAnim.name.startsWith('sing')) holdTimer += elapsed;
+		var isBf = curCharacter.startsWith('bf');
 
+		var curAnim = animation.curAnim;
+		var curAnimName = curAnim.name;
+
+		if (curAnimName.startsWith('sing')) holdTimer += elapsed;
+		else { if (isBf) holdTimer = 0; }
+
+		if (isBf)
+		{
+			if (curAnimName.endsWith('miss') && curAnim.finished && !debugMode) playAnim('idle', true, false, 10);
+			if (curAnimName == 'firstDeath' && curAnim.finished) playAnim('deathLoop');
+		}
+		else
+		{
 			var dadVar:Float = 4;
 			if (holdTimer >= Conductor.stepCrochet * dadVar / 1000)
 			{
