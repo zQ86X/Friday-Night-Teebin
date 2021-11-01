@@ -238,11 +238,7 @@ class TitleState extends MusicBeatState
 		}
 
 		// hi game, please stop crashing its kinda annoyin, thanks!
-		if (pressedEnter && !skippedIntro && initialized)
-		{
-			skipIntro();
-		}
-
+		if (pressedEnter && !skippedIntro && initialized) skipIntro();
 		super.update(elapsed);
 	}
 
