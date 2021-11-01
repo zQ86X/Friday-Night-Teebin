@@ -1560,6 +1560,16 @@ class PlayState extends MusicBeatState
 		if ((curBeat % 2 == 0 || dadOpponent.quickDancer) && canDance(dadOpponent.animation.curAnim)) dadOpponent.dance();
 	}
 
+	private function bopCamera()
+	{
+		if (curBeat % 4 == 0)
+		{
+			FlxG.camera.zoom += 0.015;
+			camHUD.zoom += 0.05;
+
+			for (hud in strumHUD) hud.zoom += 0.05;
+		}
+	}
 	override function beatHit()
 	{
 		super.beatHit();
@@ -1587,7 +1597,7 @@ class PlayState extends MusicBeatState
 			}
 
 		}
-		if (!Init.trueSettings.get('Reduced Movements'))
+		if (!(Init.trueSettings.get('Reduced Movements') || FlxG.camera.zoom >= 1.35))
 		{
 			switch (lowercaseSong)
 			{
@@ -1595,29 +1605,17 @@ class PlayState extends MusicBeatState
 				{
 					if (!(lowercaseSong == 'test place' && (curBeat < 128 || curBeat >= 296)))
 					{
-						if ((FlxG.camera.zoom < 1.35))
-						{
-							var div = (curBeat % 2) == 0 ? 1 : 2;
-							var zoomIn = .05 / div;
+						var div = (curBeat % 2) == 0 ? 1 : 2;
+						var zoomIn = .05 / div;
 
-							FlxG.camera.zoom += .015 / div;
-							camHUD.zoom += zoomIn;
+						FlxG.camera.zoom += .015 / div;
+						camHUD.zoom += zoomIn;
 
-							for (hud in strumHUD)
-								hud.zoom += zoomIn;
-						}
+						for (hud in strumHUD) hud.zoom += zoomIn;
 					}
+					else if (lowercaseSong == 'test place') bopCamera();
 				}
-				default:
-				{
-					if ((FlxG.camera.zoom < 1.35 && curBeat % 4 == 0))
-					{
-						FlxG.camera.zoom += 0.015;
-						camHUD.zoom += 0.05;
-
-						for (hud in strumHUD) hud.zoom += 0.05;
-					}
-				}
+				default: bopCamera();
 			}
 		}
 
