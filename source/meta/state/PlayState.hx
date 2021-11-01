@@ -1587,17 +1587,21 @@ class PlayState extends MusicBeatState
 		{
 			switch (lowercaseSong)
 			{
-				case 'rap battle':
+				case 'rap battle' | 'test place':
 				{
-					if ((FlxG.camera.zoom < 1.35))
+					if (!(lowercaseSong == 'test place' && (curBeat < 128 || curBeat >= 296)))
 					{
-						var div = (curBeat % 2) == 0 ? 1 : 2;
-						var zoomIn = .05 / div;
+						if ((FlxG.camera.zoom < 1.35))
+						{
+							var div = (curBeat % 2) == 0 ? 1 : 2;
+							var zoomIn = .05 / div;
 
-						FlxG.camera.zoom += .015 / div;
-						camHUD.zoom += zoomIn;
+							FlxG.camera.zoom += .015 / div;
+							camHUD.zoom += zoomIn;
 
-						for (hud in strumHUD) hud.zoom += zoomIn;
+							for (hud in strumHUD)
+								hud.zoom += zoomIn;
+						}
 					}
 				}
 				default:
