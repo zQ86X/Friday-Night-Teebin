@@ -451,6 +451,8 @@ class PlayState extends MusicBeatState
 				persistentDraw = true;
 				paused = true;
 
+				resetEffects();
+
 				// open pause substate
 				openSubState(new PauseSubState(boyfriend.getScreenPosition().x, boyfriend.getScreenPosition().y));
 				updateRPC(true);
@@ -485,8 +487,8 @@ class PlayState extends MusicBeatState
 				// Conductor.songPosition = FlxG.sound.music.time;
 				Conductor.songPosition += elapsed * 1000;
 
-				if (!paused)
-				{
+				if (paused) resetEffects();
+				else {
 					songTime += FlxG.game.ticks - previousFrameTime;
 					previousFrameTime = FlxG.game.ticks;
 
@@ -586,6 +588,7 @@ class PlayState extends MusicBeatState
 				persistentDraw = false;
 				paused = true;
 
+				resetEffects();
 				resetMusic();
 
 				openSubState(new GameOverSubstate(boyfriend.getScreenPosition().x, boyfriend.getScreenPosition().y));
@@ -603,8 +606,6 @@ class PlayState extends MusicBeatState
 			}
 
 			noteCalls();
-			resetEffects();
-
 			var movable = !(paused || Init.trueSettings.get('Reduced Movements'));
 			// do some camera effects
 			// ported from kade engine lua modcharts
@@ -612,6 +613,7 @@ class PlayState extends MusicBeatState
 			{
 				case 'slapfight':
 				{
+					resetEffects();
 					if (storyDifficulty > 1 && curBeat >= step)
 					{
 						if (curBeat < (step * 13))
@@ -650,6 +652,7 @@ class PlayState extends MusicBeatState
 				}
 				case 'rap battle':
 				{
+					resetEffects();
 					if (!startingSong && movable && storyDifficulty > 0 && curBeat < (4 * 104))
 					{
 						delta += (elapsed * Conductor.bpm) / (Conductor.crochet / 4);
@@ -659,6 +662,8 @@ class PlayState extends MusicBeatState
 						for (hud in strumHUD) hud.angle += sinAngle;
 					}
 				}
+				case 'test place': {} // sink because the camera moves
+				default: resetEffects();
 			}
 		}
 	}
@@ -666,6 +671,8 @@ class PlayState extends MusicBeatState
 	function resetEffects()
 	{
 		// reset any camera effects applied in update
+
+		FlxG.camera.angle = 0;
 		camHUD.angle = 0;
 
 		for (hud in strumHUD) hud.angle = 0;
@@ -680,6 +687,43 @@ class PlayState extends MusicBeatState
 			}
 		}
 	}
+	function doEffects(character:Character)
+	{
+		// do some effects
+		if (!Init.trueSettings.get('Reduced Movements'))
+		{
+			var fixedHealthDrain = healthDrain * Math.max(storyDifficulty / (Math.PI / 2), 1);
+			var fixedHealthDrainCap = healthDrainCap / Math.max(storyDifficulty, 1);
+
+			switch (CoolUtil.spaceToDash(curSong.toLowerCase()))
+			{
+				case 'amen-breaks':
+				{
+					if (storyDifficulty > 0 && health > fixedHealthDrainCap) health = Math.max(health - (fixedHealthDrain / 2), fixedHealthDrainCap);
+					FlxG.camera.shake(1 / 240, .1);
+				};
+				case 'slapfight':
+				{
+					if (storyDifficulty > 0 && health > fixedHealthDrainCap) health = Math.max(health - fixedHealthDrain, fixedHealthDrainCap);
+					if (!boyfriend.animation.curAnim.name.startsWith('sing')) boyfriend.playAnim('scared', true);
+
+					FlxG.camera.shake(1 / 120, .2);
+					gf.playAnim('scared', true);
+				};
+				case 'true-finale':
+				{
+					if (storyDifficulty > 0 && health < (fixedHealthDrainCap * 3)) health = Math.min(health + (fixedHealthDrain / (storyDifficulty * 2)), fixedHealthDrainCap * 3);
+					if (!boyfriend.animation.curAnim.name.startsWith('sing')) boyfriend.playAnim('scared', true);
+
+					FlxG.camera.shake(1 / 90, .2);
+					gf.playAnim('scared', true);
+				};
+
+				case 'test-place': FlxG.camera.angle = (Math.PI / 2) * (FlxG.camera.angle != 0 ? -(Math.abs(FlxG.camera.angle) / FlxG.camera.angle) : 1);
+			}
+		}
+	}
+
 	function noteCalls()
 	{
 		// (control stuffs don't go here they go in noteControls(), I just have them here so I don't call them every. single. time. noteControls() is called)
@@ -811,8 +855,7 @@ class PlayState extends MusicBeatState
 		}
 	}
 
-	function controlPlayer(character:Character, autoplay:Bool, characterStrums:Strumline, holdControls:Array<Bool>, pressControls:Array<Bool>,
-			releaseControls:Array<Bool>)
+	function controlPlayer(character:Character, autoplay:Bool, characterStrums:Strumline, holdControls:Array<Bool>, pressControls:Array<Bool>, releaseControls:Array<Bool>)
 	{
 		if (!autoplay)
 		{
@@ -910,6 +953,8 @@ class PlayState extends MusicBeatState
 			vocals.volume = 1;
 
 			characterPlayAnimation(coolNote, character);
+
+			if (!character.isPlayer) doEffects(character);
 			if (characterStrums.receptors.members[coolNote.noteData] != null)
 				characterStrums.receptors.members[coolNote.noteData].playAnim('confirm', true);
 
@@ -1006,47 +1051,6 @@ class PlayState extends MusicBeatState
 
 		character.playAnim(stringArrow, true);
 		character.holdTimer = 0;
-		// do some effects
-		if (!character.isPlayer)
-		{
-			switch (character.curCharacter)
-			{
-				case 'teeb':
-				{
-					if (!Init.trueSettings.get('Reduced Movements'))
-					{
-						var fixedHealthDrain = healthDrain * Math.max(storyDifficulty / (Math.PI / 2), 1);
-						var fixedHealthDrainCap = healthDrainCap / Math.max(storyDifficulty, 1);
-
-						switch (CoolUtil.spaceToDash(curSong.toLowerCase()))
-						{
-							case 'amen-breaks':
-							{
-								if (storyDifficulty > 0 && health > fixedHealthDrainCap)
-									health = Math.max(health - (fixedHealthDrain / 2), fixedHealthDrainCap);
-								FlxG.camera.shake(1 / 240, .1);
-							};
-							case 'slapfight':
-							{
-								if (storyDifficulty > 0 && health > fixedHealthDrainCap) health = Math.max(health - fixedHealthDrain, fixedHealthDrainCap);
-								if (!boyfriend.animation.curAnim.name.startsWith('sing')) boyfriend.playAnim('scared', true);
-
-								FlxG.camera.shake(1 / 120, .2);
-								gf.playAnim('scared', true);
-							};
-							case 'true-finale':
-							{
-								if (storyDifficulty > 0 && health < (fixedHealthDrainCap * 3)) health = Math.min(health + (fixedHealthDrain / (storyDifficulty * 2)), fixedHealthDrainCap * 3);
-								if (!boyfriend.animation.curAnim.name.startsWith('sing')) boyfriend.playAnim('scared', true);
-
-								FlxG.camera.shake(1 / 90, .2);
-								gf.playAnim('scared', true);
-							};
-						}
-					}
-				}
-			}
-		}
 	}
 
 	private function strumCallsAuto(cStrum:UIStaticArrow, ?callType:Int = 1, ?daNote:Note):Void
@@ -1646,6 +1650,7 @@ class PlayState extends MusicBeatState
 	{
 		if (paused)
 		{
+			resetEffects();
 			// trace('null song');
 			if (songMusic != null)
 			{
@@ -1669,6 +1674,7 @@ class PlayState extends MusicBeatState
 	{
 		if (paused)
 		{
+			resetEffects();
 			if (songMusic != null && !startingSong)
 				resyncShit();
 
