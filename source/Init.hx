@@ -49,6 +49,12 @@ class Init extends FlxState
 			'Whether to have the strumline vertically flipped in gameplay.',
 			NOT_FORCED
 		],
+		'Resetting Enabled' => [
+			false,
+			Checkmark,
+			'When enabled, if you press the Reset button, you will die immediately.',
+			NOT_FORCED
+		],
 		'Auto Pause' => [true, Checkmark, '', NOT_FORCED],
 		'FPS Counter' => [false, Checkmark, 'Whether to display the FPS counter.', NOT_FORCED],
 		'Memory Counter' => [
@@ -156,7 +162,8 @@ class Init extends FlxState
 		'ACCEPT' => [[FlxKey.SPACE, Z, FlxKey.ENTER], 4],
 		'BACK' => [[FlxKey.BACKSPACE, X, FlxKey.ESCAPE], 5],
 		'PAUSE' => [[FlxKey.ENTER, P], 6],
-		'RESET' => [[R, null], 7]
+		'RESET' => [[R, null], 7],
+		'DODGE' => [[FlxKey.SPACE, null], 8]
 	];
 
 	public static var filters:Array<BitmapFilter> = []; // the filters the game has active

@@ -181,7 +181,7 @@ class CustomTitlescreen extends MusicBeatState
 
 		FlxTween.color(backdrop, 1, backdrop.color, FlxColor.BLACK);
 
-		var pressedEnter:Bool = FlxG.keys.justPressed.ENTER;
+		var pressedEnter:Bool = controls.ACCEPT;
 		var gamepad:FlxGamepad = FlxG.gamepads.lastActive;
 
 		if (gamepad != null)

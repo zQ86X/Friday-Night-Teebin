@@ -48,10 +48,7 @@ class GameOverSubstate extends MusicBeatSubState
 		add(camFollow);
 
 		// literally why the fuck do i have to do this lol - z
-		var loss = new FlxSound().loadEmbedded(Paths.sound('fnf_loss_sfx$stageSuffix'));
-		loss.play();
-
-		//FlxG.sound.play(Paths.sound('fnf_loss_sfx$stageSuffix'));
+		new FlxSound().loadEmbedded(Paths.sound('fnf_loss_sfx$stageSuffix'), false, true).play(true);
 		Conductor.changeBPM(100);
 
 		// FlxG.camera.followLerp = 1;

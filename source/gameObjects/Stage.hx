@@ -78,7 +78,7 @@ class Stage extends FlxTypedGroup<FlxBasic>
 				case 'thorns': 'schoolEvil';
 				case 'magic-hands' | 'amen-breaks' | 'slapfight' | 'true-finale': 'teeb';
 				case 'saturday-swaggin' | 'cool-transition' | 'rap-battle': 'swagster';
-				case 'copycat' | 'test-place': 'jcom';
+				case 'copycat' | 'test-place' | 'rigged': 'jcom';
 
 				default: 'stage';
 			}

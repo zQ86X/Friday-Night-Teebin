@@ -106,9 +106,7 @@ class OptionsSubstate extends MusicBeatSubState
 
 		var arrayTemp:Array<String> = [];
 		// re-sort everything according to the list numbers
-		for (controlString in Init.gameControls.keys())
-			arrayTemp[Init.gameControls.get(controlString)[1]] = controlString;
-
+		for (controlString in Init.gameControls.keys()) arrayTemp[Init.gameControls.get(controlString)[1]] = controlString;
 		arrayTemp.push("EDIT OFFSET"); // append edit offset to the end of the array
 
 		for (i in 0...arrayTemp.length)
@@ -301,7 +299,7 @@ class OptionsSubstate extends MusicBeatSubState
 		Init.saveSettings(); // for offset
 		super.close();
 	}
-	
+
 	private var submenu:FlxSprite;
 
 	private function openSubmenu()
@@ -331,7 +329,7 @@ class OptionsSubstate extends MusicBeatSubState
 		if (curSelection != keyOptions.length - 1)
 		{
 			// be able to close the submenu
-			if (FlxG.keys.justPressed.ESCAPE)
+			if (controls.CHEAT)
 				closeSubmenu();
 			else if (FlxG.keys.justPressed.ANY)
 			{
@@ -374,18 +372,18 @@ class OptionsSubstate extends MusicBeatSubState
 		}
 		else
 		{
-			if (FlxG.keys.justPressed.ENTER)
+			if (controls.ACCEPT)
 			{
 				Init.trueSettings['Offset'] = offsetTemp;
 				closeSubmenu();
 			}
-			else if (FlxG.keys.justPressed.ESCAPE)
+			else if (controls.BACK)
 				closeSubmenu();
 
 			var move = 0;
-			if (FlxG.keys.pressed.LEFT)
+			if (controls.LEFT)
 				move = -1;
-			else if (FlxG.keys.pressed.RIGHT)
+			else if (controls.RIGHT)
 				move = 1;
 
 			offsetTemp += move * 0.1;

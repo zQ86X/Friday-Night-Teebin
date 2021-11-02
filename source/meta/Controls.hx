@@ -22,9 +22,9 @@ import flixel.input.keyboard.FlxKey;
 import flixel.input.keyboard.FlxKey;
 
 /*
-	Controls are, quite obviously, part of the backbone and structure of the project, and are 
-	about as important, if not more important, as anything in the meta filesystem. After all, 
-	controls *do* make a game, well, a game! As of right now, this is using the default input system 
+	Controls are, quite obviously, part of the backbone and structure of the project, and are
+	about as important, if not more important, as anything in the meta filesystem. After all,
+	controls *do* make a game, well, a game! As of right now, this is using the default input system
 	from the base game, but soon I'll most likely make it so that you are able to rebind your controls.
  */
 // side note, original code looks way too heavily documented and professional to be ninjamuffin
@@ -50,6 +50,7 @@ enum abstract Action(String) to String from String
 	var BACK = "back";
 	var PAUSE = "pause";
 	var RESET = "reset";
+	var DODGE = "dodge";
 	var CHEAT = "cheat";
 }
 #else
@@ -72,6 +73,7 @@ abstract Action(String) to String from String
 	var BACK = "back";
 	var PAUSE = "pause";
 	var RESET = "reset";
+	var DODGE = "dodge";
 	var CHEAT = "cheat";
 }
 #end
@@ -97,6 +99,7 @@ enum Control
 	ACCEPT;
 	BACK;
 	PAUSE;
+	DODGE;
 	CHEAT;
 }
 
@@ -130,6 +133,7 @@ class Controls extends FlxActionSet
 	var _back = new FlxActionDigital(Action.BACK);
 	var _pause = new FlxActionDigital(Action.PAUSE);
 	var _reset = new FlxActionDigital(Action.RESET);
+	var _dodge = new FlxActionDigital(Action.DODGE);
 	var _cheat = new FlxActionDigital(Action.CHEAT);
 
 	#if (haxe >= "4.0.0")
@@ -221,6 +225,11 @@ class Controls extends FlxActionSet
 	inline function get_RESET()
 		return _reset.check();
 
+	public var DODGE(get, never):Bool;
+
+	inline function get_DODGE()
+		return _dodge.check();
+
 	public var CHEAT(get, never):Bool;
 
 	inline function get_CHEAT()
@@ -247,6 +256,7 @@ class Controls extends FlxActionSet
 		add(_back);
 		add(_pause);
 		add(_reset);
+		add(_dodge);
 		add(_cheat);
 
 		for (action in digitalActions)
@@ -275,6 +285,7 @@ class Controls extends FlxActionSet
 		add(_back);
 		add(_pause);
 		add(_reset);
+		add(_dodge);
 		add(_cheat);
 
 		for (action in digitalActions)
@@ -329,6 +340,7 @@ class Controls extends FlxActionSet
 			case BACK: _back;
 			case PAUSE: _pause;
 			case RESET: _reset;
+			case DODGE: _dodge;
 			case CHEAT: _cheat;
 		}
 	}
@@ -373,6 +385,8 @@ class Controls extends FlxActionSet
 				func(_pause, JUST_PRESSED);
 			case RESET:
 				func(_reset, JUST_PRESSED);
+			case DODGE:
+				func(_dodge, JUST_PRESSED);
 			case CHEAT:
 				func(_cheat, JUST_PRESSED);
 		}
@@ -529,8 +543,9 @@ class Controls extends FlxActionSet
 		]);
 		inline bindKeys(Control.PAUSE, [Init.gameControls.get('PAUSE')[0][0], Init.gameControls.get('PAUSE')[0][1]]);
 		inline bindKeys(Control.RESET, [Init.gameControls.get('RESET')[0][0], Init.gameControls.get('RESET')[0][1]]);
+		inline bindKeys(Control.DODGE, [Init.gameControls.get('DODGE')[0][0], Init.gameControls.get('DODGE')[0][1]]);
 
-		/* 
+		/*
 			#if (haxe >= "4.0.0")
 			switch (scheme)
 			{
@@ -668,7 +683,8 @@ class Controls extends FlxActionSet
 			Control.LEFT => [DPAD_LEFT, LEFT_STICK_DIGITAL_LEFT],
 			Control.RIGHT => [DPAD_RIGHT, LEFT_STICK_DIGITAL_RIGHT],
 			Control.PAUSE => [START],
-			Control.RESET => [Y]
+			Control.RESET => [Y],
+			Control.DODGE => [RIGHT_TRIGGER_BUTTON]
 		]);
 		#else
 		addGamepadLiteral(id, [
@@ -682,6 +698,7 @@ class Controls extends FlxActionSet
 			Control.PAUSE => [START],
 			// Swap Y and X for switch
 			Control.RESET => [Y],
+			Control.DODGE => [RIGHT_TRIGGER_BUTTON],
 			Control.CHEAT => [X]
 		]);
 		#end
