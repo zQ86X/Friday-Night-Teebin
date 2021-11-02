@@ -1705,54 +1705,53 @@ class PlayState extends MusicBeatState
 			}
 			case 'rigged':
 			{
-				switch (curBeat)
+				if (storyDifficulty > 0)
 				{
-					// all beats where you have to dodge
-					// kind of hardcoded but fuck it
-					case 28 | 124 | 140 | 156 | 184 | 188 | 200 | 204 | 220 | 232 | 236 | 248 | 252 | 268 | 284 | 300 | 332:
+					switch (curBeat)
 					{
-						var doFlash = reducedMovements ? doFlashReduced : doFlashUnreduced;
-						var updateTime:Float = (Conductor.stepCrochet * 4 / 1000) / switch(curBeat)
+						// all beats where you have to dodge
+						// kind of hardcoded but fuck it
+						case 28 | 124 | 140 | 156 | 184 | 188 | 200 | 204 | 220 | 232 | 236 | 248 | 252 | 268 | 284 | 300 | 332:
 						{
-							case 332: 2;
-							default: 1;
-						};
-						var loops:Int = switch(curBeat)
-						{
-							case 332: 8;
-							default: 3;
-						}
-						doFlash(true, updateTime, loops);
-						managers.push(new FlxTimer().start(
-							updateTime,
-							function(tmr:FlxTimer)
+							var doFlash = reducedMovements ? doFlashReduced : doFlashUnreduced;
+							var updateTime:Float = (Conductor.stepCrochet * 4 / 1000) / switch (curBeat)
+							{
+								case 332: 2;
+								default: 1;
+							};
+							var loops:Int = switch (curBeat)
+							{
+								case 332: 8;
+								default: 3;
+							}
+							doFlash(true, updateTime, loops);
+							managers.push(new FlxTimer().start(updateTime, function(tmr:FlxTimer)
 							{
 								if (tmr.finished)
 								{
 									spaceText.visible = false;
 									managers.push(new FlxTimer().start(dodgeTime / 2, function(tmr:FlxTimer)
+									{
+										if (!dodging)
 										{
-											if (!dodging)
-											{
-												health -= (1 / 2) * storyDifficulty;
-												missNoteCheck(true, 0, boyfriend, false, true);
+											health -= (1 / 2) * storyDifficulty;
+											missNoteCheck(true, 0, boyfriend, false, true);
 
-												FlxG.camera.shake(1 / 60, 1 / 10);
-												FlxG.sound.play(Paths.sound('attack'), .4);
+											FlxG.camera.shake(1 / 60, 1 / 10);
+											FlxG.sound.play(Paths.sound('attack'), .4);
 
-												trace('didnt dodge, damage player');
-											}
-											cleanupManager(tmr);
+											trace('didnt dodge, damage player');
 										}
-									));
+										cleanupManager(tmr);
+									}));
 
 									FlxG.sound.play(Paths.sound('attack'), .4);
 									cleanupManager(tmr);
 								}
-								else doFlash(false, updateTime, tmr.loopsLeft);
-							},
-							loops
-						));
+								else
+									doFlash(false, updateTime, tmr.loopsLeft);
+							}, loops));
+						}
 					}
 				}
 			}
