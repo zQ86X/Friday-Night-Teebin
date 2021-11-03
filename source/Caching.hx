@@ -45,13 +45,18 @@ class Caching extends FNFUIState
 	var toBeDone:Int = 0;
 	var done:Int = 0;
 
+	var curItem:String;
+
 	var time:FlxText;
 	var text:FlxText;
 
 	var sprite:FNFSprite;
 	var speed:Float = Math.PI + (Math.PI / 2);
-	// to prevent players from getting stuck on loading
+	// to prevent players from hanging on the load screen
 	var timeout:Float = 30;
+
+	var maxThreads:Int = 4;
+	var threads:Int = 0;
 
 	var dance:Float = 60 / 82;
 	var bop:Float = 0;
@@ -107,6 +112,9 @@ class Caching extends FNFUIState
 		if (time != null) time.destroy();
 		if (text != null) text.destroy();
 
+		curItem = null;
+		threads = 0;
+
 		debounce = 0;
 		delta = 0;
 
@@ -154,6 +162,9 @@ class Caching extends FNFUIState
 			toBeDone += count;
 			trace('pushed $count items to the array');
 		}
+		#else
+		loaded = true;
+		Main.switchState(this, new Init());
 		#end
 
 		FlxG.sound.playMusic(Paths.music("loading"), .5);
@@ -170,21 +181,26 @@ class Caching extends FNFUIState
 		if (!loaded && toBeDone > 0)
 		{
 			delta += elapsed;
-			if (delta >= delay && delta >= debounce)
+			if (delta >= delay && delta >= debounce && threads < maxThreads)
 			{
 				debounce = delta + cooldown;
 				// get each queue and call their functions
 				for (queue in queues.keys())
 				{
+					// make sure the thread limit isn't exceeded
+					if (threads >= maxThreads) break;
+
 					var job = queues.get(queue);
 					if (queue.length > 0)
 					{
 						var item:String = queue[0];
-						queue.remove(item);
 
-						trace('caching item $item');
+						queue.remove(item);
+						curItem = item;
+
+						trace('caching item $item (threads going to reach ${threads + 1}, limit is $maxThreads)');
 						#if cpp
-						sys.thread.Thread.create(() -> { job(item); done++; });
+						sys.thread.Thread.create(() -> { threads++; job(item); done++; threads--; });
 						#else
 						job(item);
 						done++;
@@ -228,7 +244,9 @@ class Caching extends FNFUIState
 					var sine:Float = Math.sin(((delta * speed) + Math.PI) % (Math.PI * 2));
 					var difference:Int = Math.floor(timeout - delta);
 
-					time.text = '${difference} second${difference == 1 ? "" : "s"} until skip';
+					var fmt = curItem != null ? '\n$curItem' : "";
+
+					time.text = '${difference} second${difference == 1 ? "" : "s"} until skip$fmt';
 					text.text = '$done/$toBeDone Loaded';
 
 					text.alpha = Math.abs(sine);

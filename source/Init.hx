@@ -199,32 +199,35 @@ class Init extends FlxState
 	];
 	override public function create():Void
 	{
-		FlxG.save.bind('foreverengine-options');
-		Highscore.load();
-
-		loadSettings();
-		loadControls();
-
-		#if !html5
-		Main.updateFramerate(trueSettings.get("Framerate Cap"));
-		#end
-
-		// apply saved filters
-		FlxG.game.setFilters(filters);
-
-		// Some additional changes to default HaxeFlixel settings, both for ease of debugging and usability.
-		FlxG.fixedTimestep = false; // This ensures that the game is not tied to the FPS
-		FlxG.mouse.useSystemCursor = true; // Use system cursor because it's prettier
-		FlxG.mouse.visible = false; // Hide mouse on start
-
-		// Main.switchState(this, new TestState());
 		trace('init state');
-		#if cpp
-		if (Caching.loaded) gotoTitleScreen();
-		else Main.switchState(this, new Caching());
-		#else
-		gotoTitleScreen();
-		#end
+		var continueToTitle:Bool = true;
+		if (!Caching.loaded)
+		{
+			// put the save data initialization stuff in here, so that it isn't overridden the next time the game is booted
+			continueToTitle = false;
+
+			FlxG.save.bind('foreverengine-options');
+			Highscore.load();
+
+			loadSettings();
+			loadControls();
+
+			#if !html5
+			Main.updateFramerate(trueSettings.get("Framerate Cap"));
+			#end
+
+			// apply saved filters
+			FlxG.game.setFilters(filters);
+
+			// Some additional changes to default HaxeFlixel settings, both for ease of debugging and usability.
+			FlxG.fixedTimestep = false; // This ensures that the game is not tied to the FPS
+			FlxG.mouse.useSystemCursor = true; // Use system cursor because it's prettier
+			FlxG.mouse.visible = false; // Hide mouse on start
+
+			// Main.switchState(this, new TestState());
+			Main.switchState(this, new Caching());
+		}
+		if (continueToTitle) gotoTitleScreen();
 	}
 
 	private function gotoTitleScreen()
