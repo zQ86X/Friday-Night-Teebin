@@ -197,7 +197,6 @@ class Init extends FlxState
 			{filter: new ColorMatrixFilter(matrix)}
 		}
 	];
-
 	override public function create():Void
 	{
 		FlxG.save.bind('foreverengine-options');
@@ -219,15 +218,19 @@ class Init extends FlxState
 		FlxG.mouse.visible = false; // Hide mouse on start
 
 		// Main.switchState(this, new TestState());
+		trace('init state');
+		#if cpp
+		if (Caching.loaded) gotoTitleScreen();
+		else Main.switchState(this, new Caching());
+		#else
 		gotoTitleScreen();
+		#end
 	}
 
 	private function gotoTitleScreen()
 	{
-		if (trueSettings.get("Custom Titlescreen"))
-			Main.switchState(this, new CustomTitlescreen());
-		else
-			Main.switchState(this, new TitleState());
+		if (trueSettings.get("Custom Titlescreen")) Main.switchState(this, new CustomTitlescreen());
+		else Main.switchState(this, new TitleState());
 	}
 
 	public static function loadSettings():Void

@@ -3,7 +3,7 @@
 
 	<!-- _________________________ Application Settings _________________________ -->
 
-	<app title="V.S. Teeb" file="Teebin" packageName="com.ninjamuffin99.funkin" package="com.ninjamuffin99.funkin" main="Main" version="0.2.7.1" company="ninjamuffin99" />
+	<app title="V.S. Teeb" file="Teebin" packageName="com.ninjamuffin99.funkin" package="com.ninjamuffin99.funkin" main="Main" version="0.2.7.1" company="teebiscuit" />
 
 	<!--The flixel preloader is not accurate in Chrome. You can use it regularly if you embed the swf into a html file
 		or you can set the actual size of your file manually at "FlxPreloaderBase-onUpdate-bytesTotal"-->
@@ -32,6 +32,9 @@
 	<source path="source" />
 	<assets path="assets" />
 	<assets path="FE-CrashDialog.exe" type="template" if="windows release" />
+
+	<library name="images" preload="true" />
+	<library name="songs" preload="true" />
 	<!--<assets path="mods" />-->
 
 	<!-- _______________________________ Libraries ______________________________ -->

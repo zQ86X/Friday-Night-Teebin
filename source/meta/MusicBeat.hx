@@ -21,7 +21,7 @@ class MusicBeatState extends FNFUIState
 {
 	// original variables extended from original game source
 	// (z note) for some reason lastBeat wasnt used nor was lastStep, so i removed lastStep and used lastBeat for beat shit
-	// because it fucked with slapfight's ending cutscene (camera zoomed out twice)
+	// because it fucked with certain beat events and caused them to play twice
 	private var lastBeat:Int = 0;
 
 	public var curStep:Int = 0;
@@ -36,25 +36,16 @@ class MusicBeatState extends FNFUIState
 	override function create()
 	{
 		// dump the cache if you're going elsewhere
-		if (Main.lastState != this)
-			Main.dumpCache();
-
-		if (transIn != null)
-			trace('reg ' + transIn.region);
+		if (Main.lastState != this) Main.dumpCache();
+		if (transIn != null) trace('reg ' + transIn.region);
 
 		super.create();
-
-		// For debugging
-		FlxG.watch.add(Conductor, "songPosition");
-		FlxG.watch.add(this, "curBeat");
-		FlxG.watch.add(this, "curStep");
 	}
 
 	// class 'step' event
 	override function update(elapsed:Float)
 	{
 		updateContents();
-
 		super.update(elapsed);
 	}
 
@@ -66,15 +57,10 @@ class MusicBeatState extends FNFUIState
 		updateCurStep();
 		updateBeat();
 
-		if (oldStep != curStep && curStep > 0)
-			stepHit();
+		if (oldStep != curStep && curStep > 0) stepHit();
 	}
 
-	public function updateBeat():Void
-	{
-		curBeat = Math.floor(curStep / 4);
-	}
-
+	public function updateBeat():Void { curBeat = Math.floor(curStep / 4); }
 	public function updateCurStep():Void
 	{
 		var lastChange:BPMChangeEvent = {
@@ -82,18 +68,14 @@ class MusicBeatState extends FNFUIState
 			songTime: 0,
 			bpm: 0
 		}
-		for (i in 0...Conductor.bpmChangeMap.length)
-		{
-			if (Conductor.songPosition >= Conductor.bpmChangeMap[i].songTime)
-				lastChange = Conductor.bpmChangeMap[i];
-		}
 
+		for (i in 0...Conductor.bpmChangeMap.length) { if (Conductor.songPosition >= Conductor.bpmChangeMap[i].songTime) lastChange = Conductor.bpmChangeMap[i]; }
 		curStep = lastChange.stepTime + Math.floor((Conductor.songPosition - lastChange.songTime) / Conductor.stepCrochet);
 	}
 
 	public function stepHit():Void
 	{
-		if (curStep % 4 == 0 && lastBeat != curBeat)
+		if (curStep % 4 == 0 && lastBeat != curBeat && curBeat > 0)
 		{
 			beatHit();
 			lastBeat = curBeat;
@@ -130,9 +112,7 @@ class MusicBeatSubState extends FlxSubState
 		updateCurStep();
 		curBeat = Math.floor(curStep / 4);
 
-		if (oldStep != curStep && curStep > 0)
-			stepHit();
-
+		if (oldStep != curStep && curStep > 0) stepHit();
 		super.update(elapsed);
 	}
 
@@ -143,18 +123,14 @@ class MusicBeatSubState extends FlxSubState
 			songTime: 0,
 			bpm: 0
 		}
-		for (i in 0...Conductor.bpmChangeMap.length)
-		{
-			if (Conductor.songPosition > Conductor.bpmChangeMap[i].songTime)
-				lastChange = Conductor.bpmChangeMap[i];
-		}
 
+		for (i in 0...Conductor.bpmChangeMap.length) { if (Conductor.songPosition > Conductor.bpmChangeMap[i].songTime) lastChange = Conductor.bpmChangeMap[i]; }
 		curStep = lastChange.stepTime + Math.floor((Conductor.songPosition - lastChange.songTime) / Conductor.stepCrochet);
 	}
 
 	public function stepHit():Void
 	{
-		if (curStep % 4 == 0 && lastBeat != curBeat)
+		if (curStep % 4 == 0 && lastBeat != curBeat && curBeat > 0)
 		{
 			beatHit();
 			lastBeat = curBeat;
