@@ -171,6 +171,7 @@ class PlayState extends MusicBeatState
 	private var dodgeTime:Float = 1 / 4;
 	private var dodging:Bool = false;
 
+	private var canDodge:Bool = false;
 	private var flicker:Int = 1;
 
 	private var spaceManager:Dynamic;
@@ -666,36 +667,39 @@ class PlayState extends MusicBeatState
 				}
 				case 'rigged':
 				{
-					// enable dodging
 					resetEffects();
-					if (controls.DODGE && !dodging)
+					if (canDodge)
 					{
-						dodging = true;
-						// flickering effect
+						// get dodge keypress and shit
+						if (controls.DODGE && !dodging)
+						{
+							dodging = true;
+							// flickering effect
 
-						boyfriend.alpha = .5;
-						managers.push(new FlxTimer().start(
-							dodgeTime / flicker / 2,
-							function(tmr:FlxTimer)
-							{
-								var loops:Int = tmr.loopsLeft + 1;
-								var finished:Bool = tmr.finished;
+							boyfriend.alpha = .5;
+							managers.push(new FlxTimer().start(
+								dodgeTime / flicker / 2,
+								function(tmr:FlxTimer)
+								{
+									var loops:Int = tmr.loopsLeft + 1;
+									var finished:Bool = tmr.finished;
 
-								boyfriend.alpha = (finished || (loops % 2) > 0) ? 1 : .5;
-								if (finished) cleanupManager(tmr);
-							},
-							flicker + 1
-						));
-						managers.push(new FlxTimer().start(dodgeTime,
-							function(tmr:FlxTimer)
-							{
-								dodging = false;
-								cleanupManager(tmr);
+									boyfriend.alpha = (finished || (loops % 2) > 0) ? 1 : .5;
+									if (finished) cleanupManager(tmr);
+								},
+								flicker + 1
+							));
+							managers.push(new FlxTimer().start(dodgeTime,
+								function(tmr:FlxTimer)
+								{
+									dodging = false;
+									cleanupManager(tmr);
 
-								trace('dodge done');
-							}
-						));
-						trace('dodge');
+									trace('dodge done');
+								}
+							));
+							trace('dodge');
+						}
 					}
 				}
 				case 'test place': {} // sink because the camera moves
@@ -1459,8 +1463,11 @@ class PlayState extends MusicBeatState
 		{
 			resyncShit();
 
+			var lowercaseSong = curSong.toLowerCase();
 			var songComplete = endSong;
-			switch (curSong.toLowerCase())
+
+			canDodge = (lowercaseSong == 'rigged') && storyDifficulty > 0;
+			switch (lowercaseSong)
 			{
 				case 'slapfight':
 				{
@@ -1625,7 +1632,7 @@ class PlayState extends MusicBeatState
 		}
 	}
 
-	private function mainDoFlash(first:Bool, delay:Float, count:Int)
+	private function mainDoFlash(first:Bool, delay:Float, count:Int, reduced:Bool = false)
 	{
 		var loops:Int = Std.int(Main.framerate * delay);
 
@@ -1643,23 +1650,26 @@ class PlayState extends MusicBeatState
 		spaceText.visible = true;
 		spaceText.alpha = alpha;
 
-		if (spaceManager != null) cleanupManager(spaceManager);
-		spaceManager = new FlxTimer().start(1 / Main.framerate, function(tmr:FlxTimer)
+		if (spaceManager != null) cleanupManager(spaceManager, true);
+		if (!reduced)
 		{
-			var elapsed:Float = tmr.elapsedTime / delay;
+			spaceManager = new FlxTimer().start(1 / Main.framerate, function(tmr:FlxTimer)
+			{
+				var elapsed:Float = tmr.elapsedTime / delay;
 
-			alpha -= elapsed * 2;
-			size -= elapsed * 20;
+				alpha -= elapsed * 2;
+				size -= elapsed * 20;
 
-			spaceText.size = Std.int(size);
-			spaceText.alpha = alpha;
+				spaceText.size = Std.int(size);
+				spaceText.alpha = alpha;
 
-			spaceText.updateHitbox();
-			spaceText.screenCenter();
+				spaceText.updateHitbox();
+				spaceText.screenCenter();
 
-			if (tmr.finished) cleanupManager(tmr);
-		}, loops);
-		managers.push(spaceManager);
+				if (tmr.finished) cleanupManager(tmr);
+			}, loops);
+			managers.push(spaceManager);
+		}
 		FlxG.sound.play(Paths.sound('alert${first ? 1 : 2}'), .4);
 	}
 
@@ -1670,8 +1680,24 @@ class PlayState extends MusicBeatState
 	}
 	private function doFlashReduced(first:Bool, delay:Float, count:Int)
 	{
-		mainDoFlash(first, delay, count);
-		FlxG.camera.fade(FlxColor.fromRGB(255, 0, 0, 50), .5, false, null, true);
+		mainDoFlash(first, delay, count, true);
+		FlxG.camera.flash(FlxColor.fromRGB(255, 0, 0, 50), Math.POSITIVE_INFINITY, null, true);
+	}
+
+	private function cleanupFlashMain()
+	{
+		if (spaceManager != null) cleanupManager(spaceManager, true);
+		spaceText.visible = false;
+	}
+	private function cleanupFlashUnreduced()
+	{
+		cleanupFlashMain();
+		FlxG.camera.flash(FlxColor.TRANSPARENT, 0, null, true);
+	}
+	private function cleanupFlashReduced()
+	{
+		cleanupFlashMain();
+		FlxG.camera.flash(FlxColor.TRANSPARENT, 0, null, true);
 	}
 
 	override function beatHit()
@@ -1696,9 +1722,13 @@ class PlayState extends MusicBeatState
 						defaultCamZoom -= .5;
 						stageBuild.fuckingDie();
 
-						if (dadOpponent.curCharacter.toLowerCase().startsWith('teeb')) dadOpponent.playAnim('hey', true);
-						lastCamera.flash();
+						if (dadOpponent.curCharacter.toLowerCase().startsWith('teeb'))
+						{
+							dadOpponent.animation.stop();
+							dadOpponent.playAnim('hey', true);
+						}
 
+						lastCamera.flash();
 						FlxTween.tween(dadOpponent, { alpha: 0 }, 2, { ease: FlxEase.linear });
 					};
 				}
@@ -1713,15 +1743,13 @@ class PlayState extends MusicBeatState
 						// kind of hardcoded but fuck it
 						case 28 | 124 | 140 | 156 | 184 | 188 | 200 | 204 | 220 | 232 | 236 | 248 | 252 | 268 | 284 | 300 | 332:
 						{
+							var cleanupFlash = reducedMovements ? cleanupFlashReduced : cleanupFlashUnreduced;
 							var doFlash = reducedMovements ? doFlashReduced : doFlashUnreduced;
-							var updateTime:Float = (Conductor.stepCrochet * 4 / 1000) / switch (curBeat)
-							{
-								case 332: 2;
-								default: 1;
-							};
+
+							var updateTime:Float = Conductor.stepCrochet * 4 / 1000;
 							var loops:Int = switch (curBeat)
 							{
-								case 332: 8;
+								case 332: 4;
 								default: 3;
 							}
 							doFlash(true, updateTime, loops);
@@ -1729,7 +1757,7 @@ class PlayState extends MusicBeatState
 							{
 								if (tmr.finished)
 								{
-									spaceText.visible = false;
+									cleanupFlash();
 									managers.push(new FlxTimer().start(dodgeTime / 2, function(tmr:FlxTimer)
 									{
 										if (!dodging)
@@ -1748,8 +1776,7 @@ class PlayState extends MusicBeatState
 									FlxG.sound.play(Paths.sound('attack'), .4);
 									cleanupManager(tmr);
 								}
-								else
-									doFlash(false, updateTime, tmr.loopsLeft);
+								else doFlash(false, updateTime, tmr.loopsLeft);
 							}, loops));
 						}
 					}
