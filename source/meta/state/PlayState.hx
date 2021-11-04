@@ -1720,7 +1720,7 @@ class PlayState extends MusicBeatState
 					case 208:
 					{
 						defaultCamZoom -= .5;
-						stageBuild.fuckingDie();
+						FlxG.sound.play(Paths.sound("Vine_Boom"));
 
 						if (dadOpponent.curCharacter.toLowerCase().startsWith('teeb'))
 						{

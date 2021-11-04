@@ -35,8 +35,6 @@ class Stage extends FlxTypedGroup<FlxBasic>
 	var phillyTrain:FNFSprite;
 	var trainSound:FlxSound;
 
-	var boomSound:FlxSound;
-
 	public var crown:FNFSprite;
 
 	public var limo:FNFSprite;
@@ -377,9 +375,6 @@ class Stage extends FlxTypedGroup<FlxBasic>
 				crown.active = false;
 
 				add(crown);
-
-				boomSound = new FlxSound().loadEmbedded(Paths.sound('Vine_Boom'));
-				FlxG.sound.list.add(boomSound);
 			}
 			case 'swagster' | 'jcom':
 			{
@@ -643,11 +638,6 @@ class Stage extends FlxTypedGroup<FlxBasic>
 					}
 				}
 		}
-	}
-	public function fuckingDie()
-	{
-		// vvine bomo sound efect fnumber 54r8jihijkec u8ik,hgjt9ohbjikgr
-		boomSound.play(true);
 	}
 
 	// PHILLY STUFFS!

@@ -33,8 +33,23 @@
 	<assets path="assets" />
 	<assets path="FE-CrashDialog.exe" type="template" if="windows release" />
 
-	<library name="images" preload="true" />
-	<library name="songs" preload="true" />
+	<define name="PRELOAD_ALL" unless="web" />
+	<define name="NO_PRELOAD_ALL" unless="PRELOAD_ALL"/>
+
+	<!-- <define name="PRELOAD_ALL" /> -->
+	<section if="PRELOAD_ALL">
+		<library name="images"   preload="true" />
+		<library name="songs"    preload="true" />
+		<library name="music"   preload="true" />
+		<library name="sound"   preload="true" />
+	</section>
+
+	<section if="NO_PRELOAD_ALL">
+		<library name="images"   preload="false" />
+		<library name="songs"    preload="false" />
+		<library name="music"   preload="true" />
+		<library name="sound"   preload="true" />
+	</section>
 	<!--<assets path="mods" />-->
 
 	<!-- _______________________________ Libraries ______________________________ -->

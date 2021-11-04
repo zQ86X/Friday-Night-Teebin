@@ -1,33 +1,20 @@
-#if sys
 package;
 
+import sys.thread.Thread;
 import lime.app.Application;
-import openfl.display.BitmapData;
-import openfl.utils.Assets;
-import flixel.ui.FlxBar;
-import haxe.Exception;
-import flixel.tweens.FlxEase;
-import flixel.tweens.FlxTween;
-#if cpp
+
 import sys.FileSystem;
 import sys.io.File;
-#end
-import cpp.Function;
+
+import openfl.display.BitmapData;
+import openfl.utils.Assets as OpenFlAssets;
+import flixel.tweens.FlxTween;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxBasic;
-import flixel.addons.transition.FlxTransitionSprite.GraphicTransTileDiamond;
-import flixel.addons.transition.FlxTransitionableState;
-import flixel.addons.transition.TransitionData;
 import flixel.graphics.FlxGraphic;
-import flixel.graphics.frames.FlxAtlasFrames;
 import meta.data.dependency.FNFUIState;
 import meta.data.dependency.FNFSprite;
-import meta.MusicBeat;
-import flixel.math.FlxPoint;
-import flixel.math.FlxRect;
-import flixel.util.FlxColor;
-import flixel.util.FlxTimer;
 import flixel.text.FlxText;
 
 using StringTools;
@@ -37,10 +24,12 @@ class Caching extends FNFUIState
 	public static var bitmapData:Map<String, FlxGraphic>;
 	public static var loaded:Bool = false;
 
-	var images:Array<String> = [];
-	var music:Array<String> = [];
+	private var pathStart:String = 'assets';
 
-	var queues:Map<Array<String>, Dynamic>;
+	var images:Array<Array<String>> = [];
+	var music:Array<Array<String>> = [];
+
+	var queues:Map<Array<Array<String>>, Dynamic>;
 
 	var toBeDone:Int = 0;
 	var done:Int = 0;
@@ -55,18 +44,16 @@ class Caching extends FNFUIState
 	// to prevent players from hanging on the load screen
 	var timeout:Float = 30;
 
-	var maxThreads:Int = 4;
+	var maxThreads:Int = 2;
 	var threads:Int = 0;
 
 	var dance:Float = 60 / 82;
 	var bop:Float = 0;
-
-	var cooldown:Float = 1 / 60;
-	var debounce:Float = 0;
 	// wait for some time before preloading the queue
 	var delay:Float = 1;
 	var delta:Float = 0;
 
+	private function cacheSound(path:String) { if (OpenFlAssets.exists(path)) FlxG.sound.cache(path); }
 	private function recenterText()
 	{
 		text.screenCenter();
@@ -77,51 +64,69 @@ class Caching extends FNFUIState
 	}
 	override function create()
 	{
+		loaded = true;
+
 		FlxG.mouse.visible = false;
 		FlxG.worldBounds.set(0, 0);
-		/*
-		[0] - paths (string or array)
-		[1] - filetypes (string or array)
-		*/
-		var scans:Map<Array<String>, Array<Dynamic>> = [
-			music => [["assets/songs", "assets/music", "assets/sounds"], ["ogg", "mp3"]],
-			images => ["assets/images", "png"]
-		];
-
-		bitmapData = new Map<String, FlxGraphic>();
-		// get the first image in the image queue then cache it, same with songs
-		queues = [
-			images => function(image:String)
-			{
-				var replaced:String = image.replace(".png", "");
-				var path:String = Paths.image('characters/$replaced');//'assets/images/characters/$image';
-
-				var data:BitmapData = BitmapData.fromFile(path);
-				var graphic = FlxGraphic.fromBitmapData(data);
-
-				graphic.persist = true;
-				bitmapData.set(replaced, graphic);
-			},
-			music => function(track:String)
-			{
-				FlxG.sound.cache(Paths.inst(track));
-				FlxG.sound.cache(Paths.voices(track));
-			}
-		];
 
 		if (time != null) time.destroy();
 		if (text != null) text.destroy();
 
-		curItem = null;
-		threads = 0;
+		FlxGraphic.defaultPersist = true;
+		#if !html5
+		loaded = false;
+		/*
+		[0] - paths (string or array)
+		[1] - filetypes (string or array)
+		[2] - check (function)
+		*/
+		var scans:Map<Array<Array<String>>, Array<Dynamic>> = [
+			music => [['$pathStart/songs', '$pathStart/music', '$pathStart/sounds'], ["ogg", "mp3"]],
+			images => ['$pathStart/images', "png", function(path:String):Bool {
+				#if linux
+				return false;
+				#end
+				return OpenFlAssets.exists('$path.xml') || OpenFlAssets.exists('$path.txt');
+			}]
+		];
+		bitmapData = new Map<String, FlxGraphic>();
+		// get the first image in the image queue then cache it, same with songs
+		queues = [
+			images => function(data:Array<String>)
+			{
+				var path:String = data[1];
+				// gets rid of the filetype (always png) and shortens the directory
+				var replaced:String = path.substring(data[3].length + 1, path.length - 4);
 
-		debounce = 0;
+				var data:BitmapData = OpenFlAssets.getBitmapData(path);
+				var graphic:FlxGraphic = FlxGraphic.fromBitmapData(data);
+
+				graphic.destroyOnNoUse = false;
+				graphic.persist = true;
+
+				bitmapData.set(replaced, graphic);
+				trace('added $replaced bitmap data');
+			},
+			music => function(data:Array<String>)
+			{
+				var track:String = data[0];
+
+				cacheSound(Paths.voices(track));
+				cacheSound(Paths.inst(track));
+			}
+		];
+
+		curItem = null;
+
+		threads = 0;
 		delta = 0;
 
 		time = new FlxText();
 		text = new FlxText();
 
 		text.alignment = FlxTextAlign.CENTER;
+
+		text.text = "?/? Loaded";
 		text.size = 32;
 
 		time.size = Std.int(text.size / (Math.PI / 2));
@@ -141,87 +146,95 @@ class Caching extends FNFUIState
 		sprite.playAnim('idle', true);
 		recenterText();
 
-		FlxGraphic.defaultPersist = true;
 		trace("pushing items in arrays to queue");
-		#if cpp
 		for (array in scans.keys())
 		{
 			var data:Array<Dynamic> = scans.get(array);
 
 			var directories = data[0];
 			var fileTypes = data[1];
+			var check = data[2];
 
-			if (Std.isOfType(directories, String)) recurseDirectory(array, directories, fileTypes);
+			if (Std.isOfType(directories, String)) recurseDirectory(array, directories, fileTypes, check, directories);
 			else
 			{
 				var recursive:Array<String> = directories;
-				for (directory in recursive) recurseDirectory(array, directory, fileTypes);
+				for (directory in recursive) recurseDirectory(array, directory, fileTypes, check, directory);
 			}
-			var count:Int = Lambda.count(array);
 
+			var count:Int = Lambda.count(array);
 			toBeDone += count;
-			trace('pushed $count items to the array');
+
+			trace('pushed $count items to the array from $directories');
 		}
-		#else
-		loaded = true;
-		Main.switchState(this, new Init());
-		#end
 
 		FlxG.sound.playMusic(Paths.music("loading"), .5);
 		add(sprite);
 
 		add(time);
 		add(text);
-
+		#else
+		Main.switchState(this, new Init());
+		#end
 		super.create();
 	}
-
+	#if !html5
 	override function update(elapsed:Float)
 	{
 		if (!loaded && toBeDone > 0)
 		{
 			delta += elapsed;
-			if (delta >= delay && delta >= debounce && threads < maxThreads)
+			if (delta >= delay)
 			{
-				debounce = delta + cooldown;
-				// get each queue and call their functions
-				for (queue in queues.keys())
+				while (threads < maxThreads && done < toBeDone)
 				{
-					// make sure the thread limit isn't exceeded
-					if (threads >= maxThreads) break;
-
-					var job = queues.get(queue);
-					if (queue.length > 0)
+					// get each queue and call their functions
+					for (queue in queues.keys())
 					{
-						var item:String = queue[0];
+						var job = queues.get(queue);
+						if (queue.length > 0)
+						{
+							var item:Array<String> = queue[0];
 
-						queue.remove(item);
-						curItem = item;
+							queue.remove(item);
+							curItem = item[1];
 
-						trace('caching item $item (threads going to reach ${threads + 1}, limit is $maxThreads)');
-						#if cpp
-						sys.thread.Thread.create(() -> { threads++; job(item); done++; threads--; });
-						#else
-						job(item);
-						done++;
-						#end
+							trace('caching item $item (thread #${threads + 1})');
+							#if cpp
+							Thread.create(() -> { threads++; job(item); done++; threads--; });
+							#else
+							job(item);
+							done++;
+							#end
+						}
+						// break if max threads reached or all done
+						if (threads >= maxThreads || done >= toBeDone) break;
 					}
 				}
 			}
-			if (done >= toBeDone || elapsed >= timeout)
+
+			var skipPressed:Bool = FlxG.keys.justPressed.ESCAPE;
+			if (done >= toBeDone || delta >= timeout || skipPressed)
 			{
 				loaded = true;
+				if (skipPressed)
+				{
+					if (bitmapData != null) bitmapData.clear();
+					text.text = "Skipped!";
+				}
+				else text.text = '$done/$toBeDone Loaded!';
 				FlxG.sound.music.fadeOut(Math.PI / 2, 0, function(twn:FlxTween)
 				{
+					if (skipPressed) bitmapData = null;
+
 					FlxG.sound.music.stop();
 					Main.switchState(this, new Init());
 
 					twn.destroy();
 				});
-				FlxG.sound.play(Paths.sound("confirmMenu"));
 
+				FlxG.sound.play(Paths.sound("confirmMenu"));
 				time.visible = false;
-				text.text = "Loaded!";
 
 				text.alpha = 1;
 				text.angle = 0;
@@ -246,7 +259,7 @@ class Caching extends FNFUIState
 
 					var fmt = curItem != null ? '\n$curItem' : "";
 
-					time.text = '${difference} second${difference == 1 ? "" : "s"} until skip$fmt';
+					time.text = 'Press Escape or wait ${difference} second${difference == 1 ? "" : "s"} to skip loading$fmt';
 					text.text = '$done/$toBeDone Loaded';
 
 					text.alpha = Math.abs(sine);
@@ -259,36 +272,33 @@ class Caching extends FNFUIState
 		super.update(elapsed);
 	}
 
-	private function recurseDirectory(array:Array<String>, directory:Any, ?fileTypes:Any)
+	private function recurseDirectory(array:Array<Array<String>>, directory:Any, ?fileTypes:Any, ?check:Dynamic, start:String)
 	{
-		//for (file in FileSystem.readDirectory(FileSystem.absolutePath("assets/images/characters"))) { if (file.endsWith(".png")) images.push(file); }
-		//for (file in FileSystem.readDirectory(FileSystem.absolutePath("assets/images/icons"))) { if (file.endsWith(".png")) images.push(file); }
-
-		//for (track in FileSystem.readDirectory(FileSystem.absolutePath("assets/sounds"))) music.push(track);
-		//for (track in FileSystem.readDirectory(FileSystem.absolutePath("assets/music"))) music.push(track);
-		//for (track in FileSystem.readDirectory(FileSystem.absolutePath("assets/songs"))) music.push(track);
 		for (item in FileSystem.readDirectory(FileSystem.absolutePath(directory)))
 		{
 			var path:String = '$directory/$item';
-			if (FileSystem.isDirectory(path)) recurseDirectory(array, path, fileTypes);
+			if (FileSystem.isDirectory(path)) recurseDirectory(array, path, fileTypes, check, start);
 			else
 			{
+				var cut:String = path;
 				if (fileTypes != null)
 				{
-					if (Std.isOfType(fileTypes, String)) { if (!item.endsWith(fileTypes)) continue; }
+					if (Std.isOfType(fileTypes, String)) { if (!item.endsWith(fileTypes)) continue; cut = path.substring(0, path.length - '.$fileTypes'.length); }
 					else
 					{
 						var fileTypeArray:Array<String> = fileTypes;
 						var pass:Bool = true;
 
-						for (fileType in fileTypeArray) { if (item.endsWith(fileType)) { pass = false; break; } }
+						for (fileType in fileTypeArray) { if (item.endsWith(fileType)) { cut = path.substring(0, path.length - '.$fileType'.length); pass = false; break; } }
 						if (pass) continue;
 					}
 				}
-				array.push(item);
+				if (check != null && !check(cut)) continue;
+				array.push([item, path, directory, start]);
 			}
 		}
 	}
+	#end
 	override function add(Object:FlxBasic):FlxBasic
 	{
 		if (Init.trueSettings.get('Disable Antialiasing') && Std.isOfType(Object, FlxSprite))
@@ -296,4 +306,3 @@ class Caching extends FNFUIState
 		return super.add(Object);
 	}
 }
-#end

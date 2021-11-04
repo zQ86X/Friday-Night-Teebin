@@ -5,7 +5,6 @@ import flixel.input.keyboard.FlxKey;
 import meta.CoolUtil;
 import meta.InfoHud;
 import meta.data.Highscore;
-import meta.data.dependency.Discord;
 import meta.state.*;
 import meta.state.charting.*;
 import openfl.filters.BitmapFilter;

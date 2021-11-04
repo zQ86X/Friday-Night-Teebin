@@ -3,6 +3,10 @@ package;
 /*
 	Aw hell yeah! something I can actually work on!
  */
+import flixel.graphics.frames.FlxFramesCollection.FlxFrameCollectionType;
+import openfl.utils.Assets;
+import openfl.display.BitmapData;
+import flixel.graphics.FlxGraphic;
 import flixel.FlxG;
 import flixel.graphics.frames.FlxAtlasFrames;
 import meta.CoolUtil;
@@ -21,17 +25,13 @@ class Paths
 	static var currentLevel:String;
 
 	// set the current level top the condition of this function if called
-	static public function setCurrentLevel(name:String)
-	{
-		currentLevel = name.toLowerCase();
-	}
-
+	static public function setCurrentLevel(name:String) { currentLevel = name.toLowerCase(); }
 	//
 	static function getPath(file:String, type:AssetType, library:Null<String>)
 	{
 		/*
 				Okay so, from what I understand, this loads in the current path based on the level
-				we're in (if a library is not specified), say like week 1 or something, 
+				we're in (if a library is not specified), say like week 1 or something,
 				then checks if the assets you're looking for are there.
 				if not, it checks the shared assets folder.
 			// */
@@ -71,69 +71,29 @@ class Paths
 			var returnFile:String = "$" + fileName + "." + fileExtension;
 			return getPath()
 	}//*/
-	/*  
+	/*
 		actually I could just combine all of these main functions into one and really call it a day
 		it's similar and would use one function with a switch case
 		for now I'm more focused on getting this to run than anything and I'll clean out the code later as I do want to organise
-		everything later 
+		everything later
 	 */
-	static public function getLibraryPath(file:String, library = "preload")
-	{
-		return if (library == "preload" || library == "default") getPreloadPath(file); else getLibraryPathForce(file, library);
-	}
+	static public function getLibraryPath(file:String, library = "preload") { return if (library == "preload" || library == "default") getPreloadPath(file); else getLibraryPathForce(file, library); }
+	inline static public function songJson(song:String, secondSong:String, ?library:String) { return getPath('songs/${song.toLowerCase()}/${secondSong.toLowerCase()}.json', TEXT, library); }
 
-	inline static function getLibraryPathForce(file:String, library:String)
-	{
-		return '$library/$file';
-	}
+	inline static public function soundRandom(key:String, min:Int, max:Int, ?library:String) { return sound(key + FlxG.random.int(min, max), library); }
+	inline static public function music(key:String, ?library:String) { return getPath('music/$key.$SOUND_EXT', MUSIC, library); }
 
-	inline static function getPreloadPath(file:String)
-	{
-		return 'assets/$file';
-	}
+	static public function sound(key:String, ?library:String) { return getPath('sounds/$key.$SOUND_EXT', SOUND, library); }
 
-	inline static public function file(file:String, type:AssetType = TEXT, ?library:String)
-	{
-		return getPath(file, type, library);
-	}
+	inline static public function offsetTxt(key:String, ?library:String) { return getPath('images/characters/$key.txt', TEXT, library); }
+	inline static public function txt(key:String, ?library:String) { return getPath('$key.txt', TEXT, library); }
 
-	inline static public function txt(key:String, ?library:String)
-	{
-		return getPath('$key.txt', TEXT, library);
-	}
+	inline static public function file(file:String, ?library:String, type:AssetType = TEXT) { return getPath(file, type, library); }
+	inline static public function json(key:String, ?library:String) { return getPath('songs/$key.json', TEXT, library); }
+	inline static public function xml(key:String, ?library:String) { return getPath('data/$key.xml', TEXT, library); }
 
-	inline static public function xml(key:String, ?library:String)
-	{
-		return getPath('data/$key.xml', TEXT, library);
-	}
-
-	inline static public function offsetTxt(key:String, ?library:String)
-	{
-		return getPath('images/characters/$key.txt', TEXT, library);
-	}
-
-	inline static public function json(key:String, ?library:String)
-	{
-		return getPath('songs/$key.json', TEXT, library);
-	}
-
-	inline static public function songJson(song:String, secondSong:String, ?library:String)
-		return getPath('songs/${song.toLowerCase()}/${secondSong.toLowerCase()}.json', TEXT, library);
-
-	static public function sound(key:String, ?library:String)
-	{
-		return getPath('sounds/$key.$SOUND_EXT', SOUND, library);
-	}
-
-	inline static public function soundRandom(key:String, min:Int, max:Int, ?library:String)
-	{
-		return sound(key + FlxG.random.int(min, max), library);
-	}
-
-	inline static public function music(key:String, ?library:String)
-	{
-		return getPath('music/$key.$SOUND_EXT', MUSIC, library);
-	}
+	inline static function getLibraryPathForce(file:String, library:String) { return '$library/$file'; }
+	inline static function getPreloadPath(file:String) { return 'assets/$file'; }
 
 	inline static public function voices(song:String)
 	{
@@ -155,25 +115,20 @@ class Paths
 		return getPath(instPath, MUSIC, null);
 	}
 
-	inline static public function image(key:String, ?library:String)
+	inline static public function image(key:String, ?library:String) { return getPath('images/$key.png', IMAGE, library); }
+	inline static public function font(key:String) { return 'assets/fonts/$key'; }
+
+	static public function loadImage(key:String, ?library:String):Dynamic
 	{
-		return getPath('images/$key.png', IMAGE, library);
+		var path = image(key, library);
+		#if !(html5 || linux)
+		var data:Map<String, FlxGraphic> = Caching.bitmapData;
+		if (data != null && data.exists(key)) { trace('got cached: $key'); return data.get(key); };
+		#end
+		var data:BitmapData = OpenFlAssets.getBitmapData(path);
+		return data != null ? FlxGraphic.fromBitmapData(data) : path;
 	}
 
-	inline static public function font(key:String)
-	{
-		return 'assets/fonts/$key';
-	}
-
-	inline static public function getSparrowAtlas(key:String, ?library:String)
-	{
-		return (FlxAtlasFrames.fromSparrow(image(key, library), File.getContent(file('images/$key.xml', library))));
-	}
-
-	inline static public function getPackerAtlas(key:String, ?library:String)
-	{
-		return (FlxAtlasFrames.fromSpriteSheetPacker(image(key, library), file('images/$key.txt', library)));
-	}
-
-	
+	inline static public function getPackerAtlas(key:String, ?library:String) { return FlxAtlasFrames.fromSpriteSheetPacker(loadImage(key, library), file('images/$key.txt', library)); }
+	inline static public function getSparrowAtlas(key:String, ?library:String) { return FlxAtlasFrames.fromSparrow(loadImage(key, library), file('images/$key.xml', library)); }
 }
