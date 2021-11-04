@@ -50,8 +50,8 @@ class Caching extends FNFUIState
 	var dance:Float = 60 / 82;
 	var bop:Float = 0;
 	// wait for some time before preloading the queue
+	var totalElapsed:Float = 0;
 	var delay:Float = 1;
-	var delta:Float = 0;
 
 	private function cacheSound(path:String) { if (OpenFlAssets.exists(path)) FlxG.sound.cache(path); }
 	private function recenterText()
@@ -86,6 +86,7 @@ class Caching extends FNFUIState
 				#if linux
 				return false;
 				#end
+				trace(path);
 				return OpenFlAssets.exists('$path.xml') || OpenFlAssets.exists('$path.txt');
 			}]
 		];
@@ -101,8 +102,8 @@ class Caching extends FNFUIState
 				var data:BitmapData = OpenFlAssets.getBitmapData(path);
 				var graphic:FlxGraphic = FlxGraphic.fromBitmapData(data);
 
-				graphic.destroyOnNoUse = false;
 				graphic.persist = true;
+				graphic.destroyOnNoUse = false;
 
 				bitmapData.set(replaced, graphic);
 				trace('added $replaced bitmap data');
@@ -118,8 +119,8 @@ class Caching extends FNFUIState
 
 		curItem = null;
 
+		totalElapsed = 0;
 		threads = 0;
-		delta = 0;
 
 		time = new FlxText();
 		text = new FlxText();
@@ -183,8 +184,8 @@ class Caching extends FNFUIState
 	{
 		if (!loaded && toBeDone > 0)
 		{
-			delta += elapsed;
-			if (delta >= delay)
+			totalElapsed += elapsed;
+			if (totalElapsed >= delay)
 			{
 				while (threads < maxThreads && done < toBeDone)
 				{
@@ -195,17 +196,20 @@ class Caching extends FNFUIState
 						if (queue.length > 0)
 						{
 							var item:Array<String> = queue[0];
+							if (item != null)
+							{
+								queue.remove(item);
+								curItem = item[1];
 
-							queue.remove(item);
-							curItem = item[1];
-
-							trace('caching item $item (thread #${threads + 1})');
-							#if cpp
-							Thread.create(() -> { threads++; job(item); done++; threads--; });
-							#else
-							job(item);
-							done++;
-							#end
+								trace('caching item $item (thread #${threads + 1})');
+								// if it can thread then i will do
+								#if cpp
+								Thread.create(() -> { threads++; job(item); queue.remove(item); done++; threads--; });
+								#else
+								job(item);
+								done++;
+								#end
+							}
 						}
 						// break if max threads reached or all done
 						if (threads >= maxThreads || done >= toBeDone) break;
@@ -214,7 +218,7 @@ class Caching extends FNFUIState
 			}
 
 			var skipPressed:Bool = FlxG.keys.justPressed.ESCAPE;
-			if (done >= toBeDone || delta >= timeout || skipPressed)
+			if (done >= toBeDone || totalElapsed >= timeout || skipPressed)
 			{
 				loaded = true;
 				if (skipPressed)
@@ -243,6 +247,7 @@ class Caching extends FNFUIState
 				recenterText();
 
 				trace("caching finished");
+				trace(OpenFlAssets.cache.hasBitmapData('GF_assets'));
 			}
 			else
 			{
@@ -254,8 +259,8 @@ class Caching extends FNFUIState
 				}
 				if (text != null && time != null)
 				{
-					var sine:Float = Math.sin(((delta * speed) + Math.PI) % (Math.PI * 2));
-					var difference:Int = Math.floor(timeout - delta);
+					var sine:Float = Math.sin(((totalElapsed * speed) + Math.PI) % (Math.PI * 2));
+					var difference:Int = Math.floor(timeout - totalElapsed);
 
 					var fmt = curItem != null ? '\n$curItem' : "";
 
