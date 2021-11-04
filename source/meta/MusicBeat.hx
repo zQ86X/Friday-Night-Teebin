@@ -1,5 +1,6 @@
 package meta;
 
+import flixel.FlxBasic;
 import flixel.FlxG;
 import flixel.FlxSubState;
 import flixel.addons.transition.FlxTransitionableState;

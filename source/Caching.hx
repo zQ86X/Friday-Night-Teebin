@@ -1,5 +1,6 @@
 package;
 
+import meta.MusicBeat.MusicBeatState;
 import sys.thread.Thread;
 import lime.app.Application;
 
@@ -18,7 +19,7 @@ import meta.data.dependency.FNFSprite;
 import flixel.text.FlxText;
 
 using StringTools;
-
+// deadass just a really heavily modified kade engine caching
 class Caching extends FNFUIState
 {
 	public static var bitmapData:Map<String, FlxGraphic>;
@@ -179,7 +180,6 @@ class Caching extends FNFUIState
 		#end
 		super.create();
 	}
-	#if !html5
 	override function update(elapsed:Float)
 	{
 		if (!loaded && toBeDone > 0)
@@ -303,7 +303,7 @@ class Caching extends FNFUIState
 			}
 		}
 	}
-	#end
+
 	override function add(Object:FlxBasic):FlxBasic
 	{
 		if (Init.trueSettings.get('Disable Antialiasing') && Std.isOfType(Object, FlxSprite))
