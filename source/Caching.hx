@@ -25,7 +25,10 @@ class Caching extends FNFUIState
 	public static var bitmapData:Map<String, FlxGraphic>;
 	public static var loaded:Bool = false;
 
-	private var pathStart:String = 'assets';
+	private static var pathStart:String = 'assets';
+	private static var imageStart:String = '$pathStart/images';
+
+	var previewSize:Int = 128;
 
 	var images:Array<Array<String>> = [];
 	var music:Array<Array<String>> = [];
@@ -41,6 +44,8 @@ class Caching extends FNFUIState
 	var text:FlxText;
 
 	var sprite:FNFSprite;
+	var test:FNFSprite;
+
 	var speed:Float = Math.PI + (Math.PI / 2);
 	// to prevent players from hanging on the load screen
 	var timeout:Float = 30;
@@ -63,6 +68,16 @@ class Caching extends FNFUIState
 		text.y += sprite.height / (Math.PI / 2);
 		time.y = text.y + (text.size + (time.size / 2));
 	}
+	private function recenterPreview()
+	{
+		test.setGraphicSize(previewSize);
+
+		test.updateHitbox();
+		test.screenCenter();
+
+		test.x += previewSize * 2;
+	}
+
 	override function create()
 	{
 		loaded = true;
@@ -72,6 +87,9 @@ class Caching extends FNFUIState
 
 		if (time != null) time.destroy();
 		if (text != null) text.destroy();
+
+		if (sprite != null) sprite.destroy();
+		if (test != null) test.destroy();
 
 		FlxGraphic.defaultPersist = true;
 		#if !html5
@@ -83,11 +101,10 @@ class Caching extends FNFUIState
 		*/
 		var scans:Map<Array<Array<String>>, Array<Dynamic>> = [
 			music => [['$pathStart/songs', '$pathStart/music', '$pathStart/sounds'], ["ogg", "mp3"]],
-			images => ['$pathStart/images', "png", function(path:String):Bool {
+			images => [imageStart, "png", function(path:String):Bool {
 				#if linux
 				return false;
 				#end
-				trace(path);
 				return OpenFlAssets.exists('$path.xml') || OpenFlAssets.exists('$path.txt');
 			}]
 		];
@@ -98,16 +115,22 @@ class Caching extends FNFUIState
 			{
 				var path:String = data[1];
 				// gets rid of the filetype (always png) and shortens the directory
-				var replaced:String = path.substring(data[3].length + 1, path.length - 4);
+				var trim:String = path.substring(imageStart.length + 1, path.length - 4);
 
 				var data:BitmapData = OpenFlAssets.getBitmapData(path);
-				var graphic:FlxGraphic = FlxGraphic.fromBitmapData(data);
+				var graphic:FlxGraphic = FlxG.bitmap.add(data, true, trim); //FlxGraphic.fromBitmapData(data);
 
 				graphic.persist = true;
 				graphic.destroyOnNoUse = false;
 
-				bitmapData.set(replaced, graphic);
-				trace('added $replaced bitmap data');
+				bitmapData.set(trim, graphic);
+				trace('added $trim bitmap data');
+
+				if (test != null)
+				{
+					test.loadGraphic(graphic);
+					recenterPreview();
+				}
 			},
 			music => function(data:Array<String>)
 			{
@@ -135,8 +158,9 @@ class Caching extends FNFUIState
 		time.alignment = FlxTextAlign.LEFT;
 
 		sprite = new FNFSprite(FlxG.width / 2, FlxG.height / 2);
-		sprite.frames = Paths.getSparrowAtlas('characters/Teebicus_Assets');
+		test = new FNFSprite();
 
+		sprite.frames = Paths.getSparrowAtlas('characters/Teebicus_Assets');
 		sprite.setGraphicSize(Std.int(sprite.width * .6));
 
 		sprite.screenCenter();
@@ -146,6 +170,8 @@ class Caching extends FNFUIState
 		sprite.animation.addByPrefix('finish', 'TEEB_POSE', 24, false);
 
 		sprite.playAnim('idle', true);
+
+		recenterPreview();
 		recenterText();
 
 		trace("pushing items in arrays to queue");
@@ -169,9 +195,10 @@ class Caching extends FNFUIState
 
 			trace('pushed $count items to the array from $directories');
 		}
-
 		FlxG.sound.playMusic(Paths.music("loading"), .5);
+
 		add(sprite);
+		add(test);
 
 		add(time);
 		add(text);

@@ -123,8 +123,7 @@ class Paths
 		var path = image(key, library);
 		#if !(html5 || linux)
 		var data:Map<String, FlxGraphic> = Caching.bitmapData;
-		trace(key);
-		if (data != null && data.exists(key)) { trace('got cached: $key'); return data.get(key); };
+		if (data != null && data.exists(key)) { trace('got cached: $key (${data.get(key)})'); return data.get(key); };
 		#end
 		var data:BitmapData = OpenFlAssets.getBitmapData(path);
 		return data != null ? FlxGraphic.fromBitmapData(data) : path;
