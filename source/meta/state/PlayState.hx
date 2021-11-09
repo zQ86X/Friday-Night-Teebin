@@ -751,10 +751,10 @@ class PlayState extends MusicBeatState
 				};
 				case 'true-finale':
 				{
-					if (storyDifficulty > 0 && health < (fixedHealthDrainCap * 3)) health = Math.min(health + (fixedHealthDrain / (storyDifficulty * 2)), fixedHealthDrainCap * 3);
+					if (health < (fixedHealthDrainCap * 3)) health = Math.min(health - (fixedHealthDrain / Math.PI), fixedHealthDrainCap * 3);
 					if (!boyfriend.animation.curAnim.name.startsWith('sing')) boyfriend.playAnim('scared', true);
 
-					FlxG.camera.shake(1 / 90, .2);
+					FlxG.camera.shake(1 / 180, .2);
 					gf.playAnim('scared', true);
 				};
 
@@ -855,17 +855,10 @@ class PlayState extends MusicBeatState
 					mainControls(daNote, strumline.character, strumline, strumline.autoplay);
 
 					// check where the note is and make sure it is either active or inactive
-					if (daNote.y > FlxG.height)
-					{
-						daNote.active = false;
-						daNote.visible = false;
-					}
-					else
-					{
-						daNote.visible = true;
-						daNote.active = true;
-					}
+					var noteActive:Bool = daNote.y <= FlxG.height;
 
+					daNote.visible = noteActive;
+					daNote.active = noteActive;
 					// if the note is off screen (above)
 					if (((!Init.trueSettings.get('Downscroll')) && (daNote.y < -daNote.height))
 						|| ((Init.trueSettings.get('Downscroll')) && (daNote.y > (FlxG.height + daNote.height))))
@@ -1780,6 +1773,13 @@ class PlayState extends MusicBeatState
 							}, loops));
 						}
 					}
+				}
+			}
+			case 'baseplate':
+			{
+				switch (curBeat)
+				{
+					case 36: dadOpponent.setCharacter(60, 160, 'fiddlepat');
 				}
 			}
 		}

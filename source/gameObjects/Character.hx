@@ -45,6 +45,8 @@ class Character extends FNFSprite
 		antialiasing = true;
 
 		var characterAtlas:Map<String, Array<Dynamic>> = [
+			'fiddlepat' => ['Fiddlepat', 'FIDDLEPAT'],
+
 			'swagster' => ['Swagster', 'SWAGSTER'],
 			'jcom' => ['Teebjcom', 'TEEBJCOM'],
 
@@ -477,7 +479,7 @@ class Character extends FNFSprite
 			// 	quickDancer = true;
 
 			// 	playAnim('danceLeft');
-			case 'swagster' | 'jcom' | 'teeb':
+			case 'fiddlepat' | 'swagster' | 'jcom' | 'teeb':
 				var atlas = characterAtlas[curCharacter];
 
 				var quick = atlas[2] == true;
@@ -501,6 +503,19 @@ class Character extends FNFSprite
 
 				quickDancer = quick;
 				playAnim(quick ? 'danceLeft' : 'idle');
+			case 'baseplate':
+			{
+				frames = Paths.getSparrowAtlas("characters/Baseplate_Assets");
+				alpha = 0;
+
+				animation.addByPrefix('idle', 'IDLE', 24, false);
+				animation.addByPrefix('singUP', 'IDLE', 24);
+				animation.addByPrefix('singRIGHT', 'IDLE', 24);
+				animation.addByPrefix('singDOWN', 'IDLE', 24);
+				animation.addByPrefix('singLEFT', 'IDLE', 24);
+
+				playAnim('idle');
+			}
 			default:
 				// set up animations if they aren't already
 
@@ -524,7 +539,7 @@ class Character extends FNFSprite
 					// DAD ANIMATION LOADING CODE
 					tex = Paths.getSparrowAtlas('characters/DADDY_DEAREST');
 					frames = tex;
-					animation.addByPrefix('idle', 'Dad idle dance', 30, false);
+					animation.addByPrefix('idle', 'Dad idle dance', 24, false);
 					animation.addByPrefix('singUP', 'Dad Sing Note UP', 24);
 					animation.addByPrefix('singRIGHT', 'Dad Sing Note RIGHT', 24);
 					animation.addByPrefix('singDOWN', 'Dad Sing Note DOWN', 24);

@@ -199,11 +199,12 @@ class Init extends FlxState
 	override public function create():Void
 	{
 		trace('init state');
+
 		var continueToTitle:Bool = true;
-		if (!Caching.loaded)
-		{
+		//if (!Caching.loaded)
+		//{
 			// put the save data initialization stuff in here, so that it isn't overridden the next time the game is booted
-			continueToTitle = false;
+			//continueToTitle = false;
 
 			FlxG.save.bind('foreverengine-options');
 			Highscore.load();
@@ -223,9 +224,9 @@ class Init extends FlxState
 			FlxG.mouse.useSystemCursor = true; // Use system cursor because it's prettier
 			FlxG.mouse.visible = false; // Hide mouse on start
 
-			// Main.switchState(this, new TestState());
-			Main.switchState(this, new Caching());
-		}
+			// disabling caching for now
+			//Main.switchState(this, new Caching());
+		//}
 		if (continueToTitle) gotoTitleScreen();
 	}
 

@@ -77,6 +77,7 @@ class Stage extends FlxTypedGroup<FlxBasic>
 				case 'magic-hands' | 'amen-breaks' | 'slapfight' | 'true-finale': 'teeb';
 				case 'saturday-swaggin' | 'cool-transition' | 'rap-battle': 'swagster';
 				case 'copycat' | 'test-place' | 'rigged': 'jcom';
+				case 'baseplate': 'baseplate';
 
 				default: 'stage';
 			}
@@ -399,6 +400,17 @@ class Stage extends FlxTypedGroup<FlxBasic>
 
 				add(stageFront);
 			}
+			case 'baseplate':
+			{
+				PlayState.defaultCamZoom = 1.1;
+				var stageFront:FNFSprite = new FNFSprite(-178, -80).loadGraphic(Paths.image('backgrounds/$curStage/Foreground'));
+
+				stageFront.antialiasing = FlxG.save.data.antialiasing;
+				stageFront.scrollFactor.set(1, 1);
+				stageFront.active = false;
+
+				add(stageFront);
+			}
 
 			default:
 				PlayState.defaultCamZoom = 0.9;
@@ -554,6 +566,9 @@ class Stage extends FlxTypedGroup<FlxBasic>
 
 				dad.y -= 80;
 				gf.y -= 80;
+			case 'baseplate':
+				dad.x += 180;
+				dad.y += 360;
 		}
 	}
 
