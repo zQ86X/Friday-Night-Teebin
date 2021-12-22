@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TextureAtlas imagePath="Teeb_Dialog.png">
+	<!-- Created with Adobe Animate version 21.0.9.42677 -->
+	<!-- http://www.adobe.com/products/animate.html -->
+	<SubTexture name="Teebicus_Portrait0000" x="0" y="0" width="382" height="470"/>
+	<SubTexture name="Teebicus_Portrait0001" x="0" y="0" width="382" height="470"/>
+	<SubTexture name="Teebicus_Portrait0002" x="0" y="0" width="382" height="470"/>
+	<SubTexture name="Teebicus_Portrait0003" x="0" y="0" width="382" height="470"/>
+	<SubTexture name="Teebicus_Portrait0004" x="0" y="0" width="382" height="470"/>
+</TextureAtlas>
