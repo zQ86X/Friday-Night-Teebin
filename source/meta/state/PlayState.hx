@@ -1565,7 +1565,33 @@ class PlayState extends MusicBeatState
 
 	override function stepHit()
 	{
+		var oldBeat:Int = lastBeat;
 		super.stepHit();
+
+		var isNewBeat:Bool = oldBeat != curBeat;
+		switch (curSong.toLowerCase())
+		{
+			case 'slapfight':
+			{
+				if ((curBeat >= 16 && curBeat <= 48) || (curBeat >= 64 && curBeat <= 128) || (curBeat >= 144 && curBeat <= 208))
+				{
+					var stepMod:Int = curStep % 16;
+					var beatMod:Int = curBeat % 8;
+
+					if ((beatMod <= 4 && beatMod % 2 == 0 && isNewBeat) || (beatMod > 4 && (stepMod > 6 && stepMod < 12 && stepMod % 2 == 1)))
+					{
+						trace(stepMod);
+						var zoomIn = .05;
+
+						FlxG.camera.zoom += .015;
+						camHUD.zoom += zoomIn;
+
+						for (hud in strumHUD) hud.zoom += zoomIn;
+					}
+				}
+				else { if (isNewBeat) bopCamera(); }
+			}
+		}
 		///*
 		var curConductorPos = Conductor.songPosition;
 
@@ -1799,8 +1825,9 @@ class PlayState extends MusicBeatState
 
 						for (hud in strumHUD) hud.zoom += zoomIn;
 					}
-					else if (lowercaseSong == 'test place') bopCamera();
+					else { if (lowercaseSong == 'test place') bopCamera(); }
 				}
+				case 'slapfight': { }
 				default: bopCamera();
 			}
 		}

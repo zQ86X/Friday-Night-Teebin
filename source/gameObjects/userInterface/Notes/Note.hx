@@ -1,5 +1,6 @@
 package gameObjects.userInterface.notes;
 
+import openfl.Lib;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.graphics.frames.FlxAtlasFrames;
@@ -57,7 +58,7 @@ class Note extends FNFSprite
 		isSustainNote = sustainNote;
 
 		// oh okay I know why this exists now
-		y -= 2000;
+		y -= Lib.application.window.height + frameHeight;
 
 		this.strumTime = strumTime;
 		this.noteData = noteData;

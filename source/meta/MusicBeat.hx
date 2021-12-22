@@ -21,9 +21,10 @@ import meta.data.dependency.FNFUIState;
 class MusicBeatState extends FNFUIState
 {
 	// original variables extended from original game source
-	// (z note) for some reason lastBeat wasnt used nor was lastStep, so i removed lastStep and used lastBeat for beat shit
+	// (z note) for some reason lastBeat wasnt used nor was lastStep, so i game them a use
 	// because it fucked with certain beat events and caused them to play twice
-	private var lastBeat:Int = 0;
+	public var lastStep:Int = 0;
+	public var lastBeat:Int = 0;
 
 	public var curStep:Int = 0;
 	public var curBeat:Int = 0;
@@ -46,19 +47,13 @@ class MusicBeatState extends FNFUIState
 	// class 'step' event
 	override function update(elapsed:Float)
 	{
-		updateContents();
-		super.update(elapsed);
-	}
-
-	public function updateContents()
-	{
-		// everyStep();
-		var oldStep:Int = curStep;
+		lastStep = curStep;
 
 		updateCurStep();
 		updateBeat();
 
-		if (oldStep != curStep && curStep > 0) stepHit();
+		if (lastStep != curStep && curStep > 0) stepHit();
+		super.update(elapsed);
 	}
 
 	public function updateBeat():Void { curBeat = Math.floor(curStep / 4); }
@@ -70,13 +65,16 @@ class MusicBeatState extends FNFUIState
 			bpm: 0
 		}
 
-		for (i in 0...Conductor.bpmChangeMap.length) { if (Conductor.songPosition >= Conductor.bpmChangeMap[i].songTime) lastChange = Conductor.bpmChangeMap[i]; }
+		//for (i in 0...Conductor.bpmChangeMap.length) { var change = Conductor.bpmChangeMap[i]; if (Conductor.songPosition >= change.songTime) lastChange = change; trace(change.stepTime); }
+		var changeLength:Int = Conductor.bpmChangeMap.length;
+		if (changeLength > 0) lastChange = Conductor.bpmChangeMap[changeLength - 1];
+
 		curStep = lastChange.stepTime + Math.floor((Conductor.songPosition - lastChange.songTime) / Conductor.stepCrochet);
 	}
 
 	public function stepHit():Void
 	{
-		if (curStep % 4 == 0 && lastBeat != curBeat && curBeat > 0)
+		if (curBeat > 0 && lastBeat != curBeat) //(curStep % 4 == 0 && lastBeat != curBeat && curBeat > 0)
 		{
 			beatHit();
 			lastBeat = curBeat;
