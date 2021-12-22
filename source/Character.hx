@@ -51,6 +51,7 @@ class Character extends FlxSprite
 	public var specialAnim:Bool = false;
 	public var animationNotes:Array<Dynamic> = [];
 	public var stunned:Bool = false;
+	public var startedDeath:Bool = false;
 	public var singDuration:Float = 4; //Multiplier of how long a character holds the sing pose
 	public var idleSuffix:String = '';
 	public var danceIdle:Bool = false; //Character use "danceLeft" and "danceRight" instead of "idle"
@@ -212,24 +213,20 @@ class Character extends FlxSprite
 				dance();
 			}
 
+			if (animation.curAnim.name.startsWith('sing')) { holdTimer += elapsed; }
+			else if (isPlayer) { holdTimer = 0; }
+
 			if (!isPlayer)
 			{
-				if (animation.curAnim.name.startsWith('sing'))
-				{
-					holdTimer += elapsed;
-				}
-
-				if (holdTimer >= Conductor.stepCrochet * 0.001 * singDuration)
+				if (holdTimer >= Conductor.stepCrochet * .001 * singDuration)
 				{
 					dance();
 					holdTimer = 0;
 				}
 			}
 
-			if(animation.curAnim.finished && animation.getByName(animation.curAnim.name + '-loop') != null)
-			{
-				playAnim(animation.curAnim.name + '-loop');
-			}
+			if(animation.curAnim.finished && animation.getByName(animation.curAnim.name + '-loop') != null) playAnim(animation.curAnim.name + '-loop');
+			if (animation.curAnim.name.toLowerCase().startsWith('firstdeath') && animation.curAnim.finished && startedDeath) playAnim('deathLoop');
 		}
 		super.update(elapsed);
 	}
