@@ -1,0 +1,20 @@
+{
+	"songs": [
+		["Magic Hands", "teeb", [102, 102, 102]]
+	],
+
+	"weekCharacters": [
+		"teeb",
+		"bf",
+		"gf"
+	],
+	"weekBackground": "teeb",
+
+	"storyName": "teb",
+	"weekBefore": "tutorial",
+	"weekName": "Week 7",
+	"startUnlocked": true,
+
+	"hideStoryMode": false,
+	"hideFreeplay": false
+}

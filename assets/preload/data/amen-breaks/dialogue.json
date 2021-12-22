@@ -1,0 +1,35 @@
+{
+    "box": "speech_bubble_talking",
+    "boxState": "normal",
+    "dialogue": [
+        {
+            "portrait": "teeb",
+            "expression": "normal",
+            "text": "you ruined my streak"
+        },
+		{
+			"portrait": "bf",
+			"text": "Bop beboop"
+		},
+        {
+            "portrait": "teeb",
+            "text": "i literally cannot understand you"
+        },
+        {
+            "portrait": "bf",
+            "text": "Be"
+        },
+		{
+			"text": "Bop"
+		},
+		{
+			"expression": "excited",
+			"text": "(You fucking suck)"
+		},
+        {
+            "portrait": "teeb",
+            "expression": "normal",
+            "text": "ok thats just too far"
+        }
+    ]
+}
