@@ -16,7 +16,7 @@ class DiscordClient
 	{
 		trace("Discord Client starting...");
 		DiscordRpc.start({
-			clientID: "863222024192262205",
+			clientID: "901639087935606784",
 			onReady: onReady,
 			onError: onError,
 			onDisconnected: onDisconnected
@@ -32,19 +32,19 @@ class DiscordClient
 
 		DiscordRpc.shutdown();
 	}
-	
+
 	public static function shutdown()
 	{
 		DiscordRpc.shutdown();
 	}
-	
+
 	static function onReady()
 	{
 		DiscordRpc.presence({
 			details: "In the Menus",
 			state: null,
-			largeImageKey: 'icon',
-			largeImageText: "Psych Engine"
+			largeImageKey: 'iconog',
+			largeImageText: "Teeb Engine"
 		});
 	}
 
@@ -79,7 +79,7 @@ class DiscordClient
 		DiscordRpc.presence({
 			details: details,
 			state: state,
-			largeImageKey: 'icon',
+			largeImageKey: 'iconog',
 			largeImageText: "Engine Version: " + MainMenuState.psychEngineVersion,
 			smallImageKey : smallImageKey,
 			// Obtained times are in milliseconds so they are divided so Discord can use it

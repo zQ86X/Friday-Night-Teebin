@@ -4,22 +4,26 @@
     "dialogue": [
         {
             "portrait": "teeb",
-            "expression": "normal",
+            "expression": "talk",
             "text": "you ruined my streak"
         },
 		{
+			"expression": "talk",
 			"portrait": "bf",
 			"text": "Bop beboop"
 		},
         {
+			"expression": "talk",
             "portrait": "teeb",
             "text": "i literally cannot understand you"
         },
         {
+			"expression": "talk",
             "portrait": "bf",
             "text": "Be"
         },
 		{
+			"expression": "talk",
 			"text": "Bop"
 		},
 		{
@@ -28,7 +32,7 @@
 		},
         {
             "portrait": "teeb",
-            "expression": "normal",
+            "expression": "talk",
             "text": "ok thats just too far"
         }
     ]

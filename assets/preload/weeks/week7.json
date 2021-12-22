@@ -1,6 +1,8 @@
 {
 	"songs": [
-		["Magic Hands", "teeb", [102, 102, 102]]
+		["Magic Hands", "teeb", [102, 102, 102]],
+		["Amen Breaks", "teeb", [102, 102, 102]],
+		["Slapfight", "teeb", [102, 102, 102]]
 	],
 
 	"weekCharacters": [
@@ -10,7 +12,7 @@
 	],
 	"weekBackground": "teeb",
 
-	"storyName": "teb",
+	"storyName": "Teebical Hands",
 	"weekBefore": "tutorial",
 	"weekName": "Week 7",
 	"startUnlocked": true,
