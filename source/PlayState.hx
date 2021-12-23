@@ -3752,9 +3752,14 @@ class PlayState extends MusicBeatState
 		{
 			if(cpuControlled && (note.ignoreNote || note.hitCausesMiss)) return;
 
+			var isSus:Bool = note.isSustainNote; //GET OUT OF MY HEAD, GET OUT OF MY HEAD, GET OUT OF MY HEAD
+
+			var leData:Int = Std.int(Math.abs(note.noteData));
+			var leType:String = note.noteType;
+
 			if(note.hitCausesMiss) {
 				noteMiss(note);
-				if(!note.noteSplashDisabled && !note.isSustainNote) {
+				if(!note.noteSplashDisabled && !isSus) {
 					spawnNoteSplashOnNote(note);
 				}
 
@@ -3767,7 +3772,7 @@ class PlayState extends MusicBeatState
 				}
 
 				note.wasGoodHit = true;
-				if (!note.isSustainNote)
+				if (!isSus)
 				{
 					note.kill();
 					notes.remove(note, true);
@@ -3776,7 +3781,7 @@ class PlayState extends MusicBeatState
 				return;
 			}
 
-			if (!note.isSustainNote)
+			if (!isSus)
 			{
 				combo += 1;
 				popUpScore(note);
@@ -3788,7 +3793,7 @@ class PlayState extends MusicBeatState
 				var daAlt = '';
 				if(note.noteType == 'Alt Animation') daAlt = '-alt';
 
-				var animToPlay:String = singAnimations[Std.int(Math.abs(note.noteData))];
+				var animToPlay:String = singAnimations[leData];
 
 				//if (note.isSustainNote){ wouldn't this be fun : P. i think it would be swell
 
@@ -3828,15 +3833,13 @@ class PlayState extends MusicBeatState
 			}
 
 			if(cpuControlled) {
-				var time:Float = 0.15;
-				if(note.isSustainNote && !note.animation.curAnim.name.endsWith('end')) {
-					time += 0.15;
-				}
-				StrumPlayAnim(false, Std.int(Math.abs(note.noteData)) % 4, time);
+				var time:Float = .15;
+				if(isSus && !note.animation.curAnim.name.endsWith('end')) time *= 2;
+				StrumPlayAnim(false, leData % 4, time);
 			} else {
 				playerStrums.forEach(function(spr:StrumNote)
 				{
-					if (Math.abs(note.noteData) == spr.ID)
+					if (leData == spr.ID)
 					{
 						spr.playAnim('confirm', true);
 					}
@@ -3845,12 +3848,9 @@ class PlayState extends MusicBeatState
 			note.wasGoodHit = true;
 			vocals.volume = 1;
 
-			var isSus:Bool = note.isSustainNote; //GET OUT OF MY HEAD, GET OUT OF MY HEAD, GET OUT OF MY HEAD
-			var leData:Int = Math.round(Math.abs(note.noteData));
-			var leType:String = note.noteType;
 			callOnLuas('goodNoteHit', [notes.members.indexOf(note), leData, leType, isSus]);
 
-			if (!note.isSustainNote)
+			if (!isSus)
 			{
 				note.kill();
 				notes.remove(note, true);
@@ -4084,24 +4084,26 @@ class PlayState extends MusicBeatState
 		if (generatedMusic) notes.sort(FlxSort.byY, ClientPrefs.downScroll ? FlxSort.ASCENDING : FlxSort.DESCENDING);
 
 		var curBar:Int = Std.int(curStep / 16);
-		if (SONG.notes[curBar] != null)
+		var curNote:SwagSection = SONG.notes[curBar];
+
+		if (curNote != null)
 		{
-			if (SONG.notes[curBar].changeBPM)
+			if (curNote.changeBPM)
 			{
-				Conductor.changeBPM(SONG.notes[curBar].bpm);
+				Conductor.changeBPM(curNote.bpm);
 				//FlxG.log.add('CHANGED BPM!');
 				setOnLuas('curBpm', Conductor.bpm);
 				setOnLuas('crochet', Conductor.crochet);
 				setOnLuas('stepCrochet', Conductor.stepCrochet);
 			}
-			setOnLuas('mustHitSection', SONG.notes[Math.floor(curStep / 16)].mustHitSection);
-			setOnLuas('altAnim', SONG.notes[Math.floor(curStep / 16)].altAnim);
-			setOnLuas('gfSection', SONG.notes[Math.floor(curStep / 16)].gfSection);
+			setOnLuas('mustHitSection', curNote.mustHitSection);
+			setOnLuas('altAnim', curNote.altAnim);
+			setOnLuas('gfSection', curNote.gfSection);
 			// else
 			// Conductor.changeBPM(SONG.bpm);
 		}
 
-		if (generatedMusic && PlayState.SONG.notes[curBar] != null && !endingSong && !isCameraOnForcedPos) moveCameraSection(curBar);
+		if (generatedMusic && curNote != null && !endingSong && !isCameraOnForcedPos) moveCameraSection(curBar);
 		switch (Paths.formatToSongPath(curSong))
 		{
 			case 'slapfight':
@@ -4135,7 +4137,6 @@ class PlayState extends MusicBeatState
 			if (boyfriend.animation.curAnim.name != null && !boyfriend.animation.curAnim.name.startsWith("sing") && !boyfriend.stunned) boyfriend.dance();
 			if (dad.animation.curAnim.name != null && !dad.animation.curAnim.name.startsWith("sing") && !dad.stunned) dad.dance();
 		} else { if (dad.danceIdle && dad.animation.curAnim.name != null && !dad.curCharacter.startsWith('gf') && !dad.animation.curAnim.name.startsWith("sing") && !dad.stunned) dad.dance(); }
-
 		switch (curStage)
 		{
 			case 'school': if (!ClientPrefs.lowQuality) bgGirls.dance();
