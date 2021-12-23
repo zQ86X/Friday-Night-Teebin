@@ -4101,14 +4101,11 @@ class PlayState extends MusicBeatState
 					slapfightBeatHit = true;
 
 					if (ClientPrefs.flashing) camOther.flash(FlxColor.RED, .5, null, true);
-					if (canZoomCamera())
+					if (ClientPrefs.camZooms)
 					{
-						FlxG.camera.zoom += .4;
-						camHUD.zoom += .2;
+						FlxG.camera.zoom += .5;
+						camHUD.zoom += .25;
 					}
-
-					camGame.shake();
-					camHUD.shake();
 				}
 			}
 		}
