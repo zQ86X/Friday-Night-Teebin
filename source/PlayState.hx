@@ -64,30 +64,42 @@ class PlayState extends MusicBeatState
 	public static var STRUM_X_MIDDLESCROLL = -278;
 
 	public static var ratingStuff:Array<Dynamic> = [
-		['Fail', 0.2], //From 0% to 19%
-		['Shit', 0.4], //From 20% to 39%
-		['Bad', 0.5], //From 40% to 49%
-		['OK', 0.6], //From 50% to 59%
-		['Meh', 0.7], //From 60% to 69%
-		['Good', 0.8], //From 70% to 79%
-		['Great', 0.9], //From 80% to 89%
+		['Fail', .2], //From 0% to 19%
+		['Shit', .4], //From 20% to 39%
+		['Bad', .5], //From 40% to 49%
+		['OK', .6], //From 50% to 59%
+		['Meh', .7], //From 60% to 69%
+		['Good', .8], //From 70% to 79%
+		['Great', .9], //From 80% to 89%
 		['Sick!', 1], //From 90% to 99%
 		['Perfect', 1] //The value on this one isn't used actually, since Perfect is always "1"
 	];
 
+	// public var modchartTweens:Map<String, FlxTween> = new Map<String, FlxTween>();
+	// public var modchartSprites:Map<String, ModchartSprite> = new Map<String, ModchartSprite>();
+	// public var modchartTimers:Map<String, FlxTimer> = new Map<String, FlxTimer>();
+	// public var modchartSounds:Map<String, FlxSound> = new Map<String, FlxSound>();
+	// public var modchartTexts:Map<String, ModchartText> = new Map<String, ModchartText>();
+
+	//event variables
+	private var isCameraOnForcedPos:Bool = false;
+	#if (haxe >= "4.0.0")
+	public var modchartTweens:Map<String, FlxTween> = new Map();
+	public var modchartSprites:Map<String, ModchartSprite> = new Map();
+	public var modchartTimers:Map<String, FlxTimer> = new Map();
+	public var modchartSounds:Map<String, FlxSound> = new Map();
+	public var modchartTexts:Map<String, ModchartText> = new Map();
+
+	public var boyfriendMap:Map<String, Character> = new Map();
+	public var dadMap:Map<String, Character> = new Map();
+	public var gfMap:Map<String, Character> = new Map();
+	#else
 	public var modchartTweens:Map<String, FlxTween> = new Map<String, FlxTween>();
 	public var modchartSprites:Map<String, ModchartSprite> = new Map<String, ModchartSprite>();
 	public var modchartTimers:Map<String, FlxTimer> = new Map<String, FlxTimer>();
 	public var modchartSounds:Map<String, FlxSound> = new Map<String, FlxSound>();
 	public var modchartTexts:Map<String, ModchartText> = new Map<String, ModchartText>();
 
-	//event variables
-	private var isCameraOnForcedPos:Bool = false;
-	#if (haxe >= "4.0.0")
-	public var boyfriendMap:Map<String, Character> = new Map();
-	public var dadMap:Map<String, Character> = new Map();
-	public var gfMap:Map<String, Character> = new Map();
-	#else
 	public var boyfriendMap:Map<String, Character> = new Map<String, Character>();
 	public var dadMap:Map<String, Character> = new Map<String, Character>();
 	public var gfMap:Map<String, Character> = new Map<String, Character>();
@@ -324,14 +336,8 @@ class PlayState extends MusicBeatState
 		];
 
 		// For the "Just the Two of Us" achievement
-		for (i in 0...keysArray.length)
-		{
-			keysPressed.push(false);
-		}
-
-		if (FlxG.sound.music != null)
-			FlxG.sound.music.stop();
-
+		for (i in 0...keysArray.length) keysPressed.push(false);
+		if (FlxG.sound.music != null) FlxG.sound.music.stop();
 		// Gameplay settings
 		healthGain = ClientPrefs.getGameplaySetting('healthgain', 1);
 		healthLoss = ClientPrefs.getGameplaySetting('healthloss', 1);
@@ -357,8 +363,7 @@ class PlayState extends MusicBeatState
 		persistentUpdate = true;
 		persistentDraw = true;
 
-		if (SONG == null)
-			SONG = Song.loadFromJson('tutorial');
+		if (SONG == null) SONG = Song.loadFromJson('tutorial');
 
 		Conductor.mapBPMChanges(SONG);
 		Conductor.changeBPM(SONG.bpm);
@@ -3962,12 +3967,8 @@ class PlayState extends MusicBeatState
 		lightningStrikeBeat = curBeat;
 		lightningOffset = FlxG.random.int(8, 24);
 
-		if(boyfriend.animOffsets.exists('scared')) {
-			boyfriend.playAnim('scared', true);
-		}
-		if(gf.animOffsets.exists('scared')) {
-			gf.playAnim('scared', true);
-		}
+		boyfriend.playAnim('scared', true);
+		gf.playAnim('scared', true);
 
 		if(ClientPrefs.camZooms) {
 			FlxG.camera.zoom += 0.015;
@@ -4056,6 +4057,7 @@ class PlayState extends MusicBeatState
 		if (canZoomCamera() && !zoomFunction[0]) zoomFunction[1]();
 
 		lastStepHit = curStep;
+
 		setOnLuas('curStep', curStep);
 		callOnLuas('onStepHit', []);
 	}
