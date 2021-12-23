@@ -1,0 +1,99 @@
+{
+	"song": {
+		"speed": 3,
+		"stage": null,
+		"player1": "bf",
+		"player2": "teeb",
+		"player3": null,
+		"events": [
+			[
+				4800,
+				[
+					[
+						"Set Zoom Type",
+						"1",
+						""
+					]
+				]
+			],
+			[
+				14400,
+				[
+					[
+						"Set Zoom Type",
+						"0",
+						""
+					]
+				]
+			],
+			[
+				19200,
+				[
+					[
+						"Set Zoom Type",
+						"1",
+						""
+					]
+				]
+			],
+			[
+				28800,
+				[
+					[
+						"Set Zoom Type",
+						"0",
+						""
+					]
+				]
+			],
+			[
+				33600,
+				[
+					[
+						"Set Zoom Type",
+						"1",
+						""
+					]
+				]
+			],
+			[
+				38400,
+				[
+					[
+						"Set Zoom Type",
+						"0",
+						""
+					]
+				]
+			],
+			[
+				43200,
+				[
+					[
+						"Set Zoom Type",
+						"1",
+						""
+					]
+				]
+			],
+			[
+				62400,
+				[
+					[
+						"Set Zoom Type",
+						"0",
+						""
+					]
+				]
+			]
+		],
+		"notes": [],
+		"splashSkin": null,
+		"validScore": false,
+		"gfVersion": "gf",
+		"bpm": 200,
+		"arrowSkin": null,
+		"needsVoices": true,
+		"song": "Slapfight"
+	}
+}

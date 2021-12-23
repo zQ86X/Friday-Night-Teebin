@@ -1,5 +1,6 @@
 package;
 
+import haxe.macro.Expr.Case;
 #if desktop
 import Discord.DiscordClient;
 #end
@@ -188,6 +189,9 @@ class PlayState extends MusicBeatState
 	private var delta:Float = 0;
 	private var defaultStrums:Array<FlxPoint> = [];
 
+	public var camZoomType:Int = 0;
+	public var camZoomTypes:Array<Array<Dynamic>>;
+
 	var dialogue:Array<String> = [];
 	var dialogueJson:DialogueFile = null;
 
@@ -274,6 +278,32 @@ class PlayState extends MusicBeatState
 	{
 		// for lua
 		instance = this;
+		camZoomType = 0;
+		// [ On Beat (bool), Function ]
+		camZoomTypes = [
+			[ true, function() {
+				if (curBeat % 4 == 0)
+				{
+					FlxG.camera.zoom += .015;
+					camHUD.zoom += .03;
+				}
+			} ],
+			// Slapfight
+			[ false, function() {
+				var zoomIn:Float = switch (curStep % 32)
+				{
+					case 22 | 24 | 26: .01;
+					case 0 | 8 | 16: .015;
+
+					default: 0;
+				};
+				if (zoomIn > 0)
+				{
+					FlxG.camera.zoom += zoomIn;
+					camHUD.zoom += zoomIn * 2;
+				}
+			} ]
+		];
 
 		debugKeysChart = ClientPrefs.copyKey(ClientPrefs.keyBinds.get('debug_1'));
 		debugKeysCharacter = ClientPrefs.copyKey(ClientPrefs.keyBinds.get('debug_2'));
@@ -2784,6 +2814,11 @@ class PlayState extends MusicBeatState
 					camHUD.zoom += hudZoom;
 				}
 
+			case 'Set Zoom Type':
+			{
+				camZoomType = Std.int(FlxMath.bound(Std.parseInt(value1), 0, camZoomTypes.length - 1));
+			}
+
 			case 'Trigger BG Ghouls':
 				if(curStage == 'schoolEvil' && !ClientPrefs.lowQuality) {
 					bgGhouls.dance(true);
@@ -3048,6 +3083,7 @@ class PlayState extends MusicBeatState
 		}
 	}
 
+	function canZoomCamera():Bool { return camZooming && FlxG.camera.zoom < 1.35 && ClientPrefs.camZooms; }
 
 	public var transitioning = false;
 	public function endSong():Void
@@ -4045,6 +4081,9 @@ class PlayState extends MusicBeatState
 			return;
 		}
 
+		var zoomFunction:Array<Dynamic> = camZoomTypes[camZoomType];
+		if (canZoomCamera() && !zoomFunction[0]) zoomFunction[1]();
+
 		lastStepHit = curStep;
 		setOnLuas('curStep', curStep);
 		callOnLuas('onStepHit', []);
@@ -4090,11 +4129,9 @@ class PlayState extends MusicBeatState
 		{
 			moveCameraSection(Std.int(curStep / 16));
 		}
-		if (camZooming && FlxG.camera.zoom < 1.35 && ClientPrefs.camZooms && curBeat % 4 == 0)
-		{
-			FlxG.camera.zoom += 0.015;
-			camHUD.zoom += 0.03;
-		}
+
+		var zoomFunction:Array<Dynamic> = camZoomTypes[camZoomType];
+		if (canZoomCamera() && zoomFunction[0]) zoomFunction[1]();
 
 		iconP1.scale.set(1.2, 1.2);
 		iconP2.scale.set(1.2, 1.2);
