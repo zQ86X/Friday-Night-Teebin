@@ -15,7 +15,6 @@ import flixel.addons.transition.TransitionData;
 import haxe.Json;
 import openfl.display.Bitmap;
 import openfl.display.BitmapData;
-//import flixel.graphics.FlxGraphic;
 import flixel.graphics.frames.FlxAtlasFrames;
 import flixel.group.FlxGroup;
 import flixel.input.gamepad.FlxGamepad;
@@ -66,12 +65,9 @@ class TitleState extends MusicBeatState
 	var easterEggKeyCombination:Array<FlxKey> = [FlxKey.B, FlxKey.B]; //bb stands for bbpanzu cuz he wanted this lmao
 	var lastKeysPressed:Array<FlxKey> = [];
 
-	var mustUpdate:Bool = false;
-
 	var titleJSON:TitleData;
 
 	public static var updateVersion:String = '';
-
 	override public function create():Void
 	{
 		var path = Paths.getPreloadPath("images/gfDanceTitle.json");
@@ -329,11 +325,7 @@ class TitleState extends MusicBeatState
 
 				new FlxTimer().start(1, function(tmr:FlxTimer)
 				{
-					if (mustUpdate) {
-						MusicBeatState.switchState(new OutdatedState());
-					} else {
-						MusicBeatState.switchState(new MainMenuState());
-					}
+					MusicBeatState.switchState(new MainMenuState());
 					closedState = true;
 				});
 				// FlxG.sound.play(Paths.music('titleShoot'), 0.7);
@@ -437,66 +429,43 @@ class TitleState extends MusicBeatState
 	{
 		super.beatHit();
 
-		if(logoBl != null)
-			logoBl.animation.play('bump', true);
-
-		if(gfDance != null) {
+		if(logoBl != null) logoBl.animation.play('bump', true);
+		if(gfDance != null)
+		{
 			danceLeft = !danceLeft;
-
-			if (danceLeft)
-				gfDance.animation.play('danceRight');
-			else
-				gfDance.animation.play('danceLeft');
+			gfDance.animation.play(danceLeft ? 'danceRight' : 'danceLeft');
 		}
 
 		if(!closedState) {
 			sickBeats++;
 			switch (sickBeats)
 			{
-				case 1: createCoolText(['zion', FlxG.random.bool(5) ? "teebiscuit" : "teebicus"]);
-				// credTextShit.visible = true;
+				case 1: createCoolText(['Zion', FlxG.random.bool(5) ? "Teebiscuit" : "Teebicus"]);
 				case 3: addMoreText('present');
-				// credTextShit.text += '\npresent...';
-				// credTextShit.addText();
-				case 4:
-					deleteCoolText();
-				// credTextShit.visible = false;
-				// credTextShit.text = 'In association \nwith';
-				// credTextShit.screenCenter();
+				case 4: deleteCoolText();
+
 				case 5: createCoolText(['In association', 'with'], -40);
 				case 7:
+				{
 					addMoreText('newgrounds', -40);
 					ngSpr.visible = true;
-				// credTextShit.text += '\nNewgrounds';
+				}
 				case 8:
+				{
 					deleteCoolText();
 					ngSpr.visible = false;
-				// credTextShit.visible = false;
+				}
 
-				// credTextShit.text = 'Shoutouts Tom Fulp';
-				// credTextShit.screenCenter();
-				case 9:
-					createCoolText([curWacky[0]]);
-				// credTextShit.visible = true;
-				case 11:
-					addMoreText(curWacky[1]);
-				// credTextShit.text += '\nlmao';
-				case 12:
-					deleteCoolText();
-				// credTextShit.visible = false;
-				// credTextShit.text = "Friday";
-				// credTextShit.screenCenter();
-				case 13:
-					addMoreText('Friday');
-				// credTextShit.visible = true;
-				case 14:
-					addMoreText('Night');
-				// credTextShit.text += '\nNight';
-				case 15:
-					addMoreText('Funkin'); // credTextShit.text += '\nFunkin';
+				case 9: createCoolText([curWacky[0]]);
+				case 11: addMoreText(curWacky[1]);
 
-				case 16:
-					skipIntro();
+				case 12: deleteCoolText();
+
+				case 13: addMoreText('Friday');
+				case 14: addMoreText('Night');
+				case 15: addMoreText('Teebin');
+
+				case 16: skipIntro();
 			}
 		}
 	}
