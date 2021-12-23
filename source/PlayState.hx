@@ -72,7 +72,7 @@ class PlayState extends MusicBeatState
 		['Good', .8], //From 70% to 79%
 		['Great', .9], //From 80% to 89%
 		['Sick!', 1], //From 90% to 99%
-		['Perfect', 1] //The value on this one isn't used actually, since Perfect is always "1"
+		['Perfect!', 1] //The value on this one isn't used actually, since Perfect is always "1"
 	];
 
 	// public var modchartTweens:Map<String, FlxTween> = new Map<String, FlxTween>();
@@ -310,17 +310,25 @@ class PlayState extends MusicBeatState
 			} ],
 			// Slapfight
 			[ false, function() {
-				var zoomIn:Float = switch (curStep % 32)
+				var stepMod:Int = curStep % 32;
+				var onBeat:Dynamic = switch(stepMod)
 				{
-					case 22 | 24 | 26: .01;
-					case 0 | 8 | 16: .015;
-
-					default: 0;
+					// On Step
+					case 22 | 24 | 26: false;
+					// On Beat
+					case 0 | 8 | 16: true;
+					// None
+					default: null;
 				};
-				if (zoomIn > 0)
+				if (onBeat != null)
 				{
+					var inverseValue:Int = onBeat ? 1 : -1;
+					var zoomIn:Float = onBeat ? .015 : .01;
+
 					FlxG.camera.zoom += zoomIn;
 					camHUD.zoom += zoomIn * 2;
+
+					camGame.angle += zoomIn * ((stepMod > 0 && (stepMod % (onBeat ? 16 : 4) == (onBeat ? 8 : 0))) ? -inverseValue : inverseValue) * 145;
 				}
 			} ]
 		];
@@ -2272,8 +2280,11 @@ class PlayState extends MusicBeatState
 
 		if (camZooming)
 		{
-			FlxG.camera.zoom = FlxMath.lerp(defaultCamZoom, FlxG.camera.zoom, CoolUtil.boundTo(1 - (elapsed * 3.125), 0, 1));
-			camHUD.zoom = FlxMath.lerp(1, camHUD.zoom, CoolUtil.boundTo(1 - (elapsed * 3.125), 0, 1));
+			var lerpSpeed:Float = CoolUtil.boundTo(1 - (elapsed * 3.125), 0, 1);
+			FlxG.camera.zoom = FlxMath.lerp(defaultCamZoom, FlxG.camera.zoom, lerpSpeed);
+
+			camHUD.zoom = FlxMath.lerp(1, camHUD.zoom, lerpSpeed);
+			camGame.angle = FlxMath.lerp(0, camGame.angle, lerpSpeed);
 		}
 
 		FlxG.watch.addQuick("beatShit", curBeat);
@@ -3223,13 +3234,12 @@ class PlayState extends MusicBeatState
 		switch (daRating)
 		{
 			case "shit": // shit
-				totalNotesHit += 0;
 				shits++;
 			case "bad": // bad
-				totalNotesHit += 0.5;
+				totalNotesHit += .5;
 				bads++;
 			case "good": // good
-				totalNotesHit += 0.75;
+				totalNotesHit += .75;
 				goods++;
 			case "sick": // sick
 				totalNotesHit += 1;
