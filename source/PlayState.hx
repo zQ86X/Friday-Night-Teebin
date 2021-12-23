@@ -407,7 +407,7 @@ class PlayState extends MusicBeatState
 				case 'winter-horrorland': 'mallEvil';
 				case 'senpai' | 'roses': 'school';
 				case 'thorns': 'schoolEvil';
-				case 'magic-hands' | 'amen-breaks' | 'slapfight': 'teeb';
+				case 'magic-hands' | 'amen-breaks' | 'slapfight' | 'true-finale': 'teeb';
 				default: 'stage';
 			}
 		}
@@ -2478,7 +2478,7 @@ class PlayState extends MusicBeatState
 		#end
 
 		resetStrumline();
-		switch (curSong.toLowerCase())
+		switch (Paths.formatToSongPath(curSong))
 		{
 			case 'slapfight':
 			{
@@ -3713,10 +3713,10 @@ class PlayState extends MusicBeatState
 			var fixedDrain:Float = healthDrain * (storyDifficulty / (Math.PI / 2));
 			var fixedDrainCap:Float = healthDrainCap / storyDifficulty;
 
-			var lowerSong:String = curSong.toLowerCase();
+			var lowerSong:String = Paths.formatToSongPath(curSong);
 			var drainDiv:Float = switch(lowerSong)
 			{
-				case 'amen breaks': 2;
+				case 'amen-breaks': 2;
 				case 'slapfight': 1;
 
 				default: 0;
@@ -4102,7 +4102,7 @@ class PlayState extends MusicBeatState
 		}
 
 		if (generatedMusic && PlayState.SONG.notes[curBar] != null && !endingSong && !isCameraOnForcedPos) moveCameraSection(curBar);
-		switch (curSong.toLowerCase())
+		switch (Paths.formatToSongPath(curSong))
 		{
 			case 'slapfight':
 			{
