@@ -3859,8 +3859,22 @@ class PlayState extends MusicBeatState
 			note.wasGoodHit = true;
 			vocals.volume = 1;
 
-			callOnLuas('goodNoteHit', [notes.members.indexOf(note), leData, leType, isSus]);
+			var shakeDiv:Dynamic = switch (Paths.formatToSongPath(curSong))
+			{
+				case 'slapfight': [ Math.PI / 2, 1 ];
+				case 'true-finale': [ Math.PI, 0 ];
 
+				default: null;
+			}
+			if (shakeDiv != null)
+			{
+				if (ClientPrefs.camZooms)
+				{
+					var divider:Float = shakeDiv[0];
+					camGame.shake(1 / (120 * divider), 1 / (5 * divider), null, false);
+				}
+			}
+			callOnLuas('goodNoteHit', [notes.members.indexOf(note), leData, leType, isSus]);
 			if (!isSus)
 			{
 				note.kill();
