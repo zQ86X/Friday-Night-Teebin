@@ -300,11 +300,18 @@ class PlayState extends MusicBeatState
 			[ true, function() {
 				if (curBeat % 2 == 0)
 				{
-					var beatDiv:Int = curBeat % 4 == 2 ? 2 : 1;
+					var beatDiv:Int = (curBeat % 4) == 2 ? 2 : 1;
 
 					FlxG.camera.zoom += .015 / beatDiv;
 					camHUD.zoom += .03 / beatDiv;
 				}
+			} ],
+			// Rap Battle
+			[ true, function() {
+				var beatDiv:Float = (curBeat % 2) == 0 ? 1 : .5;
+
+				FlxG.camera.zoom += .015 / beatDiv;
+				camHUD.zoom += .03 / beatDiv;
 			} ]
 		];
 
@@ -1118,16 +1125,21 @@ class PlayState extends MusicBeatState
 		previousFrameTime = gameTicks;
 
 		FlxG.sound.playMusic(Paths.inst(PlayState.SONG.song), 1, false);
-
 		FlxG.sound.music.onComplete = finishSong;
-		FlxG.sound.music.play(true);
 
+		FlxG.sound.music.play(true);
+		vocals.play(true);
+
+		var curTime:Float = FlxG.sound.music.time;
+
+		FlxG.sound.music.time = curTime;
+		vocals.time = curTime;
+
+		resyncVocals();
 		if (paused) {
-			//trace('Oopsie doopsie! Paused sound');
 			FlxG.sound.music.pause();
 			vocals.pause();
 		}
-		else { resyncVocals(); }
 		// Song duration in a float, useful for the time left feature
 		songLength = FlxG.sound.music.length;
 
