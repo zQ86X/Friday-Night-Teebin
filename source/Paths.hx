@@ -83,11 +83,6 @@ class Paths
 		return getPath('data/$key.json', TEXT, library);
 	}
 
-	inline static public function lua(key:String, ?library:String)
-	{
-		return getPath('$key.lua', TEXT, library);
-	}
-
 	static public function video(key:String)
 	{
 		return 'assets/videos/$key.$VIDEO_EXT';
@@ -124,7 +119,7 @@ class Paths
 		return getPath('images/$key.png', IMAGE, library);
 	}
 
-	static public function getTextFromFile(key:String, ?ignoreMods:Bool = false):String
+	static public function getTextFromFile(key:String):String
 	{
 		#if sys
 		if (FileSystem.exists(getPreloadPath(key)))
