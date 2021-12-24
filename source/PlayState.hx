@@ -209,6 +209,8 @@ class PlayState extends MusicBeatState
 
 	var teebCrown:BGSprite;
 
+	var coolTransition:FlxSprite;
+
 	public var songScore:Int = 0;
 	public var songHits:Int = 0;
 	public var songMisses:Int = 0;
@@ -880,93 +882,132 @@ class PlayState extends MusicBeatState
 
 		startedCountdown = true;
 		Conductor.songPosition = 0;
-		Conductor.songPosition -= Conductor.crochet * 5;
-
-		var swagCounter:Int = 0;
-
-		startTimer = new FlxTimer().start(Conductor.crochet / 1000, function(tmr:FlxTimer)
+		switch (curSong)
 		{
-			if (tmr.loopsLeft % gfSpeed == 0 && !gf.stunned && gf.animation.curAnim.name != null && !gf.animation.curAnim.name.startsWith("sing")) gf.dance();
-			if(tmr.loopsLeft % 2 == 0) {
-				if (boyfriend.animation.curAnim != null && !boyfriend.animation.curAnim.name.startsWith('sing') && !boyfriend.stunned) boyfriend.dance();
-				if (dad.animation.curAnim != null && !dad.animation.curAnim.name.startsWith('sing') && !dad.stunned) dad.dance();
-			}
-			else if(dad.danceIdle && dad.animation.curAnim != null && !dad.stunned && !dad.curCharacter.startsWith('gf') && !dad.animation.curAnim.name.startsWith("sing")) dad.dance();
-
-			var introAssets:Map<String, Array<String>> = new Map<String, Array<String>>();
-			introAssets.set('default', ['ready', 'set', 'go']);
-
-			var introAlts:Array<String> = introAssets.get('default');
-			var antialias:Bool = ClientPrefs.globalAntialiasing;
-
-			switch (swagCounter)
+			case 'cool-transition':
 			{
-				case 0:
-					FlxG.sound.play(Paths.sound('intro3' + introSoundsSuffix), 0.6);
-				case 1:
-					countdownReady = new FlxSprite().loadGraphic(Paths.image(introAlts[0]));
-					countdownReady.scrollFactor.set();
-					countdownReady.updateHitbox();
+				coolTransition = new FlxSprite();
+				coolTransition.cameras = [camHUD];
 
-					countdownReady.screenCenter();
-					countdownReady.antialiasing = antialias;
-					add(countdownReady);
-					FlxTween.tween(countdownReady, {/*y: countdownReady.y + 100,*/ alpha: 0}, Conductor.crochet / 1000, {
-						ease: FlxEase.cubeInOut,
-						onComplete: function(twn:FlxTween)
-						{
-							remove(countdownReady);
-							countdownReady.destroy();
+				coolTransition.frames = Paths.getSparrowAtlas("Cool_Transition", "weekSwagster");
+				coolTransition.animation.addByPrefix("transition", "COOL_TRANSITION_ANIMATED", 24, false);
+
+				coolTransition.setGraphicSize(1284);
+				coolTransition.updateHitbox();
+
+				coolTransition.screenCenter();
+				add(coolTransition);
+				// wait one second before playing the song
+				var songBackCrochet:Float = 1000;
+				Conductor.songPosition -= songBackCrochet;
+				startTimer = new FlxTimer().start(songBackCrochet / 1000, function(tmr:FlxTimer)
+				{
+					coolTransition.animation.play("transition");
+					coolTransition.animation.finishCallback = function(name:String):Void
+					{
+						// remove the transition after it's done playing
+						remove(coolTransition);
+						coolTransition.destroy();
+					};
+
+					notes.forEachAlive(function(note:Note) {
+						note.copyAlpha = false;
+						note.alpha = note.multAlpha;
+						if(ClientPrefs.middleScroll && !note.mustPress) {
+							note.alpha = 0;
 						}
 					});
-					FlxG.sound.play(Paths.sound('intro2' + introSoundsSuffix), 0.6);
-				case 2:
-					countdownSet = new FlxSprite().loadGraphic(Paths.image(introAlts[1]));
-					countdownSet.scrollFactor.set();
-
-					countdownSet.screenCenter();
-					countdownSet.antialiasing = antialias;
-					add(countdownSet);
-					FlxTween.tween(countdownSet, {/*y: countdownSet.y + 100,*/ alpha: 0}, Conductor.crochet / 1000, {
-						ease: FlxEase.cubeInOut,
-						onComplete: function(twn:FlxTween)
-						{
-							remove(countdownSet);
-							countdownSet.destroy();
-						}
-					});
-					FlxG.sound.play(Paths.sound('intro1' + introSoundsSuffix), 0.6);
-				case 3:
-					countdownGo = new FlxSprite().loadGraphic(Paths.image(introAlts[2]));
-					countdownGo.scrollFactor.set();
-
-					countdownGo.updateHitbox();
-
-					countdownGo.screenCenter();
-					countdownGo.antialiasing = antialias;
-					add(countdownGo);
-					FlxTween.tween(countdownGo, {/*y: countdownGo.y + 100,*/ alpha: 0}, Conductor.crochet / 1000, {
-						ease: FlxEase.cubeInOut,
-						onComplete: function(twn:FlxTween)
-						{
-							remove(countdownGo);
-							countdownGo.destroy();
-						}
-					});
-					FlxG.sound.play(Paths.sound('introGo' + introSoundsSuffix), 0.6);
-				case 4:
+				}, 1);
 			}
+			default:
+			{
+				Conductor.songPosition -= Conductor.crochet * 5;
 
-			notes.forEachAlive(function(note:Note) {
-				note.copyAlpha = false;
-				note.alpha = note.multAlpha;
-				if(ClientPrefs.middleScroll && !note.mustPress) {
-					note.alpha *= 0.5;
-				}
-			});
-			swagCounter += 1;
-			// generateSong('fresh');
-		}, 5);
+				var swagCounter:Int = 0;
+				startTimer = new FlxTimer().start(Conductor.crochet / 1000, function(tmr:FlxTimer)
+				{
+					if (tmr.loopsLeft % gfSpeed == 0 && !gf.stunned && gf.animation.curAnim.name != null && !gf.animation.curAnim.name.startsWith("sing")) gf.dance();
+					if(tmr.loopsLeft % 2 == 0) {
+						if (boyfriend.animation.curAnim != null && !boyfriend.animation.curAnim.name.startsWith('sing') && !boyfriend.stunned) boyfriend.dance();
+						if (dad.animation.curAnim != null && !dad.animation.curAnim.name.startsWith('sing') && !dad.stunned) dad.dance();
+					}
+					else if(dad.danceIdle && dad.animation.curAnim != null && !dad.stunned && !dad.curCharacter.startsWith('gf') && !dad.animation.curAnim.name.startsWith("sing")) dad.dance();
+
+					var introAssets:Map<String, Array<String>> = new Map<String, Array<String>>();
+					introAssets.set('default', ['ready', 'set', 'go']);
+
+					var introAlts:Array<String> = introAssets.get('default');
+					var antialias:Bool = ClientPrefs.globalAntialiasing;
+
+					switch (swagCounter)
+					{
+						case 0: FlxG.sound.play(Paths.sound('intro3' + introSoundsSuffix), 0.6);
+						case 1:
+							countdownReady = new FlxSprite().loadGraphic(Paths.image(introAlts[0]));
+							countdownReady.scrollFactor.set();
+							countdownReady.updateHitbox();
+
+							countdownReady.screenCenter();
+							countdownReady.antialiasing = antialias;
+							add(countdownReady);
+							FlxTween.tween(countdownReady, {/*y: countdownReady.y + 100,*/ alpha: 0}, Conductor.crochet / 1000, {
+								ease: FlxEase.cubeInOut,
+								onComplete: function(twn:FlxTween)
+								{
+									remove(countdownReady);
+									countdownReady.destroy();
+								}
+							});
+							FlxG.sound.play(Paths.sound('intro2' + introSoundsSuffix), 0.6);
+						case 2:
+							countdownSet = new FlxSprite().loadGraphic(Paths.image(introAlts[1]));
+							countdownSet.scrollFactor.set();
+
+							countdownSet.screenCenter();
+							countdownSet.antialiasing = antialias;
+							add(countdownSet);
+							FlxTween.tween(countdownSet, {/*y: countdownSet.y + 100,*/ alpha: 0}, Conductor.crochet / 1000, {
+								ease: FlxEase.cubeInOut,
+								onComplete: function(twn:FlxTween)
+								{
+									remove(countdownSet);
+									countdownSet.destroy();
+								}
+							});
+							FlxG.sound.play(Paths.sound('intro1' + introSoundsSuffix), 0.6);
+						case 3:
+							countdownGo = new FlxSprite().loadGraphic(Paths.image(introAlts[2]));
+							countdownGo.scrollFactor.set();
+
+							countdownGo.updateHitbox();
+
+							countdownGo.screenCenter();
+							countdownGo.antialiasing = antialias;
+							add(countdownGo);
+							FlxTween.tween(countdownGo, {/*y: countdownGo.y + 100,*/ alpha: 0}, Conductor.crochet / 1000, {
+								ease: FlxEase.cubeInOut,
+								onComplete: function(twn:FlxTween)
+								{
+									remove(countdownGo);
+									countdownGo.destroy();
+								}
+							});
+							FlxG.sound.play(Paths.sound('introGo' + introSoundsSuffix), 0.6);
+						case 4:
+					}
+
+					notes.forEachAlive(function(note:Note) {
+						note.copyAlpha = false;
+						note.alpha = note.multAlpha;
+						if(ClientPrefs.middleScroll && !note.mustPress) {
+							note.alpha *= 0.5;
+						}
+					});
+					swagCounter += 1;
+					// generateSong('fresh');
+				}, 5);
+			}
+		}
 	}
 
 	function startNextDialogue() {
@@ -1167,16 +1208,15 @@ class PlayState extends MusicBeatState
 	function eventPushed(event:Array<Dynamic>) {
 		switch(event[1]) {
 			case 'Change Character':
-				var charType:Int = 0;
-				switch(event[2].toLowerCase()) {
-					case 'gf' | 'girlfriend' | '1':
-						charType = 2;
-					case 'dad' | 'opponent' | '0':
-						charType = 1;
+				var charType:Int = switch(event[2].toLowerCase()) {
+					case 'gf' | 'girlfriend' | '1': 2;
+					case 'dad' | 'opponent' | '0': 1;
 					default:
-						charType = Std.parseInt(event[2]);
-						if(Math.isNaN(charType)) charType = 0;
-				}
+					{
+						var temp:Int = Std.parseInt(event[2]);
+						Math.isNaN(temp) ? 0 : temp;
+					}
+				};
 
 				var newCharacter:String = event[3];
 				addCharacterToList(newCharacter, charType);
@@ -2647,9 +2687,7 @@ class PlayState extends MusicBeatState
 				boyfriend.stunned = false;
 			});*/
 
-			if(boyfriend.hasMissAnimations) {
-				boyfriend.playAnim(singAnimations[Std.int(Math.abs(direction))] + 'miss', true);
-			}
+			if(boyfriend.hasMissAnimations) boyfriend.playAnim(singAnimations[Std.int(Math.abs(direction))] + 'miss', true);
 			vocals.volume = 0;
 		}
 	}
