@@ -1,7 +1,8 @@
 package;
-
+#if sys
 import sys.io.File;
 import sys.FileSystem;
+#end
 import flixel.FlxG;
 import flixel.graphics.frames.FlxAtlasFrames;
 import openfl.utils.AssetType;

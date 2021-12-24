@@ -1,6 +1,8 @@
 package editors;
 
+#if sys
 import sys.FileSystem;
+#end
 #if desktop
 import Discord.DiscordClient;
 #end
