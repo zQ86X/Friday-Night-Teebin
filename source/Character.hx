@@ -1,5 +1,6 @@
 package;
 
+import flixel.animation.FlxAnimation;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.animation.FlxBaseAnimation;
@@ -172,27 +173,34 @@ class Character extends FlxSprite
 	{
 		if(!debugMode && animation.curAnim != null)
 		{
-			if(heyTimer > 0)
+			var curAnim:FlxAnimation = animation.curAnim;
+			var animName:String = curAnim.name;
+
+			if (heyTimer > 0)
 			{
 				heyTimer -= elapsed;
 				if(heyTimer <= 0)
 				{
-					if(specialAnim && animation.curAnim.name == 'hey' || animation.curAnim.name == 'cheer')
+					if (specialAnim && (animName == 'hey' || animName == 'cheer'))
 					{
 						specialAnim = false;
 						dance();
 					}
 					heyTimer = 0;
 				}
-			} else if(specialAnim && animation.curAnim.finished)
+			} else
 			{
-				specialAnim = false;
-				dance();
+				if (specialAnim && curAnim.finished)
+				{
+					specialAnim = false;
+					dance();
+				}
 			}
 
-			if (animation.curAnim.name.startsWith('sing')) { holdTimer += elapsed; }
+			if (animName.startsWith('sing')) { holdTimer += elapsed; }
 			else { if (isPlayer) holdTimer = 0; }
 
+			if (animName.endsWith('miss') && curAnim.finished) dance();
 			if (!isPlayer)
 			{
 				if (holdTimer >= Conductor.stepCrochet * .001 * singDuration)
@@ -202,10 +210,10 @@ class Character extends FlxSprite
 				}
 			}
 
-			var loopAnim:String = '${animation.curAnim.name}-loop';
+			var loopAnim:String = '${animName}-loop';
 
-			if(animation.curAnim.finished && animation.getByName(loopAnim) != null) playAnim(loopAnim);
-			if (animation.curAnim.name.toLowerCase().startsWith('firstdeath') && animation.curAnim.finished && startedDeath) playAnim('deathLoop');
+			if(curAnim.finished && animation.getByName(loopAnim) != null) playAnim(loopAnim);
+			if (animName.toLowerCase().startsWith('firstdeath') && curAnim.finished && startedDeath) playAnim('deathLoop');
 		}
 		super.update(elapsed);
 	}
