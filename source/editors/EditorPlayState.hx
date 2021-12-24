@@ -20,7 +20,8 @@ import flixel.input.keyboard.FlxKey;
 import openfl.events.KeyboardEvent;
 
 using StringTools;
-
+// lol fuck this shit i might try to remake this with my limited ass skills
+// i think this can just extend PlayState -z
 class EditorPlayState extends MusicBeatState
 {
 	// Yes, this is mostly a copy of PlayState, it's kinda dumb to make a direct copy of it but... ehhh
