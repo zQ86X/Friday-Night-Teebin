@@ -1118,7 +1118,9 @@ class PlayState extends MusicBeatState
 		previousFrameTime = gameTicks;
 
 		FlxG.sound.playMusic(Paths.inst(PlayState.SONG.song), 1, false);
+
 		FlxG.sound.music.onComplete = finishSong;
+		FlxG.sound.music.play(true);
 
 		if (paused) {
 			//trace('Oopsie doopsie! Paused sound');
@@ -1491,12 +1493,14 @@ class PlayState extends MusicBeatState
 	function resyncVocals():Void
 	{
 		if (finishTimer != null) return;
+
+		FlxG.sound.music.pause();
 		vocals.pause();
 
-		FlxG.sound.music.play();
 		Conductor.songPosition = FlxG.sound.music.time;
-
 		vocals.time = FlxG.sound.music.time;
+
+		FlxG.sound.music.play();
 		vocals.play();
 	}
 
