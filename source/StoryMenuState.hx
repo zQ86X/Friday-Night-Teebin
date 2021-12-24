@@ -27,7 +27,7 @@ class StoryMenuState extends MusicBeatState
 	// Not recommended, as people usually download your mod for, you know,
 	// playing just the modded week then delete it.
 	// defaults to True
-	public static var weekCompleted:Map<String, Bool> = new Map<String, Bool>();
+	public static var weekCompleted:Map<String, Bool> = new Map#if (haxe < "4.0.0") <String, Bool> #end();
 
 	var scoreText:FlxText;
 

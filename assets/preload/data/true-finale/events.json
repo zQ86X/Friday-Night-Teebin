@@ -1,0 +1,124 @@
+{
+	"song": {
+		"speed": 2.75,
+		"stage": null,
+		"player1": "bf",
+		"player2": "teeb",
+		"player3": null,
+		"events": [
+			[
+				14275.092936803,
+				[
+					[
+						"Set Zoom Type",
+						"2",
+						""
+					]
+				]
+			],
+			[
+				42379.1821561338,
+				[
+					[
+						"Add Camera Zoom",
+						".02",
+						".02"
+					],
+					[
+						"Screen Shake",
+						".45",
+						".2"
+					]
+				]
+			],
+			[
+				42434.9442379182,
+				[
+					[
+						"Add Camera Zoom",
+						".02",
+						".02"
+					]
+				]
+			],
+			[
+				42490.7063197026,
+				[
+					[
+						"Add Camera Zoom",
+						".02",
+						".02"
+					]
+				]
+			],
+			[
+				42546.468401487,
+				[
+					[
+						"Add Camera Zoom",
+						".02",
+						".02"
+					]
+				]
+			],
+			[
+				42602.2304832714,
+				[
+					[
+						"Add Camera Zoom",
+						".02",
+						".02"
+					]
+				]
+			],
+			[
+				42657.9925650557,
+				[
+					[
+						"Add Camera Zoom",
+						".02",
+						".02"
+					]
+				]
+			],
+			[
+				42713.7546468401,
+				[
+					[
+						"Add Camera Zoom",
+						".02",
+						".02"
+					]
+				]
+			],
+			[
+				42769.5167286245,
+				[
+					[
+						"Add Camera Zoom",
+						".02",
+						".02"
+					]
+				]
+			],
+			[
+				139182.156133829,
+				[
+					[
+						"Set Zoom Type",
+						"0",
+						""
+					]
+				]
+			]
+		],
+		"notes": [],
+		"splashSkin": null,
+		"validScore": false,
+		"gfVersion": "gf",
+		"bpm": 269,
+		"arrowSkin": null,
+		"needsVoices": true,
+		"song": "True Finale"
+	}
+}

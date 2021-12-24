@@ -20,7 +20,7 @@ typedef StageFile = {
 class StageData {
 	public static var forceNextDirectory:String = null;
 	public static function loadDirectory(SONG:SwagSong) {
-		var stage:String = (SONG.stage != null) ? SONG.stage : SONG.song != null ? switch (SONG.song.toLowerCase().replace(' ', '-'))
+		var stage:String = (SONG.stage != null) ? SONG.stage : SONG.song != null ? switch (Paths.formatToSongPath(SONG.song))
 		{
 			case 'spookeez' | 'south' | 'monster': 'spooky';
 			case 'pico' | 'blammed' | 'philly' | 'philly-nice': 'philly';
@@ -29,7 +29,7 @@ class StageData {
 			case 'winter-horrorland': 'mallEvil';
 			case 'senpai' | 'roses': 'school';
 			case 'thorns': 'schoolEvil';
-			case 'magic-hands' | 'amen-breaks' | 'slapfight': 'teeb';
+			case 'magic-hands' | 'amen-breaks' | 'slapfight' | 'true-finale': 'teeb';
 			default: 'stage';
 		} : 'stage';
 

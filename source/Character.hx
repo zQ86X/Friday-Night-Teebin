@@ -160,35 +160,12 @@ class Character extends FlxSprite
 				//trace('Loaded file to character ' + curCharacter);
 		}
 		originalFlipX = flipX;
-
 		if(animOffsets.exists('singLEFTmiss') || animOffsets.exists('singDOWNmiss') || animOffsets.exists('singUPmiss') || animOffsets.exists('singRIGHTmiss')) hasMissAnimations = true;
+
 		recalculateDanceIdle();
 		dance();
 
-		if (isPlayer)
-		{
-			flipX = !flipX;
-
-			/*// Doesn't flip for BF, since his are already in the right place???
-			if (!curCharacter.startsWith('bf'))
-			{
-				// var animArray
-				if(animation.getByName('singLEFT') != null && animation.getByName('singRIGHT') != null)
-				{
-					var oldRight = animation.getByName('singRIGHT').frames;
-					animation.getByName('singRIGHT').frames = animation.getByName('singLEFT').frames;
-					animation.getByName('singLEFT').frames = oldRight;
-				}
-
-				// IF THEY HAVE MISS ANIMATIONS??
-				if (animation.getByName('singLEFTmiss') != null && animation.getByName('singRIGHTmiss') != null)
-				{
-					var oldMiss = animation.getByName('singRIGHTmiss').frames;
-					animation.getByName('singRIGHTmiss').frames = animation.getByName('singLEFTmiss').frames;
-					animation.getByName('singLEFTmiss').frames = oldMiss;
-				}
-			}*/
-		}
+		if (isPlayer) flipX = !flipX;
 	}
 
 	override function update(elapsed:Float)
@@ -214,7 +191,7 @@ class Character extends FlxSprite
 			}
 
 			if (animation.curAnim.name.startsWith('sing')) { holdTimer += elapsed; }
-			else if (isPlayer) { holdTimer = 0; }
+			else { if (isPlayer) holdTimer = 0; }
 
 			if (!isPlayer)
 			{
@@ -225,7 +202,9 @@ class Character extends FlxSprite
 				}
 			}
 
-			if(animation.curAnim.finished && animation.getByName(animation.curAnim.name + '-loop') != null) playAnim(animation.curAnim.name + '-loop');
+			var loopAnim:String = '${animation.curAnim.name}-loop';
+
+			if(animation.curAnim.finished && animation.getByName(loopAnim) != null) playAnim(loopAnim);
 			if (animation.curAnim.name.toLowerCase().startsWith('firstdeath') && animation.curAnim.finished && startedDeath) playAnim('deathLoop');
 		}
 		super.update(elapsed);
@@ -240,17 +219,20 @@ class Character extends FlxSprite
 	{
 		if (!debugMode && !specialAnim)
 		{
-			if(danceIdle)
+			switch (danceIdle)
 			{
-				danced = !danced;
+				case true:
+				{
+					danced = !danced;
+					playAnim(danced ? 'danceRight$idleSuffix' : 'danceLeft$idleSuffix');
 
-				if (danced)
-					playAnim('danceRight' + idleSuffix);
-				else
-					playAnim('danceLeft' + idleSuffix);
-			}
-			else if(animation.getByName('idle' + idleSuffix) != null) {
-					playAnim('idle' + idleSuffix);
+					return;
+				}
+				default:
+				{
+					var idleFormat:String = 'idle$idleSuffix';
+					if(animation.getByName(idleFormat) != null) playAnim(idleFormat);
+				}
 			}
 		}
 	}
@@ -261,24 +243,20 @@ class Character extends FlxSprite
 		animation.play(AnimName, Force, Reversed, Frame);
 
 		var daOffset = animOffsets.get(AnimName);
+
 		if (animOffsets.exists(AnimName)) offset.set(daOffset[0], daOffset[1]);
 		else { offset.set(0, 0); }
 
-		if (curCharacter.startsWith('gf'))
+		if (danceIdle)
 		{
-			if (AnimName == 'singLEFT')
+			danced = switch (AnimName.toLowerCase())
 			{
-				danced = true;
-			}
-			else if (AnimName == 'singRIGHT')
-			{
-				danced = false;
-			}
+				case 'singright': false;
+				case 'singleft': true;
 
-			if (AnimName == 'singUP' || AnimName == 'singDOWN')
-			{
-				danced = !danced;
-			}
+				case 'singup' | 'singdown': !danced;
+				default: danced;
+			};
 		}
 	}
 

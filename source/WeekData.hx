@@ -24,7 +24,7 @@ typedef WeekFile =
 }
 
 class WeekData {
-	public static var weeksLoaded:Map<String, WeekData> = new Map<String, WeekData>();
+	public static var weeksLoaded:Map<String, WeekData> = new Map #if (haxe < "4.0.0") <String, WeekData> #end();
 	public static var weeksList:Array<String> = [];
 	public var folder:String = '';
 

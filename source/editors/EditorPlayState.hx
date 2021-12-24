@@ -55,7 +55,7 @@ class EditorPlayState extends MusicBeatState
 	var beatTxt:FlxText;
 
 	var timerToStart:Float = 0;
-	private var noteTypeMap:Map<String, Bool> = new Map<String, Bool>();
+	private var noteTypeMap:Map<String, Bool> = new Map #if (haxe < "4.0.0") <String, Bool> #end();
 
 	// Less laggy controls
 	private var keysArray:Array<Dynamic>;

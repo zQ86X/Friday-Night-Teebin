@@ -330,6 +330,16 @@ class PlayState extends MusicBeatState
 
 					camGame.angle += zoomIn * ((stepMod > 0 && (stepMod % (onBeat ? 16 : 4) == (onBeat ? 8 : 0))) ? -inverseValue : inverseValue) * 145;
 				}
+			} ],
+			// True Finale
+			[ true, function() {
+				if (curBeat % 2 == 0)
+				{
+					var beatDiv:Int = curBeat % 4 == 2 ? 2 : 1;
+
+					FlxG.camera.zoom += .015 / beatDiv;
+					camHUD.zoom += .03 / beatDiv;
+				}
 			} ]
 		];
 
@@ -3703,33 +3713,34 @@ class PlayState extends MusicBeatState
 
 		if (SONG.needsVoices) vocals.volume = 1;
 
-		var time:Float = 0.15;
-		if(note.isSustainNote && !note.animation.curAnim.name.endsWith('end')) {
-			time += .15;
-		}
+		var lowerSong:String = Paths.formatToSongPath(curSong);
+		var time:Float = .15;
 
-		if (storyDifficulty > 0)
+		if(note.isSustainNote && !note.animation.curAnim.name.endsWith('end')) time *= 2;
+		var difficultyClamp = Math.max(storyDifficulty, 1);
+
+		var fixedDrain:Float = healthDrain * (difficultyClamp / (Math.PI / 2));
+		var fixedDrainCap:Float = healthDrainCap / difficultyClamp;
+		// [ divide by, scare, difficulty minimum ]
+		var drainDiv:Dynamic = switch (lowerSong)
 		{
-			var fixedDrain:Float = healthDrain * (storyDifficulty / (Math.PI / 2));
-			var fixedDrainCap:Float = healthDrainCap / storyDifficulty;
+			case 'true-finale': [ Math.PI / 2, true, 0 ];
+			case 'slapfight': [ 1, true, 1 ];
 
-			var lowerSong:String = Paths.formatToSongPath(curSong);
-			var drainDiv:Float = switch(lowerSong)
-			{
-				case 'amen-breaks': 2;
-				case 'slapfight': 1;
+			case 'amen-breaks': [ 2, false, 1 ];
+			default: null;
+		}
+		if (drainDiv != null && (drainDiv[2] == null || drainDiv[2] <= storyDifficulty))
+		{
+			var divider:Float = drainDiv[0];
 
-				default: 0;
-			}
-			if (drainDiv > 0)
+			if (!note.isSustainNote && health > fixedDrainCap) health = Math.max(health - (fixedDrain / divider), fixedDrainCap);
+			if (ClientPrefs.camZooms) camGame.shake(1 / (120 * divider), 1 / (5 * divider), null, false);
+
+			if (drainDiv[1] == true)
 			{
-				if (!note.isSustainNote && health > fixedDrainCap) health = Math.max(health - (fixedDrain / drainDiv), fixedDrainCap);
-				camGame.shake(1 / (120 * drainDiv), 1 / (5 * drainDiv), null, false);
-				if (drainDiv <= 1)
-				{
-					if (!boyfriend.animation.name.startsWith("sing")) boyfriend.playAnim("scared", true);
-					gf.playAnim("scared", true);
-				}
+				if (!boyfriend.animation.name.startsWith("sing")) boyfriend.playAnim("scared", true);
+				gf.playAnim("scared", true);
 			}
 		}
 

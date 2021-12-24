@@ -60,8 +60,8 @@ class ChartingState extends MusicBeatState
 		'GF Sing',
 		'No Animation'
 	];
-	private var noteTypeIntMap:Map<Int, String> = new Map<Int, String>();
-	private var noteTypeMap:Map<String, Null<Int>> = new Map<String, Null<Int>>();
+	private var noteTypeIntMap:Map<Int, String> = new Map #if (haxe < "4.0.0") <Int, String> #end();
+	private var noteTypeMap:Map<String, Null<Int>> = new Map #if (haxe < "4.0.0") <String, Null<Int>> #end();
 
 	var eventStuff:Array<Dynamic> =
 	[
@@ -468,7 +468,7 @@ class ChartingState extends MusicBeatState
 
 		var directories:Array<String> = [Paths.getPreloadPath('characters/')];
 
-		var tempMap:Map<String, Bool> = new Map<String, Bool>();
+		var tempMap:Map<String, Bool> = new Map #if (haxe < "4.0.0") <String, Bool> #end();
 		var characters:Array<String> = CoolUtil.coolTextFile(Paths.txt('characterList'));
 		for (i in 0...characters.length) {
 			tempMap.set(characters[i], true);
