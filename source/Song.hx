@@ -45,7 +45,7 @@ class Song
 	public var stage:String;
 
 	public var player1:String = 'bf';
-	public var player2:String = 'dad';
+	public var player2:String = 'gf';
 	public var player3:String = 'gf'; //deprecated
 	public var gfVersion:String = 'gf';
 

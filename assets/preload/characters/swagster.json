@@ -1,0 +1,78 @@
+{
+	"animations": [
+		{
+			"offsets": [
+				0,
+				-100
+			],
+			"indices": [],
+			"fps": 24,
+			"anim": "idle",
+			"loop": true,
+			"name": "SWAGSTER_IDLE"
+		},
+		{
+			"offsets": [
+				-90,
+				-105
+			],
+			"indices": [],
+			"fps": 24,
+			"anim": "singRIGHT",
+			"loop": false,
+			"name": "SWAGSTER_RIGHT"
+		},
+		{
+			"offsets": [
+				15,
+				-123
+			],
+			"indices": [],
+			"fps": 24,
+			"anim": "singLEFT",
+			"loop": false,
+			"name": "SWAGSTER_LEFT"
+		},
+		{
+			"offsets": [
+				-105,
+				-85
+			],
+			"indices": [],
+			"fps": 24,
+			"anim": "singDOWN",
+			"loop": false,
+			"name": "SWAGSTER_DOWN"
+		},
+		{
+			"offsets": [
+				-20,
+				-45
+			],
+			"indices": [],
+			"fps": 24,
+			"anim": "singUP",
+			"loop": false,
+			"name": "SWAGSTER_UP"
+		}
+	],
+	"no_antialiasing": false,
+	"image": "characters/Swagster_Assets",
+	"position": [
+		0,
+		100
+	],
+	"healthicon": "swagster",
+	"flip_x": false,
+	"healthbar_colors": [
+		37,
+		37,
+		37
+	],
+	"camera_position": [
+		-80,
+		170
+	],
+	"sing_duration": 6.1,
+	"scale": 1
+}

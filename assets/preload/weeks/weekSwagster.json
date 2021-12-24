@@ -1,0 +1,22 @@
+{
+	"songs": [
+		["Saturday Swaggin", "swagster", [32, 32, 32]],
+		["Cool Transition", "swagster", [32, 32, 32]],
+		["Rap Battle", "swagster", [32, 32, 32]]
+	],
+
+	"weekCharacters": [
+		"swagster",
+		"bf",
+		"gf"
+	],
+	"weekBackground": "swagster",
+
+	"storyName": "Swagster Warriors",
+	"weekName": "Week Swagster",
+	"weekBefore": "weekTeeb",
+	"startUnlocked": false,
+
+	"hideStoryMode": false,
+	"hideFreeplay": false
+}

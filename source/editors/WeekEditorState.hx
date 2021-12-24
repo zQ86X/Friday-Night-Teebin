@@ -51,7 +51,7 @@ class WeekEditorState extends MusicBeatState
 		super();
 		this.weekFile = WeekData.createWeekFile();
 		if(weekFile != null) this.weekFile = weekFile;
-		else weekFileName = 'week1';
+		else weekFileName = 'tutorial';
 	}
 
 	override function create() {
@@ -170,7 +170,7 @@ class WeekEditorState extends MusicBeatState
 
 	var hideCheckbox:FlxUICheckBox;
 
-	public static var weekFileName:String = 'week1';
+	public static var weekFileName:String = 'tutorial';
 
 	function addWeekUI() {
 		var tab_group = new FlxUI(null, UI_box);
@@ -386,12 +386,12 @@ class WeekEditorState extends MusicBeatState
 
 				for (i in 0...splittedText.length) {
 					if(i >= weekFile.songs.length) { //Add new song
-						weekFile.songs.push([splittedText[i], 'dad', [146, 113, 253]]);
+						weekFile.songs.push([splittedText[i], 'gf', [165, 0, 77]]);
 					} else { //Edit song
 						weekFile.songs[i][0] = splittedText[i];
 						if(weekFile.songs[i][1] == null || weekFile.songs[i][1]) {
-							weekFile.songs[i][1] = 'dad';
-							weekFile.songs[i][2] = [146, 113, 253];
+							weekFile.songs[i][1] = 'gf';
+							weekFile.songs[i][2] = [165, 0, 77];
 						}
 					}
 				}

@@ -1,0 +1,26 @@
+{
+	"storyName": "",
+	"difficulties": "Normal",
+	"hideFreeplay": false,
+	"weekBackground": "teeb",
+	"weekBefore": "weekTeeb",
+	"startUnlocked": false,
+	"weekCharacters": [
+		"teeb",
+		"bf",
+		"gf"
+	],
+	"songs": [
+		[
+			"True Finale",
+			"teeb",
+			[
+				102,
+				102,
+				102
+			]
+		]
+	],
+	"hideStoryMode": true,
+	"weekName": "Week Finale"
+}
