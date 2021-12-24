@@ -140,10 +140,11 @@ class Character extends FlxSprite
 				animationsArray = json.animations;
 				if(animationsArray != null && animationsArray.length > 0) {
 					for (anim in animationsArray) {
-						var animAnim:String = '' + anim.anim;
-						var animName:String = '' + anim.name;
+						var animAnim:String = anim.anim;
+						var animName:String = anim.name;
+						var animLoop:Bool = anim.loop;
 						var animFps:Int = anim.fps;
-						var animLoop:Bool = !!anim.loop; //Bruh
+
 						var animIndices:Array<Int> = anim.indices;
 						if(animIndices != null && animIndices.length > 0) {
 							animation.addByIndices(animAnim, animName, animIndices, "", animFps, animLoop);

@@ -662,11 +662,6 @@ class PlayState extends MusicBeatState
 		timeBarBG.cameras = [camHUD];
 		timeTxt.cameras = [camHUD];
 
-		// if (SONG.song == 'South')
-		// FlxG.camera.alpha = 0.7;
-		// UI_camera.zoom = 1;
-
-		// cameras = [FlxG.cameras.list[1]];
 		startingSong = true;
 
 		var daSong:String = Paths.formatToSongPath(curSong);
@@ -1004,6 +999,7 @@ class PlayState extends MusicBeatState
 			FlxG.sound.music.pause();
 			vocals.pause();
 		}
+		if (Paths.formatToSongPath(curSong) != 'tutorial') camZooming = true;
 		// Song duration in a float, useful for the time left feature
 		songLength = FlxG.sound.music.length;
 
@@ -1023,18 +1019,17 @@ class PlayState extends MusicBeatState
 	{
 		// FlxG.log.add(ChartParser.parse());
 		songSpeed = SONG.speed * ClientPrefs.getGameplaySetting('scrollspeed', 1);
+		Conductor.changeBPM(SONG.bpm);
 
-		var songData = SONG;
-		Conductor.changeBPM(songData.bpm);
-
-		curSong = songData.song;
+		curSong = Paths.formatToSongPath(SONG.song);
 		vocals = new FlxSound();
 
-		var instPath:String = Paths.inst(PlayState.SONG.song);
+		var instPath:String = Paths.inst(curSong);
 		if (SONG.needsVoices)
 		{
-			var vocalsPath:String = Paths.voices(PlayState.SONG.song);
+			var vocalsPath:String = Paths.voices(curSong);
 			vocals.loadEmbedded(vocalsPath);
+
 			CoolUtil.precacheAsset(vocalsPath);
 			trace('cache $vocalsPath');
 		}
@@ -1044,26 +1039,23 @@ class PlayState extends MusicBeatState
 
 		CoolUtil.precacheAsset(instPath);
 		trace('cache $instPath');
+
 		notes = new FlxTypedGroup<Note>();
 		add(notes);
 
 		var noteData:Array<SwagSection>;
-
 		// NEW SHIT
-		noteData = songData.notes;
-
-		var playerCounter:Int = 0;
+		noteData = SONG.notes;
 
 		var daBeats:Int = 0; // Not exactly representative of 'daBeats' lol, just how much it has looped
+		var file:String = Paths.json('$curSong/events');
 
-		var songName:String = Paths.formatToSongPath(SONG.song);
-		var file:String = Paths.json(songName + '/events');
 		#if sys
 		if (FileSystem.exists(file)) {
 		#else
 		if (OpenFlAssets.exists(file)) {
 		#end
-			var eventsData:Array<Dynamic> = Song.loadFromJson('events', songName).events;
+			var eventsData:Array<Dynamic> = Song.loadFromJson('events', curSong).events;
 			for (event in eventsData) //Event Notes
 			{
 				for (i in 0...event[1].length)
@@ -1084,11 +1076,7 @@ class PlayState extends MusicBeatState
 				var daNoteData:Int = Std.int(songNotes[1] % 4);
 
 				var gottaHitNote:Bool = section.mustHitSection;
-
-				if (songNotes[1] > 3)
-				{
-					gottaHitNote = !section.mustHitSection;
-				}
+				if (songNotes[1] > 3) gottaHitNote = !section.mustHitSection;
 
 				var oldNote:Note = null;
 				if (unspawnNotes.length > 0) oldNote = unspawnNotes[Std.int(unspawnNotes.length - 1)];
@@ -1154,7 +1142,7 @@ class PlayState extends MusicBeatState
 			}
 			daBeats += 1;
 		}
-		for (event in songData.events) //Event Notes
+		for (event in SONG.events) //Event Notes
 		{
 			for (i in 0...event[1].length)
 			{
@@ -1200,10 +1188,10 @@ class PlayState extends MusicBeatState
 	}
 
 	function eventNoteEarlyTrigger(event:Array<Dynamic>):Float {
-		switch(event[1]) {
-			case 'Kill Henchmen': //Better timing so that the kill sound matches the beat intended
-				return 280; //Plays 280ms before the actual position
-		}
+		// switch(event[1]) {
+		// 	case 'Kill Henchmen': //Better timing so that the kill sound matches the beat intended
+		// 		return 280; //Plays 280ms before the actual position
+		// }
 		return 0;
 	}
 
@@ -1698,7 +1686,7 @@ class PlayState extends MusicBeatState
 		#end
 
 		resetStrumline();
-		switch (Paths.formatToSongPath(curSong))
+		switch (curSong)
 		{
 			case 'slapfight':
 			{
@@ -2028,7 +2016,6 @@ class PlayState extends MusicBeatState
 
 	function moveCameraSection(?id:Int = 0):Void {
 		if(SONG.notes[id] == null) return;
-
 		if (SONG.notes[id].gfSection)
 		{
 			camFollow.set(gf.getMidpoint().x, gf.getMidpoint().y);
@@ -2057,7 +2044,7 @@ class PlayState extends MusicBeatState
 			camFollow.x -= boyfriend.cameraPosition[0];
 			camFollow.y += boyfriend.cameraPosition[1];
 
-			if (Paths.formatToSongPath(SONG.song) == 'tutorial' && cameraTwn == null && FlxG.camera.zoom != 1)
+			if (curSong == 'tutorial' && cameraTwn == null && FlxG.camera.zoom != 1)
 			{
 				cameraTwn = FlxTween.tween(FlxG.camera, {zoom: 1}, (Conductor.stepCrochet * 4 / 1000), {ease: FlxEase.elasticInOut, onComplete:
 					function (twn:FlxTween)
@@ -2070,7 +2057,7 @@ class PlayState extends MusicBeatState
 	}
 
 	function tweenCamIn() {
-		if (Paths.formatToSongPath(SONG.song) == 'tutorial' && cameraTwn == null && FlxG.camera.zoom != 1.3) {
+		if (curSong == 'tutorial' && cameraTwn == null && FlxG.camera.zoom != 1.3) {
 			cameraTwn = FlxTween.tween(FlxG.camera, {zoom: 1.3}, (Conductor.stepCrochet * 4 / 1000), {ease: FlxEase.elasticInOut, onComplete:
 				function (twn:FlxTween) {
 					cameraTwn = null;
@@ -2669,9 +2656,6 @@ class PlayState extends MusicBeatState
 
 	function opponentNoteHit(note:Note):Void
 	{
-		if (Paths.formatToSongPath(SONG.song) != 'tutorial')
-			camZooming = true;
-
 		if(note.noteType == 'Hey!' && dad.animOffsets.exists('hey')) {
 			dad.playAnim('hey', true);
 			dad.specialAnim = true;
@@ -2698,8 +2682,6 @@ class PlayState extends MusicBeatState
 		}
 
 		if (SONG.needsVoices) vocals.volume = 1;
-
-		var lowerSong:String = Paths.formatToSongPath(curSong);
 		var time:Float = .15;
 
 		if(note.isSustainNote && !note.animation.curAnim.name.endsWith('end')) time *= 2;
@@ -2708,7 +2690,7 @@ class PlayState extends MusicBeatState
 		var fixedDrain:Float = healthDrain * (difficultyClamp / (Math.PI / 2));
 		var fixedDrainCap:Float = healthDrainCap / difficultyClamp;
 		// [ divide by, scare, difficulty minimum ]
-		var drainDiv:Dynamic = switch (lowerSong)
+		var drainDiv:Dynamic = switch (curSong)
 		{
 			case 'true-finale': [ Math.PI / 2, true, 0 ];
 			case 'slapfight': [ 1, true, 1 ];
@@ -2843,7 +2825,7 @@ class PlayState extends MusicBeatState
 			note.wasGoodHit = true;
 			vocals.volume = 1;
 
-			var shakeDiv:Dynamic = switch (Paths.formatToSongPath(curSong))
+			var shakeDiv:Dynamic = switch (curSong)
 			{
 				case 'slapfight': [ Math.PI / 2, 1 ];
 				case 'true-finale': [ Math.PI, 0 ];
@@ -2937,7 +2919,7 @@ class PlayState extends MusicBeatState
 		if (curNote != null && curNote.changeBPM) Conductor.changeBPM(curNote.bpm);
 
 		if (generatedMusic && curNote != null && !endingSong && !isCameraOnForcedPos) moveCameraSection(curBar);
-		switch (Paths.formatToSongPath(curSong))
+		switch (curSong)
 		{
 			case 'slapfight':
 			{
