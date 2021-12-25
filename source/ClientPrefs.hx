@@ -138,7 +138,7 @@ class ClientPrefs {
 			var savedData = Reflect.getProperty(ClientPrefs, persistent);
 			if (savedData != null) Reflect.setProperty(FlxG.save.data, persistent, savedData);
 		}
-		for (persistent in persistentFunctions)
+		for (persistent in persistentFunctions.keys())
 		{
 			var savedData = Reflect.getProperty(ClientPrefs, persistent);
 			if (savedData != null) Reflect.setProperty(FlxG.save.data, persistent, savedData);
@@ -157,8 +157,9 @@ class ClientPrefs {
 		var save:FlxSave = new FlxSave();
 		save.bind('teeb_controls', 'ninjamuffin99'); //Placing this in a separate save so that it can be manually deleted without removing your Score and stuff
 		save.data.customControls = keyBinds;
+
 		save.flush();
-		FlxG.log.add("Settings saved!");
+		trace("Settings saved!");
 	}
 
 	public static function loadPrefs() {
@@ -170,7 +171,7 @@ class ClientPrefs {
 		for (persistent => func in persistentFunctions)
 		{
 			var savedData = Reflect.getProperty(FlxG.save.data, persistent);
-			if (savedData != null) { if (func(savedData)) Reflect.setProperty(ClientPrefs, persistent, savedData); }
+			if (savedData != null && func(savedData)) Reflect.setProperty(ClientPrefs, persistent, savedData);
 		}
 		for (persistent in persistentMapData)
 		{
