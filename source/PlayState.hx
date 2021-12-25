@@ -1411,7 +1411,7 @@ class PlayState extends MusicBeatState
 		if(!inCutscene) {
 			var lerpVal:Float = CoolUtil.boundTo(elapsed * 2.4 * cameraSpeed, 0, 1);
 
-			var point:FlxPoint = (cameraFollowing ? playerDelta : opponentDelta);
+			var point:FlxPoint = cameraFollowing ? playerDelta : opponentDelta;
 			var multiplier:Float = ClientPrefs.reducedMotion ? 0 : cameraOffset;
 
 			camFollowPos.setPosition(FlxMath.lerp(camFollowPos.x, camFollow.x + (point.x * multiplier), lerpVal), FlxMath.lerp(camFollowPos.y, camFollow.y + (point.y * multiplier), lerpVal));
@@ -2968,6 +2968,11 @@ class PlayState extends MusicBeatState
 		if (curNote != null)
 		{
 			if (curNote.changeBPM) Conductor.changeBPM(curNote.bpm);
+			if (cameraFollowing != curNote.mustHitSection)
+			{
+				var setting:FlxPoint = cameraFollowing ? playerDelta : opponentDelta;
+				setting.set();
+			}
 			cameraFollowing = curNote.mustHitSection;
 		}
 
