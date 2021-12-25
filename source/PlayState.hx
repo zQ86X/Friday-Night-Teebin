@@ -1391,11 +1391,15 @@ class PlayState extends MusicBeatState
 		FlxG.sound.music.pause();
 		vocals.pause();
 
-		Conductor.songPosition = FlxG.sound.music.time;
-		vocals.time = FlxG.sound.music.time;
+		var curTime:Float = FlxG.sound.music.time;
+		// im like 90% sure this yields so i'm force restarting it and caching the current music time, then restarting it
+		FlxG.sound.music.play(true);
+		vocals.play(true);
 
-		FlxG.sound.music.play();
-		vocals.play();
+		Conductor.songPosition = curTime;
+
+		FlxG.sound.music.time = curTime;
+		vocals.time = curTime;
 	}
 
 	public var paused:Bool = false;
