@@ -234,9 +234,10 @@ class DialogueBoxPsych extends FlxSpriteGroup
 
 			char.setGraphicSize(Std.int(char.width * DialogueCharacter.DEFAULT_SCALE * char.jsonFile.scale));
 			char.updateHitbox();
+
 			char.antialiasing = ClientPrefs.globalAntialiasing;
 			char.scrollFactor.set();
-			char.alpha = 1 / 1000;
+
 			add(char);
 
 			var saveY:Bool = false;
@@ -356,7 +357,7 @@ class DialogueBoxPsych extends FlxSpriteGroup
 									char.x += scrollSpeed * elapsed;
 									if(char.x > char.startingPos - offsetPos) char.x = char.startingPos - offsetPos;
 							}
-							char.alpha = Math.max(char.alpha - 3 * elapsed, 1 / 1000);
+							char.alpha = Math.max(char.alpha - 3 * elapsed, 0);
 						} else {
 							switch(char.jsonFile.dialogue_pos) {
 								case 'left':

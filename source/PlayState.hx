@@ -725,29 +725,32 @@ class PlayState extends MusicBeatState
 			case 0:
 				if(!boyfriendMap.exists(newCharacter)) {
 					var newBoyfriend:Character = new Character(0, 0, newCharacter, true);
+
 					boyfriendMap.set(newCharacter, newBoyfriend);
 					boyfriendGroup.add(newBoyfriend);
+
 					startCharacterPos(newBoyfriend);
-					newBoyfriend.alpha = 1 / 1000;
 				}
 
 			case 1:
 				if(!dadMap.exists(newCharacter)) {
 					var newDad:Character = new Character(0, 0, newCharacter);
+
 					dadMap.set(newCharacter, newDad);
 					dadGroup.add(newDad);
+
 					startCharacterPos(newDad, true);
-					newDad.alpha = 1 / 1000;
 				}
 
 			case 2:
 				if(!gfMap.exists(newCharacter)) {
 					var newGf:Character = new Character(0, 0, newCharacter);
 					newGf.scrollFactor.set(0.95, 0.95);
+
 					gfMap.set(newCharacter, newGf);
 					gfGroup.add(newGf);
+
 					startCharacterPos(newGf);
-					newGf.alpha = 1 / 1000;
 				}
 		}
 	}
@@ -1780,12 +1783,10 @@ class PlayState extends MusicBeatState
 
 			persistentUpdate = false;
 			persistentDraw = false;
-			for (tween in modchartTweens) {
-				tween.active = true;
-			}
-			for (timer in modchartTimers) {
-				timer.active = true;
-			}
+
+			for (tween in modchartTweens) tween.active = true;
+			for (timer in modchartTimers) timer.active = true;
+
 			openSubState(new GameOverSubstate(boyfriend.getScreenPosition().x - boyfriend.positionArray[0], boyfriend.getScreenPosition().y - boyfriend.positionArray[1], camFollowPos.x, camFollowPos.y));
 
 			// MusicBeatState.switchState(new GameOverState(boyfriend.getScreenPosition().x, boyfriend.getScreenPosition().y));
@@ -1965,9 +1966,10 @@ class PlayState extends MusicBeatState
 							}
 
 							var lastAlpha:Float = boyfriend.alpha;
-							boyfriend.alpha = 0.00001;
+
 							boyfriend = boyfriendMap.get(value2);
 							boyfriend.alpha = lastAlpha;
+
 							iconP1.changeIcon(boyfriend.healthIcon);
 						}
 
@@ -1979,7 +1981,7 @@ class PlayState extends MusicBeatState
 
 							var wasGf:Bool = dad.curCharacter.startsWith('gf');
 							var lastAlpha:Float = dad.alpha;
-							dad.alpha = 0.00001;
+
 							dad = dadMap.get(value2);
 							if(!dad.curCharacter.startsWith('gf')) {
 								if(wasGf) {
@@ -1999,7 +2001,7 @@ class PlayState extends MusicBeatState
 							}
 
 							var lastAlpha:Float = gf.alpha;
-							gf.alpha = 0.00001;
+
 							gf = gfMap.get(value2);
 							gf.alpha = lastAlpha;
 						}
