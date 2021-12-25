@@ -209,7 +209,7 @@ class PlayState extends MusicBeatState
 	var coolTransition:FlxSprite;
 
 	var cameraOffsetPlayer:Bool = false;
-	var cameraOffset:Float = 45;
+	var cameraOffset:Float = 25;
 
 	var cameraDeltaX:Int = 0;
 	var cameraDeltaY:Int = 0;
