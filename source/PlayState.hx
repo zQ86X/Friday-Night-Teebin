@@ -207,6 +207,10 @@ class PlayState extends MusicBeatState
 	var teebCrown:BGSprite;
 
 	var coolTransition:FlxSprite;
+	var cameraOffset:Float = 45;
+
+	var cameraDeltaX:Int = 0;
+	var cameraDeltaY:Int = 0;
 
 	public var songScore:Int = 0;
 	public var songHits:Int = 0;
@@ -278,7 +282,7 @@ class PlayState extends MusicBeatState
 					FlxG.camera.zoom += zoomIn;
 					camHUD.zoom += zoomIn * 2;
 
-					camGame.angle += zoomIn * ((stepMod > 0 && (stepMod % (onBeat ? 16 : 4) == (onBeat ? 8 : 0))) ? -inverseValue : inverseValue) * 145;
+					if (!ClientPrefs.reducedMotion) camGame.angle += zoomIn * ((stepMod > 0 && (stepMod % (onBeat ? 16 : 4) == (onBeat ? 8 : 0))) ? -inverseValue : inverseValue) * 145;
 				}
 			} ],
 			// True Finale
@@ -1400,7 +1404,9 @@ class PlayState extends MusicBeatState
 		}*/
 		if(!inCutscene) {
 			var lerpVal:Float = CoolUtil.boundTo(elapsed * 2.4 * cameraSpeed, 0, 1);
-			camFollowPos.setPosition(FlxMath.lerp(camFollowPos.x, camFollow.x, lerpVal), FlxMath.lerp(camFollowPos.y, camFollow.y, lerpVal));
+			var multiplier:Float = ClientPrefs.reducedMotion ? 0 : cameraOffset;
+
+			camFollowPos.setPosition(FlxMath.lerp(camFollowPos.x, camFollow.x + (cameraDeltaX * multiplier), lerpVal), FlxMath.lerp(camFollowPos.y, camFollow.y + (cameraDeltaY * multiplier), lerpVal));
 		}
 
 		super.update(elapsed);
@@ -2713,7 +2719,7 @@ class PlayState extends MusicBeatState
 			var divider:Float = drainDiv[0];
 
 			if (!note.isSustainNote && health > fixedDrainCap) health = Math.max(health - (fixedDrain / divider), fixedDrainCap);
-			if (ClientPrefs.camZooms) camGame.shake(1 / (120 * divider), 1 / (5 * divider), null, false);
+			if (!ClientPrefs.reducedMotion) camGame.shake(1 / (120 * divider), 1 / (5 * divider), null, false);
 
 			if (drainDiv[1] == true)
 			{
@@ -2722,7 +2728,10 @@ class PlayState extends MusicBeatState
 			}
 		}
 
-		StrumPlayAnim(true, Std.int(Math.abs(note.noteData)) % 4, time);
+		var leData:Int = CoolUtil.wrapNoteData(note.noteData);
+		setCameraDelta(leData, false);
+
+		StrumPlayAnim(true, leData, time);
 		note.hitByOpponent = true;
 
 		if (!note.isSustainNote)
@@ -2737,12 +2746,10 @@ class PlayState extends MusicBeatState
 	{
 		if (!note.wasGoodHit)
 		{
-			if(cpuControlled && (note.ignoreNote || note.hitCausesMiss)) return;
+			if (cpuControlled && (note.ignoreNote || note.hitCausesMiss)) return;
 
 			var isSus:Bool = note.isSustainNote; //GET OUT OF MY HEAD, GET OUT OF MY HEAD, GET OUT OF MY HEAD
-
-			var leData:Int = Std.int(Math.abs(note.noteData));
-			var leType:String = note.noteType;
+			var leData:Int = CoolUtil.wrapNoteData(note.noteData);
 
 			if(note.hitCausesMiss) {
 				noteMiss(note);
@@ -2835,6 +2842,7 @@ class PlayState extends MusicBeatState
 			note.wasGoodHit = true;
 			vocals.volume = 1;
 
+			setCameraDelta(leData, true);
 			var shakeDiv:Dynamic = switch (curSong)
 			{
 				case 'slapfight': [ Math.PI / 2, 1 ];
@@ -2842,13 +2850,10 @@ class PlayState extends MusicBeatState
 
 				default: null;
 			}
-			if (shakeDiv != null)
+			if (shakeDiv != null && !ClientPrefs.reducedMotion)
 			{
-				if (ClientPrefs.camZooms)
-				{
-					var divider:Float = shakeDiv[0];
-					camGame.shake(1 / (120 * divider), 1 / (5 * divider), null, false);
-				}
+				var divider:Float = shakeDiv[0];
+				camGame.shake(1 / (120 * divider), 1 / (5 * divider), null, false);
 			}
 			if (!isSus)
 			{
@@ -2859,6 +2864,29 @@ class PlayState extends MusicBeatState
 		}
 	}
 
+	function setCameraDelta(leData:Int, mustHit:Bool)
+	{
+		var curBar:Int = Std.int(curStep / 16);
+		var curNote:SwagSection = SONG.notes[curBar];
+
+		if (curNote != null && curNote.mustHitSection == mustHit)
+		{
+			cameraDeltaX = switch (leData)
+			{
+				case 0: -1;
+				case 3: 1;
+
+				default: 0;
+			};
+			cameraDeltaY = switch (leData)
+			{
+				case 2: -1;
+				case 1: 1;
+
+				default: 0;
+			};
+		}
+	}
 	function spawnNoteSplashOnNote(note:Note) {
 		if(ClientPrefs.noteSplashes && note != null) {
 			var strum:StrumNote = playerStrums.members[note.noteData];
@@ -2949,6 +2977,9 @@ class PlayState extends MusicBeatState
 
 		var zoomFunction:Array<Dynamic> = camZoomTypes[camZoomType];
 		if (canZoomCamera() && zoomFunction[0]) zoomFunction[1]();
+
+		cameraDeltaX = 0;
+		cameraDeltaY = 0;
 
 		iconP1.scale.set(1.2, 1.2);
 		iconP2.scale.set(1.2, 1.2);

@@ -46,19 +46,28 @@ class CoolUtil
 		return difficulties[PlayState.storyDifficulty].toUpperCase();
 	}
 
-	inline public static function boundTo(value:Float, min:Float, max:Float):Float {
+	inline public static function boundTo(value:Float, min:Float, max:Float):Float
+	{
 		return Math.max(min, Math.min(max, value));
 	}
-	inline public static function repeat(value:Int, delta:Int, loop:Int):Int {
+	inline public static function repeat(value:Int, delta:Int, loop:Int):Int
+	{
 		var newValue:Int = value + delta;
 		return newValue >= loop ? 0 : newValue < 0 ? loop - 1 : newValue;
 	}
 
-	inline public static function boolToInt(value:Bool):Int {
+	inline public static function boolToInt(value:Bool):Int
+	{
 		return value ? 1 : 0;
 	}
-	inline public static function getDelta(a:Bool, b:Bool):Int {
+	inline public static function getDelta(a:Bool, b:Bool):Int
+	{
 		return boolToInt(a) - boolToInt(b);
+	}
+
+	inline public static function wrapNoteData(leData:Int):Int
+	{
+		return Std.int(Math.abs(leData)) % 4;
 	}
 
 	public static function coolTextFile(path:String):Array<String>

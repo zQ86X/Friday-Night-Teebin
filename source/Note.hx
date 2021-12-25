@@ -1,5 +1,6 @@
 package;
 
+import openfl.Lib;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.graphics.frames.FlxAtlasFrames;
@@ -124,7 +125,7 @@ class Note extends FlxSprite
 
 		x += (ClientPrefs.middleScroll ? PlayState.STRUM_X_MIDDLESCROLL : PlayState.STRUM_X) + 50;
 		// MAKE SURE ITS DEFINITELY OFF SCREEN?
-		y -= 2000;
+		y -= Main.gameHeight + frameHeight;
 		this.strumTime = strumTime;
 		if(!inEditor) this.strumTime += ClientPrefs.noteOffset;
 
