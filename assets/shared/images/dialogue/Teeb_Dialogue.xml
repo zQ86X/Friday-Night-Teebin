@@ -1,10 +1,13 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TextureAtlas imagePath="Teeb_Dialog.png">
-	<!-- Created with Adobe Animate version 21.0.9.42677 -->
+<TextureAtlas imagePath="Teeb_Dialogue.png">
+	<!-- Created with Adobe Animate version 22.0.2.168 -->
 	<!-- http://www.adobe.com/products/animate.html -->
-	<SubTexture name="Teebicus_Portrait0000" x="0" y="0" width="382" height="470"/>
-	<SubTexture name="Teebicus_Portrait0001" x="0" y="0" width="382" height="470"/>
-	<SubTexture name="Teebicus_Portrait0002" x="0" y="0" width="382" height="470"/>
-	<SubTexture name="Teebicus_Portrait0003" x="0" y="0" width="382" height="470"/>
-	<SubTexture name="Teebicus_Portrait0004" x="0" y="0" width="382" height="470"/>
+	<SubTexture name="TEEB_DIALOGUE_IDLE0000" x="100" y="100" width="569" height="754"/>
+	<SubTexture name="TEEB_DIALOGUE_SPEAK0000" x="769" y="100" width="543" height="782" frameX="-13" frameY="0" frameWidth="569" frameHeight="784"/>
+	<SubTexture name="TEEB_DIALOGUE_SPEAK0001" x="1412" y="100" width="557" height="766" frameX="-6" frameY="-17" frameWidth="569" frameHeight="784"/>
+	<SubTexture name="TEEB_DIALOGUE_SPEAK0002" x="2069" y="100" width="566" height="754" frameX="-1" frameY="-30" frameWidth="569" frameHeight="784"/>
+	<SubTexture name="TEEB_DIALOGUE_SPEAK0003" x="2735" y="100" width="569" height="750" frameX="0" frameY="-34" frameWidth="569" frameHeight="784"/>
+	<SubTexture name="TEEB_DIALOGUE_SPEAK0004" x="3404" y="100" width="569" height="752" frameX="0" frameY="-32" frameWidth="569" frameHeight="784"/>
+	<SubTexture name="TEEB_DIALOGUE_SPEAK0005" x="100" y="982" width="569" height="754" frameX="0" frameY="-30" frameWidth="569" frameHeight="784"/>
+	<SubTexture name="TEEB_DIALOGUE_SPEAK0006" x="769" y="982" width="569" height="754" frameX="0" frameY="-30" frameWidth="569" frameHeight="784"/>
 </TextureAtlas>

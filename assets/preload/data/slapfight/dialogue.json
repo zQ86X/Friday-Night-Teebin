@@ -1,26 +1,26 @@
 {
-    "box": "speech_bubble_talking",
-    "boxState": "angry",
-    "dialogue": [
-        {
-            "portrait": "teeb",
-            "expression": "talk",
-            "text": "thats it."
-        },
+	"dialogue": [
 		{
-            "portrait": "teeb",
 			"expression": "talk",
-			"text": "you're going to be mere atoms after i'm\ndone with you."
+			"text": "thats it.",
+			"portrait": "teeb"
 		},
 		{
-            "portrait": "teeb",
 			"expression": "talk",
-			"text": "literally demolished. eviscerated."
+			"text": "you're going to be mere atoms after i'm\\ndone with you.",
+			"portrait": "teeb"
 		},
 		{
-            "portrait": "teeb",
 			"expression": "talk",
-			"text": "say your goodbyes."
+			"text": "literally demolished. eviscerated.",
+			"portrait": "teeb"
+		},
+		{
+			"expression": "talk",
+			"text": "say your goodbyes.",
+			"portrait": "teeb"
 		}
-    ]
+	],
+	"boxState": "angry",
+	"box": "speech_bubble_talking"
 }
