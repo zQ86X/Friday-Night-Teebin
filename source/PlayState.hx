@@ -447,12 +447,12 @@ class PlayState extends MusicBeatState
 				add(stageFront);
 			}
 		}
+
 		add(gfGroup);
+		switch (curStage) { case 'teeb': add(teebCrown); }
 
 		add(dadGroup);
 		add(boyfriendGroup);
-
-		switch (curStage) { case 'teeb': add(teebCrown); }
 
 		// STAGE SCRIPTS
 
