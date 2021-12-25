@@ -1034,7 +1034,7 @@ class PlayState extends MusicBeatState
 
 		Conductor.songPosition = curTime;
 
-		resyncVocals();
+		resyncVocals(true);
 		if (paused) {
 			FlxG.sound.music.pause();
 			vocals.pause();
@@ -1321,12 +1321,12 @@ class PlayState extends MusicBeatState
 	{
 		if (paused)
 		{
-			if (FlxG.sound.music != null && !startingSong) resyncVocals();
+			if (FlxG.sound.music != null && !startingSong) resyncVocals(true);
 
 			if (!startTimer.finished) startTimer.active = true;
 			if (finishTimer != null && !finishTimer.finished) finishTimer.active = true;
-			if (songSpeedTween != null) songSpeedTween.active = true;
 
+			if (songSpeedTween != null) songSpeedTween.active = true;
 			var chars:Array<Character> = [boyfriend, gf, dad];
 			for (i in 0...chars.length) {
 				if(chars[i].colorTween != null) {
@@ -1384,22 +1384,23 @@ class PlayState extends MusicBeatState
 		super.onFocusLost();
 	}
 
-	function resyncVocals():Void
+	function resyncVocals(?forceMusic:Bool = false):Void
 	{
 		if (finishTimer != null) return;
 
-		FlxG.sound.music.pause();
-		vocals.pause();
-
 		var curTime:Float = FlxG.sound.music.time;
-		// im like 90% sure this yields so i'm force restarting it and caching the current music time, then restarting it
-		FlxG.sound.music.play(true);
-		vocals.play(true);
+		var curVocals:Float = vocals.time;
 
 		Conductor.songPosition = curTime;
+		if (forceMusic || curVocals > curTime + vocalResyncTime || curVocals < curTime - vocalResyncTime)
+		{
+			// im like 90% sure this yields so i'm force restarting it and caching the current music time, then restarting it
+			FlxG.sound.music.play(true);
+			vocals.play(true);
 
-		FlxG.sound.music.time = curTime;
-		vocals.time = curTime;
+			FlxG.sound.music.time = curTime;
+			vocals.time = curTime;
+		}
 	}
 
 	public var paused:Bool = false;
