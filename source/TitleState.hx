@@ -57,9 +57,8 @@ class TitleState extends MusicBeatState
 	var textGroup:FlxGroup;
 	var ngSpr:FlxSprite;
 
-	var curWacky:Array<String> = [];
-
-	var wackyImage:FlxSprite;
+	var curWacky1:Array<String> = [];
+	var curWacky2:Array<String> = [];
 
 	var easterEggEnabled:Bool = true; //Disable this to hide the easter egg
 	var easterEggKeyCombination:Array<FlxKey> = [FlxKey.B, FlxKey.B]; //bb stands for bbpanzu cuz he wanted this lmao
@@ -81,7 +80,8 @@ class TitleState extends MusicBeatState
 
 		PlayerSettings.init();
 
-		curWacky = FlxG.random.getObject(getIntroTextShit());
+		curWacky1 = rollWacky();
+		curWacky2 = rollWacky(curWacky1);
 
 		// DEBUG BULLSHIT
 
@@ -413,6 +413,12 @@ class TitleState extends MusicBeatState
 			textGroup.add(coolText);
 		}
 	}
+	function rollWacky(?match = null)
+	{
+		var rolled = null;
+		do { rolled = FlxG.random.getObject(getIntroTextShit()); } while (rolled == match);
+		return rolled;
+	}
 
 	function deleteCoolText()
 	{
@@ -440,32 +446,40 @@ class TitleState extends MusicBeatState
 			sickBeats++;
 			switch (sickBeats)
 			{
-				case 1: createCoolText(['Zion', FlxG.random.bool(5) ? "Teebiscuit" : "Teebicus"]);
-				case 3: addMoreText('present');
-				case 4: deleteCoolText();
+				case 1: createCoolText(['Zion']);
+				case 3: addMoreText(FlxG.random.bool(5) ? 'Teebiscuit' : 'Teebicus');
+				case 5: addMoreText('MotorcycIeMan');
+				case 7: addMoreText('yellwbit');
+				case 9: addMoreText('present');
+				case 13: deleteCoolText();
 
-				case 5: createCoolText(['In association', 'with'], -40);
-				case 7:
+				case 15: createCoolText(['In association', 'with'], -40);
+				case 17:
 				{
 					addMoreText('newgrounds', -40);
 					ngSpr.visible = true;
 				}
-				case 8:
+				case 19:
 				{
 					deleteCoolText();
 					ngSpr.visible = false;
 				}
 
-				case 9: createCoolText([curWacky[0]]);
-				case 11: addMoreText(curWacky[1]);
+				case 21: createCoolText([curWacky1[0]]);
+				case 23: addMoreText(curWacky1[1]);
 
-				case 12: deleteCoolText();
+				case 25: deleteCoolText();
 
-				case 13: addMoreText('Friday');
-				case 14: addMoreText('Night');
-				case 15: addMoreText('Teebin');
+				case 27: createCoolText([curWacky2[0]]);
+				case 29: addMoreText(curWacky2[1]);
 
-				case 16: skipIntro();
+				case 31: deleteCoolText();
+
+				case 33: addMoreText('Friday');
+				case 35: addMoreText('Night');
+				case 37: addMoreText('Teebin');
+
+				case 39: skipIntro();
 			}
 		}
 	}
