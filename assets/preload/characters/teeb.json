@@ -1,125 +1,73 @@
 {
 	"animations": [
 		{
+			"loop": false,
 			"offsets": [
 				10,
-				-108
+				-106
 			],
-			"loop": false,
-			"fps": 24,
 			"anim": "singLEFT",
-			"indices": [],
-			"name": "TEEB_LEFT"
+			"fps": 24,
+			"name": "TEEB_LEFT",
+			"indices": []
 		},
 		{
+			"loop": false,
 			"offsets": [
 				0,
 				-110
 			],
-			"loop": false,
-			"fps": 24,
 			"anim": "singDOWN",
-			"indices": [],
-			"name": "TEEB_DOWN"
+			"fps": 24,
+			"name": "TEEB_DOWN",
+			"indices": []
 		},
 		{
+			"loop": false,
 			"offsets": [
-				0,
+				-70,
+				-55
+			],
+			"anim": "singUP",
+			"fps": 24,
+			"name": "TEEB_UP",
+			"indices": []
+		},
+		{
+			"loop": true,
+			"offsets": [
+				-110,
 				-85
 			],
-			"loop": false,
+			"anim": "singRIGHT",
 			"fps": 24,
-			"anim": "singUP",
+			"name": "TEEB_RIGHT",
+			"indices": []
+		},
+		{
+			"offsets": [
+				-50,
+				-120
+			],
 			"indices": [],
-			"name": "TEEB_UP"
-		},
-		{
-			"loop": false,
-			"offsets": [
-				0,
-				-120
-			],
-			"anim": "danceLeft",
-			"fps": 24,
-			"name": "TEEB_IDLE",
-			"indices": [
-				15,
-				16,
-				17,
-				18,
-				19,
-				20,
-				21,
-				22,
-				23,
-				24,
-				25,
-				26,
-				27
-			]
-		},
-		{
-			"loop": false,
-			"offsets": [
-				0,
-				-120
-			],
-			"anim": "danceRight",
-			"fps": 24,
-			"name": "TEEB_IDLE",
-			"indices": [
-				0,
-				1,
-				2,
-				3,
-				4,
-				5,
-				6,
-				7,
-				8,
-				9,
-				10,
-				11,
-				12,
-				13,
-				14
-			]
-		},
-		{
-			"offsets": [
-				0,
-				-120
-			],
-			"loop": false,
 			"fps": 24,
 			"anim": "idle",
-			"indices": [],
-			"name": "TEEB_IDLE"
-		},
-		{
-			"offsets": [
-				0,
-				-105
-			],
 			"loop": true,
-			"fps": 24,
-			"anim": "singRIGHT",
-			"indices": [],
-			"name": "TEEB_RIGHT"
+			"name": "TEEB_IDLE"
 		}
 	],
 	"no_antialiasing": false,
 	"image": "characters/Teebicus_Assets",
 	"position": [
 		0,
-		100
+		-130
 	],
 	"healthicon": "teeb",
 	"flip_x": false,
 	"healthbar_colors": [
-		102,
-		102,
-		102
+		123,
+		123,
+		123
 	],
 	"camera_position": [
 		-140,
