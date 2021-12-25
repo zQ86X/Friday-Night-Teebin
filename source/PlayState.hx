@@ -1014,13 +1014,15 @@ class PlayState extends MusicBeatState
 		FlxG.sound.playMusic(Paths.inst(PlayState.SONG.song), 1, false);
 		FlxG.sound.music.onComplete = finishSong;
 
+		var curTime:Float = FlxG.sound.music.time;
+
 		FlxG.sound.music.play(true);
 		vocals.play(true);
 
-		var curTime:Float = FlxG.sound.music.time;
-
 		FlxG.sound.music.time = curTime;
 		vocals.time = curTime;
+
+		Conductor.songPosition = curTime;
 
 		resyncVocals();
 		if (paused) {

@@ -1,59 +1,59 @@
 {
 	"animations": [
 		{
-			"loop": false,
 			"offsets": [
-				10,
-				-106
-			],
-			"anim": "singLEFT",
-			"fps": 24,
-			"name": "TEEB_LEFT",
-			"indices": []
-		},
-		{
-			"loop": false,
-			"offsets": [
-				0,
+				8,
 				-110
 			],
-			"anim": "singDOWN",
+			"loop": false,
 			"fps": 24,
-			"name": "TEEB_DOWN",
-			"indices": []
+			"anim": "singLEFT",
+			"indices": [],
+			"name": "TEEB_LEFT"
+		},
+		{
+			"offsets": [
+				0,
+				-116
+			],
+			"loop": false,
+			"fps": 24,
+			"anim": "singDOWN",
+			"indices": [],
+			"name": "TEEB_DOWN"
+		},
+		{
+			"offsets": [
+				-55,
+				-74
+			],
+			"loop": false,
+			"fps": 24,
+			"anim": "singUP",
+			"indices": [],
+			"name": "TEEB_UP"
 		},
 		{
 			"loop": false,
-			"offsets": [
-				-70,
-				-55
-			],
-			"anim": "singUP",
-			"fps": 24,
-			"name": "TEEB_UP",
-			"indices": []
-		},
-		{
-			"loop": true,
-			"offsets": [
-				-110,
-				-85
-			],
-			"anim": "singRIGHT",
-			"fps": 24,
-			"name": "TEEB_RIGHT",
-			"indices": []
-		},
-		{
 			"offsets": [
 				-50,
 				-120
 			],
+			"anim": "idle",
+			"fps": 24,
+			"name": "TEEB_IDLE",
+			"indices": []
+		},
+		{
+			"offsets": [
+				-110,
+				-95
+			],
 			"indices": [],
 			"fps": 24,
-			"anim": "idle",
+			"anim": "singRIGHT",
 			"loop": false,
-			"name": "TEEB_IDLE"
+			"name": "TEEB_RIGHT"
 		}
 	],
 	"no_antialiasing": false,
