@@ -945,9 +945,7 @@ class ChartingState extends MusicBeatState
 	{
 		if(curSelectedNote != null && curSelectedNote[2] == null) //Is event note
 		{
-			curEventSelected += change;
-			if(curEventSelected < 0) curEventSelected = Std.int(curSelectedNote[1].length) - 1;
-			else if(curEventSelected >= curSelectedNote[1].length) curEventSelected = 0;
+			curEventSelected = CoolUtil.repeat(curEventSelected, change, curSelectedNote[1].length);
 			selectedEventText.text = 'Selected Event: ' + (curEventSelected + 1) + ' / ' + curSelectedNote[1].length;
 		}
 		else
@@ -1915,8 +1913,7 @@ class ChartingState extends MusicBeatState
 		{
 			if (curSelectedNote[2] != null)
 			{
-				curSelectedNote[2] += value;
-				curSelectedNote[2] = Math.max(curSelectedNote[2], 0);
+				curSelectedNote[2] = Math.max(curSelectedNote[2] + value, 0);
 			}
 		}
 

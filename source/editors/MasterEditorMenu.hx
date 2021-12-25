@@ -63,13 +63,10 @@ class MasterEditorMenu extends MusicBeatState
 
 	override function update(elapsed:Float)
 	{
-		if (controls.UI_UP_P)
+		var delta:Int = CoolUtil.getDelta(controls.UI_DOWN_P, controls.UI_UP_P);
+		if (delta != 0)
 		{
-			changeSelection(-1);
-		}
-		if (controls.UI_DOWN_P)
-		{
-			changeSelection(1);
+			changeSelection(delta);
 		}
 
 		if (controls.BACK)
@@ -120,12 +117,6 @@ class MasterEditorMenu extends MusicBeatState
 	function changeSelection(change:Int = 0)
 	{
 		FlxG.sound.play(Paths.sound('scrollMenu'), 0.4);
-
-		curSelected += change;
-
-		if (curSelected < 0)
-			curSelected = options.length - 1;
-		if (curSelected >= options.length)
-			curSelected = 0;
+		curSelected = CoolUtil.repeat(curSelected, change, options.length);
 	}
 }

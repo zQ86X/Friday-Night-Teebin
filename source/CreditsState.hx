@@ -114,21 +114,12 @@ class CreditsState extends MusicBeatState
 
 	override function update(elapsed:Float)
 	{
-		if (FlxG.sound.music.volume < 0.7)
-		{
-			FlxG.sound.music.volume += 0.5 * FlxG.elapsed;
-		}
+		FlxG.sound.music.volume = Math.min(FlxG.sound.music.volume + (.5 * elapsed), .7);
 
-		var upP = controls.UI_UP_P;
-		var downP = controls.UI_DOWN_P;
-
-		if (upP)
+		var delta:Int = CoolUtil.getDelta(controls.UI_DOWN_P, controls.UI_UP_P);
+		if (delta != 0)
 		{
-			changeSelection(-1);
-		}
-		if (downP)
-		{
-			changeSelection(1);
+			changeSelection(delta);
 		}
 
 		if (controls.BACK)
@@ -149,11 +140,7 @@ class CreditsState extends MusicBeatState
 	{
 		FlxG.sound.play(Paths.sound('scrollMenu'), 0.4);
 		do {
-			curSelected += change;
-			if (curSelected < 0)
-				curSelected = creditsStuff.length - 1;
-			if (curSelected >= creditsStuff.length)
-				curSelected = 0;
+			curSelected = CoolUtil.repeat(curSelected, change, creditsStuff.length);
 		} while(unselectableCheck(curSelected));
 
 		var newColor:Int =  getCurrentBGColor();

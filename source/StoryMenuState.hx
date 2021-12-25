@@ -200,36 +200,18 @@ class StoryMenuState extends MusicBeatState
 
 		if (!movedBack && !selectedWeek)
 		{
-			var upP = controls.UI_UP_P;
-			var downP = controls.UI_DOWN_P;
-			if (upP)
+			var delta:Int = CoolUtil.getDelta(controls.UI_DOWN_P, controls.UI_UP_P);
+			if (delta != 0)
 			{
-				changeWeek(-1);
+				changeWeek(delta);
 				FlxG.sound.play(Paths.sound('scrollMenu'));
 			}
 
-			if (downP)
-			{
-				changeWeek(1);
-				FlxG.sound.play(Paths.sound('scrollMenu'));
-			}
+			rightArrow.animation.play(controls.UI_RIGHT ? 'press' : 'idle');
+			leftArrow.animation.play(controls.UI_LEFT ? 'press' : 'idle');
 
-			if (controls.UI_RIGHT)
-				rightArrow.animation.play('press')
-			else
-				rightArrow.animation.play('idle');
-
-			if (controls.UI_LEFT)
-				leftArrow.animation.play('press');
-			else
-				leftArrow.animation.play('idle');
-
-			if (controls.UI_RIGHT_P)
-				changeDifficulty(1);
-			else if (controls.UI_LEFT_P)
-				changeDifficulty(-1);
-			else if (upP || downP)
-				changeDifficulty();
+			var horDelta:Int = CoolUtil.getDelta(controls.UI_RIGHT_P, controls.UI_LEFT_P);
+			if (horDelta != 0 || delta != 0) changeDifficulty(horDelta);
 
 			if(FlxG.keys.justPressed.CONTROL)
 			{
@@ -314,12 +296,7 @@ class StoryMenuState extends MusicBeatState
 	var lastImagePath:String;
 	function changeDifficulty(change:Int = 0):Void
 	{
-		curDifficulty += change;
-
-		if (curDifficulty < 0)
-			curDifficulty = CoolUtil.difficulties.length-1;
-		if (curDifficulty >= CoolUtil.difficulties.length)
-			curDifficulty = 0;
+		curDifficulty = CoolUtil.repeat(curDifficulty, change, CoolUtil.difficulties.length);
 
 		var image:Dynamic = Paths.image('menudifficulties/' + Paths.formatToSongPath(CoolUtil.difficulties[curDifficulty]));
 		var newImagePath:String = '';
@@ -358,12 +335,7 @@ class StoryMenuState extends MusicBeatState
 
 	function changeWeek(change:Int = 0):Void
 	{
-		curWeek += change;
-
-		if (curWeek >= WeekData.weeksList.length)
-			curWeek = 0;
-		if (curWeek < 0)
-			curWeek = WeekData.weeksList.length - 1;
+		curWeek = CoolUtil.repeat(curWeek, change, WeekData.weeksList.length);
 
 		var leWeek:WeekData = WeekData.weeksLoaded.get(WeekData.weeksList[curWeek]);
 		WeekData.setDirectoryFromWeek(leWeek);

@@ -1,5 +1,6 @@
 package options;
 
+import haxe.macro.ComplexTypeTools;
 #if desktop
 import Discord.DiscordClient;
 #end
@@ -44,7 +45,7 @@ class NotesSubState extends MusicBeatSubstate
 	var posX = 230;
 	public function new() {
 		super();
-		
+
 		var bg:FlxSprite = new FlxSprite().loadGraphic(Paths.image('menuDesat'));
 		bg.color = 0xFFea71fd;
 		bg.setGraphicSize(Std.int(bg.width * 1.1));
@@ -52,7 +53,7 @@ class NotesSubState extends MusicBeatSubstate
 		bg.screenCenter();
 		bg.antialiasing = ClientPrefs.globalAntialiasing;
 		add(bg);
-		
+
 		blackBG = new FlxSprite(posX - 25).makeGraphic(870, 200, FlxColor.BLACK);
 		blackBG.alpha = 0.4;
 		add(blackBG);
@@ -128,20 +129,17 @@ class NotesSubState extends MusicBeatSubstate
 				}
 			}
 		} else {
-			if (controls.UI_UP_P) {
-				changeSelection(-1);
+			var horDelta:Int = CoolUtil.getDelta(controls.UI_RIGHT_P, controls.UI_LEFT_P);
+			var delta:Int = CoolUtil.getDelta(controls.UI_DOWN_P, controls.UI_UP_P);
+
+			if (delta != 0)
+			{
+				changeSelection(delta);
 				FlxG.sound.play(Paths.sound('scrollMenu'));
 			}
-			if (controls.UI_DOWN_P) {
-				changeSelection(1);
-				FlxG.sound.play(Paths.sound('scrollMenu'));
-			}
-			if (controls.UI_LEFT_P) {
-				changeType(-1);
-				FlxG.sound.play(Paths.sound('scrollMenu'));
-			}
-			if (controls.UI_RIGHT_P) {
-				changeType(1);
+			if (horDelta != 0)
+			{
+				changeType(horDelta);
 				FlxG.sound.play(Paths.sound('scrollMenu'));
 			}
 			if(controls.RESET) {
@@ -190,15 +188,10 @@ class NotesSubState extends MusicBeatSubstate
 	}
 
 	function changeSelection(change:Int = 0) {
-		curSelected += change;
-		if (curSelected < 0)
-			curSelected = ClientPrefs.arrowHSV.length-1;
-		if (curSelected >= ClientPrefs.arrowHSV.length)
-			curSelected = 0;
-
+		curSelected = CoolUtil.repeat(curSelected, change, ClientPrefs.arrowHSV.length);
 		curValue = ClientPrefs.arrowHSV[curSelected][typeSelected];
-		updateValue();
 
+		updateValue();
 		for (i in 0...grpNumbers.length) {
 			var item = grpNumbers.members[i];
 			item.alpha = 0.6;
@@ -221,15 +214,10 @@ class NotesSubState extends MusicBeatSubstate
 	}
 
 	function changeType(change:Int = 0) {
-		typeSelected += change;
-		if (typeSelected < 0)
-			typeSelected = 2;
-		if (typeSelected > 2)
-			typeSelected = 0;
-
+		typeSelected = CoolUtil.repeat(typeSelected, change, 2);
 		curValue = ClientPrefs.arrowHSV[curSelected][typeSelected];
-		updateValue();
 
+		updateValue();
 		for (i in 0...grpNumbers.length) {
 			var item = grpNumbers.members[i];
 			item.alpha = 0.6;

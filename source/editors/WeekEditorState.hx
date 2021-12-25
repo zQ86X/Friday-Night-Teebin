@@ -733,13 +733,7 @@ class WeekEditorFreeplayState extends MusicBeatState
 
 	function changeSelection(change:Int = 0) {
 		FlxG.sound.play(Paths.sound('scrollMenu'), 0.4);
-
-		curSelected += change;
-
-		if (curSelected < 0)
-			curSelected = weekFile.songs.length - 1;
-		if (curSelected >= weekFile.songs.length)
-			curSelected = 0;
+		curSelected = CoolUtil.repeat(curSelected, change, weekFile.songs.length);
 
 		var bullShit:Int = 0;
 		for (i in 0...iconArray.length)
@@ -797,8 +791,11 @@ class WeekEditorFreeplayState extends MusicBeatState
 				FlxG.sound.playMusic(Paths.music('freakyMenu'));
 			}
 
-			if(controls.UI_UP_P) changeSelection(-1);
-			if(controls.UI_DOWN_P) changeSelection(1);
+			var delta:Int = CoolUtil.getDelta(controls.UI_DOWN_P, controls.UI_UP_P);
+			if (delta != 0)
+			{
+				changeSelection(delta);
+			}
 		}
 		super.update(elapsed);
 	}

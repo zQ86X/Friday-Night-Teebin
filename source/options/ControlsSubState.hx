@@ -118,11 +118,10 @@ class ControlsSubState extends MusicBeatSubstate {
 	var bindingTime:Float = 0;
 	override function update(elapsed:Float) {
 		if(!rebindingKey) {
-			if (controls.UI_UP_P) {
-				changeSelection(-1);
-			}
-			if (controls.UI_DOWN_P) {
-				changeSelection(1);
+			var delta:Int = CoolUtil.getDelta(controls.UI_DOWN_P, controls.UI_UP_P);
+			if (delta != 0)
+			{
+				changeSelection(delta);
 			}
 			if (controls.UI_LEFT_P || controls.UI_RIGHT_P) {
 				changeAlt();
@@ -196,14 +195,10 @@ class ControlsSubState extends MusicBeatSubstate {
 		}
 		return num;
 	}
-	
+
 	function changeSelection(change:Int = 0) {
 		do {
-			curSelected += change;
-			if (curSelected < 0)
-				curSelected = optionShit.length - 1;
-			if (curSelected >= optionShit.length)
-				curSelected = 0;
+			curSelected = CoolUtil.repeat(curSelected, change, optionShit.length);
 		} while(unselectableCheck(curSelected));
 
 		var bullShit:Int = 0;
