@@ -145,11 +145,11 @@ class ClientPrefs {
 		}
 		for (persistent in persistentMapData)
 		{
-			var savedMap:Map<String, Dynamic> = Reflect.getProperty(ClientPrefs, persistent);
+			var savedMap:Map<Any, Any> = Reflect.getProperty(ClientPrefs, persistent);
 			if (savedMap != null)
 			{
-				var reflectMap:Map<String, Dynamic> = Reflect.getProperty(FlxG.save.data, persistent);
-				for (name => value in savedMap) reflectMap.set(name, value);
+				var reflectMap:Map<Any, Any> = Reflect.getProperty(FlxG.save.data, persistent);
+				if (reflectMap != null) { for (name => value in savedMap) reflectMap.set(name, value); }
 			}
 		}
 		FlxG.save.flush();
