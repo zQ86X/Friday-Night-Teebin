@@ -200,11 +200,10 @@ class PlayState extends MusicBeatState
 	private var losingPercent:Float = 20;
 	private var vocalResyncTime:Int = 20;
 
-	private var slapfightBeatHit:Bool = false;
-
 	var dialogue:Array<String> = [];
 	var dialogueJson:DialogueFile = null;
 
+	var slapfightBeatHit:Bool = false;
 	var teebCrown:BGSprite;
 
 	var coolTransition:FlxSprite;
@@ -237,14 +236,7 @@ class PlayState extends MusicBeatState
 	var detailsPausedText:String = "";
 	#end
 
-	//Achievement shit
-	var keysPressed:Array<Bool> = [];
-	var boyfriendIdleTime:Float = 0.0;
-	var boyfriendIdled:Bool = false;
-
-	// Lua shit
 	public static var instance:PlayState;
-	public var introSoundsSuffix:String = '';
 
 	// Debug buttons
 	private var debugKeysChart:Array<FlxKey>;
@@ -255,7 +247,6 @@ class PlayState extends MusicBeatState
 
 	override public function create()
 	{
-		// for lua
 		instance = this;
 		camZoomType = 0;
 		// [ On Beat (bool), Function ]
@@ -318,9 +309,6 @@ class PlayState extends MusicBeatState
 			ClientPrefs.copyKey(ClientPrefs.keyBinds.get('note_up')),
 			ClientPrefs.copyKey(ClientPrefs.keyBinds.get('note_right'))
 		];
-
-		// For the "Just the Two of Us" achievement
-		for (i in 0...keysArray.length) keysPressed.push(false);
 		if (FlxG.sound.music != null) FlxG.sound.music.stop();
 		// Gameplay settings
 		healthGain = ClientPrefs.getGameplaySetting('healthgain', 1);
@@ -855,7 +843,6 @@ class PlayState extends MusicBeatState
 	var startTimer:FlxTimer;
 	var finishTimer:FlxTimer = null;
 
-	// For being able to mess with the sprites on Lua
 	public var countdownReady:FlxSprite;
 	public var countdownSet:FlxSprite;
 	public var countdownGo:FlxSprite;
@@ -911,9 +898,8 @@ class PlayState extends MusicBeatState
 					notes.forEachAlive(function(note:Note) {
 						note.copyAlpha = false;
 						note.alpha = note.multAlpha;
-						if(ClientPrefs.middleScroll && !note.mustPress) {
-							note.alpha = 0;
-						}
+
+						if (ClientPrefs.middleScroll && !note.mustPress) note.alpha = 0;
 					});
 				}, 1);
 			}
@@ -939,7 +925,7 @@ class PlayState extends MusicBeatState
 
 					switch (swagCounter)
 					{
-						case 0: FlxG.sound.play(Paths.sound('intro3' + introSoundsSuffix), 0.6);
+						case 0: FlxG.sound.play(Paths.sound('intro3'), 0.6);
 						case 1:
 							countdownReady = new FlxSprite().loadGraphic(Paths.image(introAlts[0]));
 							countdownReady.scrollFactor.set();
@@ -956,7 +942,7 @@ class PlayState extends MusicBeatState
 									countdownReady.destroy();
 								}
 							});
-							FlxG.sound.play(Paths.sound('intro2' + introSoundsSuffix), 0.6);
+							FlxG.sound.play(Paths.sound('intro2'), 0.6);
 						case 2:
 							countdownSet = new FlxSprite().loadGraphic(Paths.image(introAlts[1]));
 							countdownSet.scrollFactor.set();
@@ -972,7 +958,7 @@ class PlayState extends MusicBeatState
 									countdownSet.destroy();
 								}
 							});
-							FlxG.sound.play(Paths.sound('intro1' + introSoundsSuffix), 0.6);
+							FlxG.sound.play(Paths.sound('intro1'), 0.6);
 						case 3:
 							countdownGo = new FlxSprite().loadGraphic(Paths.image(introAlts[2]));
 							countdownGo.scrollFactor.set();
@@ -990,7 +976,7 @@ class PlayState extends MusicBeatState
 									countdownGo.destroy();
 								}
 							});
-							FlxG.sound.play(Paths.sound('introGo' + introSoundsSuffix), 0.6);
+							FlxG.sound.play(Paths.sound('introGo'), 0.6);
 						case 4:
 					}
 
@@ -1410,14 +1396,6 @@ class PlayState extends MusicBeatState
 		if(!inCutscene) {
 			var lerpVal:Float = CoolUtil.boundTo(elapsed * 2.4 * cameraSpeed, 0, 1);
 			camFollowPos.setPosition(FlxMath.lerp(camFollowPos.x, camFollow.x, lerpVal), FlxMath.lerp(camFollowPos.y, camFollow.y, lerpVal));
-			if(!startingSong && !endingSong && boyfriend.animation.curAnim.name.startsWith('idle')) {
-				boyfriendIdleTime += elapsed;
-				if(boyfriendIdleTime >= 0.15) { // Kind of a mercy thing for making the achievement easier to get as it's apparently frustrating to some playerss
-					boyfriendIdled = true;
-				}
-			} else {
-				boyfriendIdleTime = 0;
-			}
 		}
 
 		super.update(elapsed);
@@ -1788,7 +1766,7 @@ class PlayState extends MusicBeatState
 		#end
 	}
 
-	public var isDead:Bool = false; //Don't mess with this on Lua!!!
+	public var isDead:Bool = false;
 	function doDeathCheck(?skipHealthCheck:Bool = false) {
 		if (((skipHealthCheck && instakillOnMiss) || health <= 0) && !practiceMode && !isDead)
 		{
@@ -2492,14 +2470,6 @@ class PlayState extends MusicBeatState
 					}
 				}
 				else { if (canMiss) noteMissPress(key); }
-
-				// I dunno what you need this for but here you go
-				//									- Shubs
-
-				// Shubs, this is for the "Just the Two of Us" achievement lol
-				//									- Shadow Mario
-				keysPressed[key] = true;
-
 				//more accurate hit time for the ratings? part 2 (Now that the calculations are done, go back to the time it was before for not causing a note stutter)
 				Conductor.songPosition = lastTime;
 			}
