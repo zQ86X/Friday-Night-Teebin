@@ -71,10 +71,10 @@ class VisualsUISubState extends BaseOptionsMenu
 		addOption(option);
 
 		var option:Option = new Option('Reduced Motion',
-			"If unchecked, extra effects such as the camera moving when a character hits a note are disabled.",
+			"If checked, extra effects such as the camera moving when a character hits a note are disabled.",
 			'reducedMotion',
 			'bool',
-			true);
+			false);
 		addOption(option);
 
 		var option:Option = new Option('Score Text Zoom on Hit',
