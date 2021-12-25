@@ -77,18 +77,15 @@ class ClientPrefs {
 	public static var persistentData:Array<String> = [
 		'downScroll',
 		'middleScroll',
-		'showFPS',
 		'flashing',
 		'globalAntialiasing',
 		'noteSplashes',
 		'lowQuality',
-		'framerate',
 
 		'camZooms',
 		'noteOffset',
 		'hideHud',
 		'arrowHSV',
-		'imagesPersist',
 		'ghostTapping',
 		'timeBarType',
 		'scoreZoom',
@@ -103,6 +100,22 @@ class ClientPrefs {
 		'badWindow',
 		'safeFrames',
 		'controllerMode',
+	];
+	public static var persistentFunctions:Map<String, Dynamic> = [
+		'framerate' => function(data):Bool {
+			if (data > FlxG.drawFramerate) { FlxG.updateFramerate = data; FlxG.drawFramerate = data; }
+			else { FlxG.drawFramerate = data; FlxG.updateFramerate = data; }
+
+			return true;
+		},
+		'showFPS' => function(data):Bool {
+			if (Main.fpsVar != null) Main.fpsVar.visible = data;
+			return true;
+		},
+		'imagesPersist' => function(data):Bool {
+			FlxGraphic.defaultPersist = data;
+			return true;
+		}
 	];
 	public static var persistentMapData:Array<String> = [
 		'gameplaySettings'
@@ -122,25 +135,27 @@ class ClientPrefs {
 	public static function saveSettings() {
 		for (persistent in persistentData)
 		{
-			var savedData:Any = Reflect.getProperty(ClientPrefs, persistent);
+			var savedData = Reflect.getProperty(ClientPrefs, persistent);
+			if (savedData != null) Reflect.setProperty(FlxG.save.data, persistent, savedData);
+		}
+		for (persistent in persistentFunctions)
+		{
+			var savedData = Reflect.getProperty(ClientPrefs, persistent);
 			if (savedData != null) Reflect.setProperty(FlxG.save.data, persistent, savedData);
 		}
 		for (persistent in persistentMapData)
 		{
-			var savedMap:Map<String, Dynamic> = Reflect.getProperty(FlxG.save.data, persistent);
+			var savedMap:Map<String, Dynamic> = Reflect.getProperty(ClientPrefs, persistent);
 			if (savedMap != null)
 			{
-				var reflectMap:Map<String, Dynamic> = Reflect.getProperty(ClientPrefs, persistent);
-				for (name => value in savedMap)
-				{
-					reflectMap.set(name, value);
-				}
+				var reflectMap:Map<String, Dynamic> = Reflect.getProperty(FlxG.save.data, persistent);
+				for (name => value in savedMap) reflectMap.set(name, value);
 			}
 		}
 		FlxG.save.flush();
 
 		var save:FlxSave = new FlxSave();
-		save.bind('teebControls', 'ninjamuffin99'); //Placing this in a separate save so that it can be manually deleted without removing your Score and stuff
+		save.bind('teeb_controls', 'ninjamuffin99'); //Placing this in a separate save so that it can be manually deleted without removing your Score and stuff
 		save.data.customControls = keyBinds;
 		save.flush();
 		FlxG.log.add("Settings saved!");
@@ -151,6 +166,20 @@ class ClientPrefs {
 		{
 			var savedData = Reflect.getProperty(FlxG.save.data, persistent);
 			if (savedData != null) Reflect.setProperty(ClientPrefs, persistent, savedData);
+		}
+		for (persistent => func in persistentFunctions)
+		{
+			var savedData = Reflect.getProperty(FlxG.save.data, persistent);
+			if (savedData != null) { if (func(savedData)) Reflect.setProperty(ClientPrefs, persistent, savedData); }
+		}
+		for (persistent in persistentMapData)
+		{
+			var savedMap:Map<String, Dynamic> = Reflect.getProperty(FlxG.save.data, persistent);
+			if (savedMap != null)
+			{
+				var reflectMap:Map<String, Dynamic> = Reflect.getProperty(ClientPrefs, persistent);
+				for (name => value in savedMap) reflectMap.set(name, value);
+			}
 		}
 		// flixel automatically saves your volume!
 		for (persistent => key in flixelPersistentData)
