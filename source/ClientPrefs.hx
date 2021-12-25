@@ -120,7 +120,11 @@ class ClientPrefs {
 	}
 
 	public static function saveSettings() {
-		for (persistent in persistentData) Reflect.setProperty(FlxG.save.data, persistent, Reflect.getProperty(ClientPrefs, persistent));
+		for (persistent in persistentData)
+		{
+			var savedData:Any = Reflect.getProperty(ClientPrefs, persistent);
+			if (savedData != null) Reflect.setProperty(FlxG.save.data, persistent, savedData);
+		}
 		for (persistent in persistentMapData)
 		{
 			var savedMap:Map<String, Dynamic> = Reflect.getProperty(FlxG.save.data, persistent);
