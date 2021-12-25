@@ -207,6 +207,8 @@ class PlayState extends MusicBeatState
 	var teebCrown:BGSprite;
 
 	var coolTransition:FlxSprite;
+
+	var cameraOffsetPlayer:Bool = false;
 	var cameraOffset:Float = 45;
 
 	var cameraDeltaX:Int = 0;
@@ -2871,6 +2873,7 @@ class PlayState extends MusicBeatState
 
 		if (curNote != null && curNote.mustHitSection == mustHit)
 		{
+			cameraOffsetPlayer = mustHit;
 			cameraDeltaX = switch (leData)
 			{
 				case 0: -1;
@@ -2954,7 +2957,16 @@ class PlayState extends MusicBeatState
 		var curBar:Int = Std.int(curStep / 16);
 		var curNote:SwagSection = SONG.notes[curBar];
 
-		if (curNote != null && curNote.changeBPM) Conductor.changeBPM(curNote.bpm);
+		if (curNote != null)
+		{
+			if (curNote.changeBPM) Conductor.changeBPM(curNote.bpm);
+			if (curNote.mustHitSection != cameraOffsetPlayer)
+			{
+				cameraDeltaX = 0;
+				cameraDeltaY = 0;
+			}
+			cameraOffsetPlayer = curNote.mustHitSection;
+		}
 
 		if (generatedMusic && curNote != null && !endingSong && !isCameraOnForcedPos) moveCameraSection(curBar);
 		switch (curSong)
@@ -2977,9 +2989,6 @@ class PlayState extends MusicBeatState
 
 		var zoomFunction:Array<Dynamic> = camZoomTypes[camZoomType];
 		if (canZoomCamera() && zoomFunction[0]) zoomFunction[1]();
-
-		cameraDeltaX = 0;
-		cameraDeltaY = 0;
 
 		iconP1.scale.set(1.2, 1.2);
 		iconP2.scale.set(1.2, 1.2);
