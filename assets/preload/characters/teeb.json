@@ -52,15 +52,15 @@
 			"indices": [],
 			"fps": 24,
 			"anim": "idle",
-			"loop": true,
+			"loop": false,
 			"name": "TEEB_IDLE"
 		}
 	],
 	"no_antialiasing": false,
 	"image": "characters/Teebicus_Assets",
 	"position": [
-		0,
-		-130
+		-120,
+		-30
 	],
 	"healthicon": "teeb",
 	"flip_x": false,
@@ -70,9 +70,9 @@
 		123
 	],
 	"camera_position": [
-		-140,
-		170
+		-20,
+		300
 	],
 	"sing_duration": 6.1,
-	"scale": 1
+	"scale": 0.7
 }
