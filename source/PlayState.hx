@@ -208,11 +208,11 @@ class PlayState extends MusicBeatState
 
 	var coolTransition:FlxSprite;
 
-	var cameraOffsetPlayer:Bool = false;
+	var cameraFollowing:Bool = false;
 	var cameraOffset:Float = 25;
 
-	var cameraDeltaX:Int = 0;
-	var cameraDeltaY:Int = 0;
+	var opponentDelta:FlxPoint;
+	var playerDelta:FlxPoint;
 
 	public var songScore:Int = 0;
 	public var songHits:Int = 0;
@@ -254,6 +254,10 @@ class PlayState extends MusicBeatState
 	override public function create()
 	{
 		instance = this;
+
+		opponentDelta = new FlxPoint();
+		playerDelta = new FlxPoint();
+
 		camZoomType = 0;
 		// [ On Beat (bool), Function ]
 		camZoomTypes = [
@@ -1406,9 +1410,11 @@ class PlayState extends MusicBeatState
 		}*/
 		if(!inCutscene) {
 			var lerpVal:Float = CoolUtil.boundTo(elapsed * 2.4 * cameraSpeed, 0, 1);
+
+			var point:FlxPoint = (cameraFollowing ? playerDelta : opponentDelta);
 			var multiplier:Float = ClientPrefs.reducedMotion ? 0 : cameraOffset;
 
-			camFollowPos.setPosition(FlxMath.lerp(camFollowPos.x, camFollow.x + (cameraDeltaX * multiplier), lerpVal), FlxMath.lerp(camFollowPos.y, camFollow.y + (cameraDeltaY * multiplier), lerpVal));
+			camFollowPos.setPosition(FlxMath.lerp(camFollowPos.x, camFollow.x + (point.x * multiplier), lerpVal), FlxMath.lerp(camFollowPos.y, camFollow.y + (point.y * multiplier), lerpVal));
 		}
 
 		super.update(elapsed);
@@ -2731,7 +2737,9 @@ class PlayState extends MusicBeatState
 		}
 
 		var leData:Int = CoolUtil.wrapNoteData(note.noteData);
-		setCameraDelta(leData, false);
+
+		opponentDelta = getCameraDelta(leData);
+		setCameraFollowing(false);
 
 		StrumPlayAnim(true, leData, time);
 		note.hitByOpponent = true;
@@ -2753,6 +2761,7 @@ class PlayState extends MusicBeatState
 			var isSus:Bool = note.isSustainNote; //GET OUT OF MY HEAD, GET OUT OF MY HEAD, GET OUT OF MY HEAD
 			var leData:Int = CoolUtil.wrapNoteData(note.noteData);
 
+			playerDelta = getCameraDelta(leData);
 			if(note.hitCausesMiss) {
 				noteMiss(note);
 				if(!note.noteSplashDisabled && !isSus) {
@@ -2844,7 +2853,7 @@ class PlayState extends MusicBeatState
 			note.wasGoodHit = true;
 			vocals.volume = 1;
 
-			setCameraDelta(leData, true);
+			setCameraFollowing(true);
 			var shakeDiv:Dynamic = switch (curSong)
 			{
 				case 'slapfight': [ Math.PI / 2, 1 ];
@@ -2866,29 +2875,28 @@ class PlayState extends MusicBeatState
 		}
 	}
 
-	function setCameraDelta(leData:Int, mustHit:Bool)
+	function getCameraDelta(leData:Int):FlxPoint
+	{
+		return new FlxPoint(switch (leData)
+		{
+			case 0: -1;
+			case 3: 1;
+
+			default: 0;
+		}, switch (leData)
+		{
+			case 2: -1;
+			case 1: 1;
+
+			default: 0;
+		});
+	}
+	function setCameraFollowing(mustHit:Bool)
 	{
 		var curBar:Int = Std.int(curStep / 16);
 		var curNote:SwagSection = SONG.notes[curBar];
 
-		if (curNote != null && curNote.mustHitSection == mustHit)
-		{
-			cameraOffsetPlayer = mustHit;
-			cameraDeltaX = switch (leData)
-			{
-				case 0: -1;
-				case 3: 1;
-
-				default: 0;
-			};
-			cameraDeltaY = switch (leData)
-			{
-				case 2: -1;
-				case 1: 1;
-
-				default: 0;
-			};
-		}
+		if (curNote != null && curNote.mustHitSection == mustHit) cameraFollowing = mustHit;
 	}
 	function spawnNoteSplashOnNote(note:Note) {
 		if(ClientPrefs.noteSplashes && note != null) {
@@ -2960,12 +2968,7 @@ class PlayState extends MusicBeatState
 		if (curNote != null)
 		{
 			if (curNote.changeBPM) Conductor.changeBPM(curNote.bpm);
-			if (curNote.mustHitSection != cameraOffsetPlayer)
-			{
-				cameraDeltaX = 0;
-				cameraDeltaY = 0;
-			}
-			cameraOffsetPlayer = curNote.mustHitSection;
+			cameraFollowing = curNote.mustHitSection;
 		}
 
 		if (generatedMusic && curNote != null && !endingSong && !isCameraOnForcedPos) moveCameraSection(curBar);

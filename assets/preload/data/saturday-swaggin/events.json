@@ -1,6 +1,6 @@
 {
 	"song": {
-		"speed": 2.75,
+		"speed": 2.45,
 		"stage": null,
 		"player1": "bf",
 		"player2": "swagster",
@@ -77,16 +77,6 @@
 					[
 						"Set Zoom Type",
 						"2",
-						""
-					]
-				]
-			],
-			[
-				106666.666666667,
-				[
-					[
-						"Set Zoom Type",
-						"3",
 						""
 					]
 				]
@@ -300,7 +290,7 @@
 		"notes": [],
 		"splashSkin": null,
 		"validScore": false,
-		"gfVersion": "gf",
+		"gfVersion": null,
 		"bpm": 198,
 		"arrowSkin": null,
 		"needsVoices": true,
