@@ -43,6 +43,16 @@
 						"Change Character",
 						"dad",
 						"teeb"
+					],
+					[
+						"Flash Camera",
+						"",
+						""
+					],
+					[
+						"Add Camera Zoom",
+						".05",
+						".1"
 					]
 				]
 			],
@@ -53,6 +63,16 @@
 						"Change Character",
 						"dad",
 						"teeb-angry"
+					],
+					[
+						"Add Camera Zoom",
+						".05",
+						".1"
+					],
+					[
+						"Flash Camera",
+						"",
+						"0xFFFF0000"
 					]
 				]
 			],
@@ -68,6 +88,16 @@
 						"Change Character",
 						"dad",
 						"teeb"
+					],
+					[
+						"Flash Camera",
+						"",
+						""
+					],
+					[
+						"Add Camera Zoom",
+						".05",
+						".1"
 					]
 				]
 			],
@@ -83,6 +113,16 @@
 						"Change Character",
 						"dad",
 						"teeb-angry"
+					],
+					[
+						"Add Camera Zoom",
+						".05",
+						".1"
+					],
+					[
+						"Flash Camera",
+						"",
+						"0xFFFF0000"
 					]
 				]
 			],
@@ -92,6 +132,31 @@
 					[
 						"Set Zoom Type",
 						"0",
+						""
+					],
+					[
+						"Camera Follow Pos",
+						"200",
+						"325"
+					],
+					[
+						"Flash Camera",
+						"",
+						""
+					],
+					[
+						"Change Character Visibility",
+						"dad",
+						"false"
+					],
+					[
+						"Add Camera Zoom",
+						".3",
+						".2"
+					],
+					[
+						"Play Sound",
+						"teebDisappearSound",
 						""
 					]
 				]

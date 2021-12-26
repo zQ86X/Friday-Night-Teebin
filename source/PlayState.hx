@@ -205,6 +205,7 @@ class PlayState extends MusicBeatState
 
 	var slapfightBeatHit:Bool = false;
 	var teebCrown:BGSprite;
+	var teebDisappearSound:FlxSound;
 
 	var coolTransition:FlxSprite;
 
@@ -1080,6 +1081,15 @@ class PlayState extends MusicBeatState
 		CoolUtil.precacheRawSound(instPath);
 		trace('cache $instPath');
 
+		switch (curSong)
+		{
+			case 'slapfight':
+			{
+				CoolUtil.precacheSound('vineBoom');
+				teebDisappearSound = new FlxSound().loadEmbedded(Paths.sound('vineBoom'));
+			}
+		}
+
 		notes = new FlxTypedGroup<Note>();
 		add(notes);
 
@@ -1898,10 +1908,40 @@ class PlayState extends MusicBeatState
 
 			case 'Set Zoom Type':
 			{
-				var value:Int = Std.parseInt(value1);
+				var value:Int = Std.parseInt(value1.trim());
 				camZoomType = Math.isNaN(value) ? 0 : Std.int(CoolUtil.boundTo(value, 0, camZoomTypes.length - 1));
 			}
+			case 'Flash Camera':
+			{
+				var duration:Float = Std.parseFloat(value1.trim());
+				var color:String = value2.trim();
 
+				if (color.length > 1) { if (!color.startsWith('0x')) color = '0xFF$color'; }
+				else { color = "0xFFFFFFFF"; }
+
+				if (ClientPrefs.flashing) camOther.flash(Std.parseInt(color), Math.isNaN(duration) ? 1 : duration, null, true);
+			}
+			case 'Change Character Visibility':
+			{
+				var visibility:String = value2.toLowerCase();
+				var char:Character = switch (value1.toLowerCase().trim()) {
+					case 'gf' | 'girlfriend': gf;
+					case 'dad' | 'opponent': dad;
+
+					default: boyfriend;
+				};
+				char.visible = visibility.length <= 1 || visibility.startsWith('true');
+			}
+
+			case 'Play Sound':
+			{
+				try
+				{
+					var sound:Dynamic = Reflect.getProperty(this, value1);
+					if (sound != null && Std.isOfType(sound, FlxSound)) sound.play(true);
+				}
+				catch (e) { trace('Unknown sound tried to be played - $e'); }
+			}
 			case 'Play Animation':
 				//trace('Anim to play: ' + value1);
 				var char:Character = dad;
@@ -1923,8 +1963,10 @@ class PlayState extends MusicBeatState
 				char.specialAnim = true;
 
 			case 'Camera Follow Pos':
+			{
 				var val1:Float = Std.parseFloat(value1);
 				var val2:Float = Std.parseFloat(value2);
+
 				if(Math.isNaN(val1)) val1 = 0;
 				if(Math.isNaN(val2)) val2 = 0;
 
@@ -1934,7 +1976,7 @@ class PlayState extends MusicBeatState
 					camFollow.y = val2;
 					isCameraOnForcedPos = true;
 				}
-
+			}
 			case 'Alt Idle Animation':
 				var char:Character = dad;
 				switch(value1.toLowerCase()) {
@@ -1974,26 +2016,24 @@ class PlayState extends MusicBeatState
 
 			case 'Change Character':
 			{
-				var charType:Int = 0;
-				switch(value1) {
-					case 'gf' | 'girlfriend':
-						charType = 2;
-					case 'dad' | 'opponent':
-						charType = 1;
+				var charType:Int = switch (value1) {
+					case 'gf' | 'girlfriend': 2;
+					case 'dad' | 'opponent': 1;
 					default:
-						charType = Std.parseInt(value1);
-						if(Math.isNaN(charType)) charType = 0;
+						var temp:Int = Std.parseInt(value1);
+						Math.isNaN(temp) ? 0 : temp;
 				}
-
 				switch(charType) {
 					case 0:
-						if(boyfriend.curCharacter != value2) {
+					{
+						if (boyfriend.curCharacter != value2) {
 							boyfriend.setCharacter(value2);
 							iconP1.changeIcon(boyfriend.healthIcon);
 						}
-
+					}
 					case 1:
-						if(dad.curCharacter != value2) {
+					{
+						if (dad.curCharacter != value2) {
 							var wasGf:Bool = dad.curCharacter.startsWith('gf');
 							dad.setCharacter(value2);
 							if(!dad.curCharacter.startsWith('gf')) {
@@ -2005,17 +2045,8 @@ class PlayState extends MusicBeatState
 							}
 							iconP2.changeIcon(dad.healthIcon);
 						}
-
-					case 2:
-						if(gf.curCharacter != value2) {
-							gf.setCharacter(value2);
-							// if(!gfMap.exists(value2)) {
-							// 	addCharacterToList(value2, charType);
-							// }
-
-							// gf = gfMap.get(value2);
-							// gf.alpha = lastAlpha;
-						}
+					}
+					case 2: { if (gf.curCharacter != value2) gf.setCharacter(value2); }
 				}
 				reloadHealthBarColors();
 			}
@@ -2118,40 +2149,8 @@ class PlayState extends MusicBeatState
 	}
 
 	function canZoomCamera():Bool { return camZooming && FlxG.camera.zoom < 1.35 && ClientPrefs.camZooms; }
-
-	public var transitioning = false;
-	public function endSong():Void
+	private function cleanupEndSong()
 	{
-		//Should kill you if you tried to cheat
-		if(!startingSong) {
-			notes.forEach(function(daNote:Note) {
-				if(daNote.strumTime < songLength - Conductor.safeZoneOffset) {
-					health -= 0.05 * healthLoss;
-				}
-			});
-			for (daNote in unspawnNotes) {
-				if(daNote.strumTime < songLength - Conductor.safeZoneOffset) {
-					health -= 0.05 * healthLoss;
-				}
-			}
-
-			if(doDeathCheck()) {
-				return;
-			}
-		}
-
-		timeBarBG.visible = false;
-		timeBar.visible = false;
-		timeTxt.visible = false;
-		canPause = false;
-		endingSong = true;
-		camZooming = false;
-		inCutscene = false;
-		updateTime = false;
-
-		deathCounter = 0;
-		seenCutscene = false;
-
 		if(!transitioning) {
 			if (SONG.validScore)
 			{
@@ -2233,6 +2232,52 @@ class PlayState extends MusicBeatState
 				changedDifficulty = false;
 			}
 			transitioning = true;
+		}
+	}
+
+	public var transitioning = false;
+	public function endSong():Void
+	{
+		//Should kill you if you tried to cheat
+		if(!startingSong) {
+			notes.forEach(function(daNote:Note) {
+				if(daNote.strumTime < songLength - Conductor.safeZoneOffset) {
+					health -= 0.05 * healthLoss;
+				}
+			});
+			for (daNote in unspawnNotes) {
+				if(daNote.strumTime < songLength - Conductor.safeZoneOffset) {
+					health -= 0.05 * healthLoss;
+				}
+			}
+
+			if(doDeathCheck()) {
+				return;
+			}
+		}
+
+		timeBarBG.visible = false;
+		timeBar.visible = false;
+		timeTxt.visible = false;
+		canPause = false;
+		endingSong = true;
+		camZooming = false;
+		inCutscene = false;
+		updateTime = false;
+
+		deathCounter = 0;
+		seenCutscene = false;
+
+		switch (curSong)
+		{
+			case 'slapfight':
+			{
+				trace("delay end");
+				new FlxTimer().start(2, function(tmr:FlxTimer) {
+					cleanupEndSong();
+				});
+			}
+			default: cleanupEndSong();
 		}
 	}
 
