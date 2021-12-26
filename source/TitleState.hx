@@ -1,5 +1,6 @@
 package;
 
+import flixel.math.FlxMath;
 #if desktop
 import Discord.DiscordClient;
 import sys.thread.Thread;
@@ -59,11 +60,11 @@ class TitleState extends MusicBeatState
 	var curWacky1:Array<String> = [];
 	var curWacky2:Array<String> = [];
 
-	var easterEggEnabled:Bool = true; //Disable this to hide the easter egg
-	var easterEggKeyCombination:Array<FlxKey> = [FlxKey.B, FlxKey.B]; //bb stands for bbpanzu cuz he wanted this lmao
 	var lastKeysPressed:Array<FlxKey> = [];
-
 	var titleJSON:TitleData;
+
+	var logoScale:Float = .375;
+	var logoBumpScale:Float = 1.065;
 
 	public static var updateVersion:String = '';
 	override public function create():Void
@@ -82,9 +83,6 @@ class TitleState extends MusicBeatState
 		curWacky1 = rollWacky();
 		curWacky2 = rollWacky(curWacky1);
 
-		// DEBUG BULLSHIT
-
-		swagShader = new ColorSwap();
 		super.create();
 
 		FlxG.save.bind('teebin', 'ninjamuffin99');
@@ -122,7 +120,6 @@ class TitleState extends MusicBeatState
 	var gfDance:FlxSprite;
 	var danceLeft:Bool = false;
 	var titleText:FlxSprite;
-	var swagShader:ColorSwap = null;
 
 	function startIntro()
 	{
@@ -145,28 +142,23 @@ class TitleState extends MusicBeatState
 		add(bg);
 
 		logoBl = new FlxSprite(titleJSON.titlex, titleJSON.titley);
-		logoBl.frames = Paths.getSparrowAtlas('logoBumpin');
+		logoBl.loadGraphic(Paths.image('teebin'));
 
 		logoBl.antialiasing = ClientPrefs.globalAntialiasing;
-		logoBl.animation.addByPrefix('bump', 'logo bumpin', 24, false);
-		logoBl.animation.play('bump');
 		logoBl.updateHitbox();
 		// logoBl.screenCenter();
 		// logoBl.color = FlxColor.BLACK;
 
-		swagShader = new ColorSwap();
 		gfDance = new FlxSprite(titleJSON.gfx, titleJSON.gfy);
-
 		gfDance.frames = Paths.getSparrowAtlas('gfDanceTitle');
 
 		gfDance.animation.addByIndices('danceLeft', 'gfDance', [30, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14], "", 24, false);
 		gfDance.animation.addByIndices('danceRight', 'gfDance', [15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29], "", 24, false);
 
 		gfDance.antialiasing = ClientPrefs.globalAntialiasing;
+
 		add(gfDance);
-		gfDance.shader = swagShader.shader;
 		add(logoBl);
-		//logoBl.shader = swagShader.shader;
 
 		titleText = new FlxSprite(titleJSON.startx, titleJSON.starty);
 		titleText.frames = Paths.getSparrowAtlas('titleEnter');
@@ -293,62 +285,21 @@ class TitleState extends MusicBeatState
 				});
 				// FlxG.sound.play(Paths.music('titleShoot'), 0.7);
 			}
-			else if(easterEggEnabled)
-			{
-				var finalKey:FlxKey = FlxG.keys.firstJustPressed();
-				if(finalKey != FlxKey.NONE) {
-					lastKeysPressed.push(finalKey); //Convert int to FlxKey
-					if(lastKeysPressed.length > easterEggKeyCombination.length)
-					{
-						lastKeysPressed.shift();
-					}
-
-					if(lastKeysPressed.length == easterEggKeyCombination.length)
-					{
-						var isDifferent:Bool = false;
-						for (i in 0...lastKeysPressed.length) {
-							if(lastKeysPressed[i] != easterEggKeyCombination[i]) {
-								isDifferent = true;
-								break;
-							}
-						}
-
-						/*if(!isDifferent) {
-							trace('Easter egg triggered!');
-							FlxG.save.data.psykaEasterEgg = !FlxG.save.data.psykaEasterEgg;
-							FlxG.sound.play(Paths.sound('secretSound'));
-
-							var black:FlxSprite = new FlxSprite(0, 0).makeGraphic(FlxG.width, FlxG.height, FlxColor.BLACK);
-							black.alpha = 0;
-							add(black);
-
-							FlxTween.tween(black, {alpha: 1}, 1, {onComplete:
-								function(twn:FlxTween) {
-									FlxTransitionableState.skipNextTransIn = true;
-									FlxTransitionableState.skipNextTransOut = true;
-									MusicBeatState.switchState(new TitleState());
-								}
-							});
-							lastKeysPressed = [];
-							closedState = true;
-							transitioning = true;
-						}*/
-					}
-				}
-			}
 		}
 
-		if (pressedEnter && !skippedIntro)
+		if (pressedEnter && !skippedIntro) skipIntro();
+		if (ClientPrefs.camZooms)
 		{
-			skipIntro();
+			var lerpSpeed:Float = CoolUtil.boundTo(1 - (elapsed * 3.125), 0, 1);
+			FlxG.camera.zoom = FlxMath.lerp(1, FlxG.camera.zoom, lerpSpeed);
 		}
-
-		if(swagShader != null)
+		if (logoBl != null)
 		{
-			if(controls.UI_LEFT) swagShader.hue -= elapsed * 0.1;
-			if(controls.UI_RIGHT) swagShader.hue += elapsed * 0.1;
-		}
+			var mult:Float = FlxMath.lerp(logoScale, logoBl.scale.x, CoolUtil.boundTo(1 - (elapsed * 9), 0, 1));
 
+			logoBl.scale.set(mult, mult);
+			logoBl.updateHitbox();
+		}
 		super.update(elapsed);
 	}
 
@@ -377,6 +328,7 @@ class TitleState extends MusicBeatState
 		}
 	}
 
+	function canZoomCamera():Bool { return FlxG.camera.zoom < 1.35 && ClientPrefs.camZooms; }
 	function sameRoll(a:Array<String>, ?b:Array<String> = null):Bool
 	{
 		if (b != null && a.length == b.length)
@@ -406,12 +358,22 @@ class TitleState extends MusicBeatState
 	}
 
 	private var sickBeats:Int = 0; //Basically curBeat but won't be skipped if you hold the tab or resize the screen
+	private var lastBeatHit:Int = -1;
+
 	public static var closedState:Bool = false;
+
 	override function beatHit()
 	{
 		super.beatHit();
+		if (canZoomCamera() && lastBeatHit != curBeat)
+		{
+			var beatMod = curBeat % 2;
+			FlxG.camera.zoom += .045 / (beatMod == 1 ? 2 : 1);
 
-		if(logoBl != null) logoBl.animation.play('bump', true);
+			lastBeatHit = curBeat;
+		}
+
+		if(logoBl != null) { var mult:Float = logoScale * logoBumpScale; logoBl.scale.set(mult, mult); logoBl.updateHitbox(); }
 		if(gfDance != null)
 		{
 			danceLeft = !danceLeft;
@@ -422,7 +384,7 @@ class TitleState extends MusicBeatState
 			sickBeats++;
 			switch (sickBeats)
 			{
-				case 1: createCoolText(['Zion', FlxG.random.bool(5) ? 'Teebiscuit' : 'Teebicus', 'MotorcycIeMan', 'yellwbit']);
+				case 1: createCoolText(['Zion', FlxG.random.bool(5) ? 'Teebiscuit' : 'Teebicus', 'MotorcycIeMan', 'DubSurgeon', 'yellwbit'], -40);
 				case 5: addMoreText('present');
 
 				case 7: deleteCoolText();
