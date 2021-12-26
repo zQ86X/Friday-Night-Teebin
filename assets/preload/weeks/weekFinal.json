@@ -6,18 +6,18 @@
 	"weekBefore": "weekTeeb",
 	"startUnlocked": false,
 	"weekCharacters": [
-		"teeb",
+		"teeb-angry",
 		"bf",
 		"gf"
 	],
 	"songs": [
 		[
 			"True Finale",
-			"teeb",
+			"teeb-angry",
 			[
-				102,
-				102,
-				102
+				204,
+				0,
+				0
 			]
 		]
 	],
