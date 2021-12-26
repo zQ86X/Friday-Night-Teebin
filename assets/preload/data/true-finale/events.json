@@ -1,6 +1,6 @@
 {
 	"song": {
-		"speed": 2.75,
+		"speed": 3,
 		"stage": null,
 		"player1": "bf",
 		"player2": "teeb",
@@ -98,6 +98,86 @@
 						"Add Camera Zoom",
 						".02",
 						".02"
+					]
+				]
+			],
+			[
+				42825.2788104089,
+				[
+					[
+						"Add Camera Zoom",
+						".1",
+						".1"
+					],
+					[
+						"Change Character",
+						"dad",
+						"teeb-angry"
+					],
+					[
+						"Flash Camera",
+						"",
+						"0xFFFF0000"
+					]
+				]
+			],
+			[
+				107063.197026022,
+				[
+					[
+						"Flash Camera",
+						"",
+						""
+					],
+					[
+						"Change Character",
+						"dad",
+						"teeb"
+					],
+					[
+						"Add Camera Zoom",
+						".05",
+						".1"
+					]
+				]
+			],
+			[
+				121338.289962825,
+				[
+					[
+						"Change Character",
+						"dad",
+						"teeb-angry"
+					],
+					[
+						"Flash Camera",
+						"",
+						"0xFFFF0000"
+					],
+					[
+						"Add Camera Zoom",
+						".05",
+						".1"
+					]
+				]
+			],
+			[
+				135613.382899628,
+				[
+					[
+						"Add Camera Zoom",
+						".05",
+						".1"
+					],
+					[
+						"Flash Camera",
+						"",
+						""
+					],
+					[
+						"Change Character",
+						"dad",
+						"teeb"
 					]
 				]
 			],
