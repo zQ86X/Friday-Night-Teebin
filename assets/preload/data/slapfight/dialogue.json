@@ -3,22 +3,22 @@
 		{
 			"expression": "talk",
 			"text": "thats it.",
-			"portrait": "teeb"
+			"portrait": "teeb-angry"
 		},
 		{
 			"expression": "talk",
 			"text": "you're going to be mere atoms after i'm\\ndone with you.",
-			"portrait": "teeb"
+			"portrait": "teeb-angry"
 		},
 		{
 			"expression": "talk",
 			"text": "literally demolished. eviscerated.",
-			"portrait": "teeb"
+			"portrait": "teeb-angry"
 		},
 		{
 			"expression": "talk",
 			"text": "say your goodbyes.",
-			"portrait": "teeb"
+			"portrait": "teeb-angry"
 		}
 	],
 	"boxState": "angry",

@@ -52,8 +52,8 @@ class CoolUtil
 	}
 	inline public static function repeat(value:Int, delta:Int, loop:Int):Int
 	{
-		var newValue:Int = value + delta;
-		return newValue >= loop ? 0 : newValue < 0 ? loop - 1 : newValue;
+		var newValue:Int = (value + delta) % loop;
+		return newValue < 0 ? loop - 1 : newValue;
 	}
 
 	inline public static function boolToInt(value:Bool):Int
@@ -131,16 +131,21 @@ class CoolUtil
 		return dumbArray;
 	}
 
-	//uhhhh does this even work at all? i'm starting to doubt
-	public static function precacheSound(sound:String, ?library:String = null):Void {
-		if (!Assets.cache.hasSound(Paths.sound(sound, library))) {
-			FlxG.sound.cache(Paths.sound(sound, library));
+	public static function precacheRawSound(sound:String)
+	{
+		if (!Assets.cache.hasSound(sound)) {
+			FlxG.sound.cache(sound);
 		}
 	}
 	public static function precacheAsset(asset:String):Void {
-		if (!Assets.cache.hasSound(asset)) {
-			FlxG.sound.cache(asset);
+		if (!Assets.cache.hasBitmapData(asset)) {
+			FlxG.bitmap.add(asset);
 		}
+	}
+
+	//uhhhh does this even work at all? i'm starting to doubt
+	public static function precacheSound(sound:String, ?library:String = null):Void {
+		precacheRawSound(Paths.sound(sound, library));
 	}
 
 	public static function browserLoad(site:String) {

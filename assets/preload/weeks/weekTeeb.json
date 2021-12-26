@@ -2,7 +2,7 @@
 	"songs": [
 		["Magic Hands", "teeb", [102, 102, 102]],
 		["Amen Breaks", "teeb", [102, 102, 102]],
-		["Slapfight", "teeb", [102, 102, 102]]
+		["Slapfight", "teeb-angry", [204, 0, 0]]
 	],
 
 	"weekCharacters": [

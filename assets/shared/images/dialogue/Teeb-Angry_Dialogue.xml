@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TextureAtlas imagePath="Teeb-Angry_Dialogue.png">
+	<!-- Created with Adobe Animate version 22.0.2.168 -->
+	<!-- http://www.adobe.com/products/animate.html -->
+	<SubTexture name="TEEB_ANGRY_DIALOGUE_IDLE0000" x="100" y="100" width="569" height="754"/>
+	<SubTexture name="TEEB_ANGRY_DIALOGUE_SPEAK0000" x="769" y="100" width="543" height="784" frameX="-13" frameY="0" frameWidth="569" frameHeight="785"/>
+	<SubTexture name="TEEB_ANGRY_DIALOGUE_SPEAK0001" x="1412" y="100" width="557" height="771" frameX="-6" frameY="-14" frameWidth="569" frameHeight="785"/>
+	<SubTexture name="TEEB_ANGRY_DIALOGUE_SPEAK0002" x="2069" y="100" width="566" height="761" frameX="-1" frameY="-24" frameWidth="569" frameHeight="785"/>
+	<SubTexture name="TEEB_ANGRY_DIALOGUE_SPEAK0003" x="2735" y="100" width="569" height="757" frameX="0" frameY="-28" frameWidth="569" frameHeight="785"/>
+	<SubTexture name="TEEB_ANGRY_DIALOGUE_SPEAK0004" x="3404" y="100" width="569" height="751" frameX="0" frameY="-34" frameWidth="569" frameHeight="785"/>
+	<SubTexture name="TEEB_ANGRY_DIALOGUE_SPEAK0005" x="100" y="984" width="569" height="752" frameX="0" frameY="-33" frameWidth="569" frameHeight="785"/>
+	<SubTexture name="TEEB_ANGRY_DIALOGUE_SPEAK0006" x="769" y="984" width="569" height="754" frameX="0" frameY="-31" frameWidth="569" frameHeight="785"/>
+</TextureAtlas>

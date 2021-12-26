@@ -446,11 +446,14 @@ class TitleState extends MusicBeatState
 			sickBeats++;
 			switch (sickBeats)
 			{
-				case 1: createCoolText(['Zion']);
-				case 3: addMoreText(FlxG.random.bool(5) ? 'Teebiscuit' : 'Teebicus');
-				case 5: addMoreText('MotorcycIeMan');
-				case 7: addMoreText('yellwbit');
-				case 9: addMoreText('present');
+				case 1: createCoolText(['Zion', FlxG.random.bool(5) ? 'Teebiscuit' : 'Teebicus', 'MotorcycIeMan', 'yellwbit']);
+				case 5: addMoreText('present');
+
+				case 7: deleteCoolText();
+
+				case 9: createCoolText(['A mod fabricated by']);
+				case 11: addMoreText('dumbasses');
+
 				case 13: deleteCoolText();
 
 				case 15: createCoolText(['In association', 'with'], -40);

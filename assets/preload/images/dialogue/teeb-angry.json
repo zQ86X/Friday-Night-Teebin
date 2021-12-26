@@ -1,0 +1,24 @@
+{
+	"position": [
+		0,
+		-50
+	],
+	"dialogue_pos": "left",
+	"scale": 0.75,
+	"image": "Teeb-Angry_Dialogue",
+	"animations": [
+		{
+			"idle_offsets": [
+				0,
+				-15
+			],
+			"loop_offsets": [
+				0,
+				1
+			],
+			"anim": "talk",
+			"idle_name": "TEEB_ANGRY_DIALOGUE_IDLE",
+			"loop_name": "TEEB_ANGRY_DIALOGUE_SPEAK"
+		}
+	]
+}

@@ -3,7 +3,7 @@
 		"speed": 3,
 		"stage": null,
 		"player1": "bf",
-		"player2": "teeb",
+		"player2": "teeb-angry",
 		"player3": null,
 		"events": [
 			[
@@ -37,12 +37,37 @@
 				]
 			],
 			[
+				24000,
+				[
+					[
+						"Change Character",
+						"dad",
+						"teeb"
+					]
+				]
+			],
+			[
+				33600,
+				[
+					[
+						"Change Character",
+						"dad",
+						"teeb-angry"
+					]
+				]
+			],
+			[
 				38400,
 				[
 					[
 						"Set Zoom Type",
 						"0",
 						""
+					],
+					[
+						"Change Character",
+						"dad",
+						"teeb"
 					]
 				]
 			],
@@ -53,6 +78,11 @@
 						"Set Zoom Type",
 						"1",
 						""
+					],
+					[
+						"Change Character",
+						"dad",
+						"teeb-angry"
 					]
 				]
 			],

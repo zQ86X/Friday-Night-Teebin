@@ -10,4 +10,12 @@
 	<SubTexture name="TEEB_DIALOGUE_SPEAK0004" x="3404" y="100" width="569" height="752" frameX="0" frameY="-32" frameWidth="569" frameHeight="784"/>
 	<SubTexture name="TEEB_DIALOGUE_SPEAK0005" x="100" y="982" width="569" height="754" frameX="0" frameY="-30" frameWidth="569" frameHeight="784"/>
 	<SubTexture name="TEEB_DIALOGUE_SPEAK0006" x="769" y="982" width="569" height="754" frameX="0" frameY="-30" frameWidth="569" frameHeight="784"/>
+	<SubTexture name="TEEB_SAD_DIALOGUE_IDLE0000" x="1438" y="982" width="595" height="841"/>
+	<SubTexture name="TEEB_SAD_DIALOGUE_SPEAK0000" x="2133" y="982" width="603" height="864" frameX="0" frameY="0" frameWidth="620" frameHeight="866"/>
+	<SubTexture name="TEEB_SAD_DIALOGUE_SPEAK0001" x="2836" y="982" width="604" height="854" frameX="-6" frameY="-11" frameWidth="620" frameHeight="866"/>
+	<SubTexture name="TEEB_SAD_DIALOGUE_SPEAK0002" x="100" y="1946" width="605" height="847" frameX="-10" frameY="-19" frameWidth="620" frameHeight="866"/>
+	<SubTexture name="TEEB_SAD_DIALOGUE_SPEAK0003" x="805" y="1946" width="605" height="844" frameX="-12" frameY="-22" frameWidth="620" frameHeight="866"/>
+	<SubTexture name="TEEB_SAD_DIALOGUE_SPEAK0004" x="1510" y="1946" width="602" height="844" frameX="-16" frameY="-22" frameWidth="620" frameHeight="866"/>
+	<SubTexture name="TEEB_SAD_DIALOGUE_SPEAK0005" x="2212" y="1946" width="599" height="843" frameX="-20" frameY="-23" frameWidth="620" frameHeight="866"/>
+	<SubTexture name="TEEB_SAD_DIALOGUE_SPEAK0006" x="2911" y="1946" width="595" height="842" frameX="-25" frameY="-24" frameWidth="620" frameHeight="866"/>
 </TextureAtlas>

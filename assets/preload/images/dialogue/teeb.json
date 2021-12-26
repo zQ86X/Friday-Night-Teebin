@@ -10,7 +10,7 @@
 			"anim": "talk",
 			"loop_offsets": [
 				0,
-				0
+				1
 			],
 			"idle_offsets": [
 				0,
@@ -18,6 +18,19 @@
 			],
 			"loop_name": "TEEB_DIALOGUE_SPEAK",
 			"idle_name": "TEEB_DIALOGUE_IDLE"
+		},
+		{
+			"loop_offsets": [
+				26,
+				44
+			],
+			"anim": "sad",
+			"idle_offsets": [
+				13,
+				31
+			],
+			"loop_name": "TEEB_SAD_DIALOGUE_SPEAK",
+			"idle_name": "TEEB_SAD_DIALOGUE_IDLE"
 		}
 	],
 	"image": "Teeb_Dialogue"

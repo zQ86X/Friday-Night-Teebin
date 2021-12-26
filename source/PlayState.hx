@@ -1070,14 +1070,14 @@ class PlayState extends MusicBeatState
 			var vocalsPath:String = Paths.voices(curSong);
 			vocals.loadEmbedded(vocalsPath);
 
-			CoolUtil.precacheAsset(vocalsPath);
+			CoolUtil.precacheRawSound(vocalsPath);
 			trace('cache $vocalsPath');
 		}
 
 		FlxG.sound.list.add(vocals);
 		FlxG.sound.list.add(new FlxSound().loadEmbedded(instPath));
 
-		CoolUtil.precacheAsset(instPath);
+		CoolUtil.precacheRawSound(instPath);
 		trace('cache $instPath');
 
 		notes = new FlxTypedGroup<Note>();
@@ -1207,18 +1207,19 @@ class PlayState extends MusicBeatState
 	function eventPushed(event:Array<Dynamic>) {
 		switch(event[1]) {
 			case 'Change Character':
-				var charType:Int = switch(event[2].toLowerCase()) {
-					case 'gf' | 'girlfriend' | '1': 2;
-					case 'dad' | 'opponent' | '0': 1;
-					default:
-					{
-						var temp:Int = Std.parseInt(event[2]);
-						Math.isNaN(temp) ? 0 : temp;
-					}
-				};
-
+			{
 				var newCharacter:String = event[3];
-				addCharacterToList(newCharacter, charType);
+				var path:String = Paths.getPreloadPath('characters/$newCharacter.json');
+
+				if (Assets.exists(path))
+				{
+					var json = Json.parse(Assets.getText(path));
+					var image:String = Paths.image(json.image);
+
+					if (Assets.exists(image)) CoolUtil.precacheAsset(image);
+				}
+				//addCharacterToList(newCharacter, charType);
+			}
 		}
 
 		if(!eventPushedMap.exists(event[1])) {
@@ -1895,7 +1896,11 @@ class PlayState extends MusicBeatState
 					camHUD.zoom += hudZoom;
 				}
 
-			case 'Set Zoom Type': camZoomType = Std.int(CoolUtil.boundTo(Std.parseInt(value1), 0, camZoomTypes.length - 1));
+			case 'Set Zoom Type':
+			{
+				var value:Int = Std.parseInt(value1);
+				camZoomType = Math.isNaN(value) ? 0 : Std.int(CoolUtil.boundTo(value, 0, camZoomTypes.length - 1));
+			}
 
 			case 'Play Animation':
 				//trace('Anim to play: ' + value1);
@@ -1968,6 +1973,7 @@ class PlayState extends MusicBeatState
 
 
 			case 'Change Character':
+			{
 				var charType:Int = 0;
 				switch(value1) {
 					case 'gf' | 'girlfriend':
@@ -1982,28 +1988,14 @@ class PlayState extends MusicBeatState
 				switch(charType) {
 					case 0:
 						if(boyfriend.curCharacter != value2) {
-							if(!boyfriendMap.exists(value2)) {
-								addCharacterToList(value2, charType);
-							}
-
-							var lastAlpha:Float = boyfriend.alpha;
-
-							boyfriend = boyfriendMap.get(value2);
-							boyfriend.alpha = lastAlpha;
-
+							boyfriend.setCharacter(value2);
 							iconP1.changeIcon(boyfriend.healthIcon);
 						}
 
 					case 1:
 						if(dad.curCharacter != value2) {
-							if(!dadMap.exists(value2)) {
-								addCharacterToList(value2, charType);
-							}
-
 							var wasGf:Bool = dad.curCharacter.startsWith('gf');
-							var lastAlpha:Float = dad.alpha;
-
-							dad = dadMap.get(value2);
+							dad.setCharacter(value2);
 							if(!dad.curCharacter.startsWith('gf')) {
 								if(wasGf) {
 									gf.visible = true;
@@ -2011,24 +2003,22 @@ class PlayState extends MusicBeatState
 							} else {
 								gf.visible = false;
 							}
-							dad.alpha = lastAlpha;
 							iconP2.changeIcon(dad.healthIcon);
 						}
 
 					case 2:
 						if(gf.curCharacter != value2) {
-							if(!gfMap.exists(value2)) {
-								addCharacterToList(value2, charType);
-							}
+							gf.setCharacter(value2);
+							// if(!gfMap.exists(value2)) {
+							// 	addCharacterToList(value2, charType);
+							// }
 
-							var lastAlpha:Float = gf.alpha;
-
-							gf = gfMap.get(value2);
-							gf.alpha = lastAlpha;
+							// gf = gfMap.get(value2);
+							// gf.alpha = lastAlpha;
 						}
 				}
 				reloadHealthBarColors();
-
+			}
 			case 'Change Scroll Speed':
 				var val1:Float = Std.parseFloat(value1);
 				var val2:Float = Std.parseFloat(value2);
