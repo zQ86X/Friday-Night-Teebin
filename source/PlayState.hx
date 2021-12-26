@@ -2176,7 +2176,7 @@ class PlayState extends MusicBeatState
 
 				if (storyPlaylist.length <= 0)
 				{
-					FlxG.sound.playMusic(Paths.music('freakyMenu'));
+					FlxG.sound.playMusic(Paths.music('mainmenuteebmod'));
 
 					cancelMusicFadeTween();
 					CustomFadeTransition.nextCamera = camOther;
@@ -2228,7 +2228,7 @@ class PlayState extends MusicBeatState
 					CustomFadeTransition.nextCamera = null;
 				}
 				MusicBeatState.switchState(new FreeplayState());
-				FlxG.sound.playMusic(Paths.music('freakyMenu'));
+				FlxG.sound.playMusic(Paths.music('mainmenuteebmod'));
 				changedDifficulty = false;
 			}
 			transitioning = true;
