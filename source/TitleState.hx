@@ -413,10 +413,23 @@ class TitleState extends MusicBeatState
 			textGroup.add(coolText);
 		}
 	}
-	function rollWacky(?match = null)
+
+	function sameRoll(a:Array<String>, ?b:Array<String> = null):Bool
+	{
+		if (b != null && a.length == b.length)
+		{
+			var compared:Int = 0;
+
+			for (i in 0...a.length) { if (a[i] == b[i]) compared++; }
+			if (compared >= a.length) return true;
+		}
+		return false;
+	}
+	function rollWacky(?match = null):Array<String>
 	{
 		var rolled = null;
-		do { rolled = FlxG.random.getObject(getIntroTextShit()); } while (rolled == match);
+
+		do { rolled = FlxG.random.getObject(getIntroTextShit()); } while (sameRoll(rolled, match));
 		return rolled;
 	}
 
