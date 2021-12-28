@@ -25,7 +25,7 @@ import openfl.events.Event;
 import openfl.events.IOErrorEvent;
 import flash.net.FileFilter;
 import haxe.Json;
-import DialogueBoxPsych;
+import DialogueBox;
 import lime.system.Clipboard;
 #if sys
 import sys.io.File;
@@ -186,7 +186,7 @@ class DialogueEditorState extends MusicBeatState
 				}
 		}
 		box.animation.play(anim, true);
-		DialogueBoxPsych.updateBoxOffsets(box);
+		DialogueBox.updateBoxOffsets(box);
 	}
 
 	function reloadCharacter() {
@@ -195,12 +195,12 @@ class DialogueEditorState extends MusicBeatState
 		character.reloadAnimations();
 		character.setGraphicSize(Std.int(character.width * DialogueCharacter.DEFAULT_SCALE * character.jsonFile.scale));
 		character.updateHitbox();
-		character.x = DialogueBoxPsych.LEFT_CHAR_X;
-		character.y = DialogueBoxPsych.DEFAULT_CHAR_Y;
+		character.x = DialogueBox.LEFT_CHAR_X;
+		character.y = DialogueBox.DEFAULT_CHAR_Y;
 
 		switch(character.jsonFile.dialogue_pos) {
 			case 'right':
-				character.x = FlxG.width - character.width + DialogueBoxPsych.RIGHT_CHAR_X;
+				character.x = FlxG.width - character.width + DialogueBox.RIGHT_CHAR_X;
 
 			case 'center':
 				character.x = FlxG.width / 2;
@@ -233,7 +233,7 @@ class DialogueEditorState extends MusicBeatState
 
 		var textToType:String = lineInputText.text;
 		if(textToType == null || textToType.length < 1) textToType = ' ';
-		daText = new Alphabet(DialogueBoxPsych.DEFAULT_TEXT_X, DialogueBoxPsych.DEFAULT_TEXT_Y, textToType, false, true, speed, 0.7);
+		daText = new Alphabet(DialogueBox.DEFAULT_TEXT_X, DialogueBox.DEFAULT_TEXT_Y, textToType, false, true, speed, 0.7);
 		add(daText);
 
 		if(speed > 0) {

@@ -48,7 +48,7 @@ import flixel.group.FlxSpriteGroup;
 import flixel.input.keyboard.FlxKey;
 import openfl.events.KeyboardEvent;
 import StageData;
-import DialogueBoxPsych;
+import DialogueBox;
 
 #if sys
 import sys.FileSystem;
@@ -499,7 +499,7 @@ class PlayState extends MusicBeatState
 		}
 
 		var fileJS:String = Paths.json('$songName/dialogue'); //Checks for json/Psych Engine dialogue
-		if (OpenFlAssets.exists(fileJS)) dialogueJson = DialogueBoxPsych.parseDialogue(fileJS);
+		if (OpenFlAssets.exists(fileJS)) dialogueJson = DialogueBox.parseDialogue(fileJS);
 
 		Conductor.songPosition = -5000;
 
@@ -816,7 +816,7 @@ class PlayState extends MusicBeatState
 	}
 
 	var dialogueCount:Int = 0;
-	public var psychDialogue:DialogueBoxPsych;
+	public var psychDialogue:DialogueBox;
 	//You don't have to add a song, just saying. You can just do "startDialogue(dialogueJson);" and it should work
 	public function startDialogue(dialogueFile:DialogueFile, ?song:String = null):Void
 	{
@@ -827,7 +827,7 @@ class PlayState extends MusicBeatState
 			inCutscene = true;
 			CoolUtil.precacheSound('dialogue');
 			CoolUtil.precacheSound('dialogueClose');
-			var doof:DialogueBoxPsych = new DialogueBoxPsych(dialogueFile, song);
+			var doof:DialogueBox = new DialogueBox(dialogueFile, song);
 			doof.scrollFactor.set();
 			if(endingSong) {
 				doof.finishThing = function() {
@@ -1498,22 +1498,22 @@ class PlayState extends MusicBeatState
 			MusicBeatState.switchState(new CharacterEditorState(SONG.player2));
 		}
 
-		var gameTicks:Float = elapsed * 1000;
+		var elapsedTicks:Float = elapsed * 1000;
 		if (startingSong)
 		{
 			if (startedCountdown)
 			{
-				Conductor.songPosition += gameTicks;
-				if (Conductor.songPosition >= 0) startSong(gameTicks);
+				Conductor.songPosition += elapsedTicks;
+				if (Conductor.songPosition >= 0) startSong(elapsedTicks);
 			}
 		}
 		else
 		{
-			Conductor.songPosition += gameTicks;
+			Conductor.songPosition += elapsedTicks;
 			if (!paused)
 			{
-				songTime += gameTicks - previousFrameTime;
-				previousFrameTime = gameTicks;
+				songTime += elapsedTicks;
+				previousFrameTime += elapsedTicks;
 
 				// Interpolation type beat
 				if (Conductor.lastSongPos != Conductor.songPosition)

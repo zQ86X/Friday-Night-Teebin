@@ -146,7 +146,7 @@ class DialogueCharacter extends FlxSprite
 }
 
 // TO DO: Clean code? Maybe? idk
-class DialogueBoxPsych extends FlxSpriteGroup
+class DialogueBox extends FlxSpriteGroup
 {
 	var dialogue:Alphabet;
 	var dialogueList:DialogueFile = null;
