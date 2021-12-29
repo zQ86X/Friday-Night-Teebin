@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TextureAtlas imagePath="teebDJ.png">
+	<!-- Created with Adobe Animate version 22.0.2.168 -->
+	<!-- http://www.adobe.com/products/animate.html -->
+	<SubTexture name="TEEB_DANCE0000" x="100" y="100" width="680" height="548" frameX="0" frameY="-12" frameWidth="683" frameHeight="560"/>
+	<SubTexture name="TEEB_DANCE0001" x="880" y="100" width="675" height="553" frameX="-5" frameY="-7" frameWidth="683" frameHeight="560"/>
+	<SubTexture name="TEEB_DANCE0002" x="1655" y="100" width="678" height="556" frameX="-3" frameY="-3" frameWidth="683" frameHeight="560"/>
+	<SubTexture name="TEEB_DANCE0003" x="2433" y="100" width="679" height="557" frameX="-3" frameY="-1" frameWidth="683" frameHeight="560"/>
+	<SubTexture name="TEEB_DANCE0004" x="3212" y="100" width="680" height="558" frameX="-2" frameY="0" frameWidth="683" frameHeight="560"/>
+	<SubTexture name="TEEB_DANCE0005" x="100" y="758" width="681" height="558" frameX="-2" frameY="0" frameWidth="683" frameHeight="560"/>
+	<SubTexture name="TEEB_DANCE0006" x="881" y="758" width="681" height="558" frameX="-2" frameY="0" frameWidth="683" frameHeight="560"/>
+	<SubTexture name="TEEB_DANCE0007" x="1662" y="758" width="680" height="558" frameX="-3" frameY="0" frameWidth="683" frameHeight="560"/>
+</TextureAtlas>

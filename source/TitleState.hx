@@ -38,8 +38,8 @@ typedef TitleData =
 	titley:Float,
 	startx:Float,
 	starty:Float,
-	gfx:Float,
-	gfy:Float,
+	teebx:Float,
+	teeby:Float,
 	backgroundSprite:String,
 	bpm:Int
 }
@@ -55,7 +55,7 @@ class TitleState extends MusicBeatState
 	var credGroup:FlxGroup;
 	var credTextShit:Alphabet;
 	var textGroup:FlxGroup;
-	var ngSpr:FlxSprite;
+	var trollSpr:FlxSprite;
 
 	var curWacky1:Array<String> = [];
 	var curWacky2:Array<String> = [];
@@ -69,7 +69,7 @@ class TitleState extends MusicBeatState
 	public static var updateVersion:String = '';
 	override public function create():Void
 	{
-		var path = Paths.getPreloadPath("images/gfDanceTitle.json");
+		var path = Paths.getPreloadPath("images/teebDJ.json");
 		titleJSON = Json.parse(Assets.getText(path));
 
 		FlxG.game.focusLostFramerate = 60;
@@ -117,8 +117,7 @@ class TitleState extends MusicBeatState
 	}
 
 	var logoBl:FlxSprite;
-	var gfDance:FlxSprite;
-	var danceLeft:Bool = false;
+	var teebDJ:FlxSprite;
 	var titleText:FlxSprite;
 
 	function startIntro()
@@ -139,7 +138,8 @@ class TitleState extends MusicBeatState
 		if (titleJSON.backgroundSprite != null && titleJSON.backgroundSprite.length > 0 && titleJSON.backgroundSprite != "none") { bg.loadGraphic(Paths.image(titleJSON.backgroundSprite)); }
 		else { bg.makeGraphic(FlxG.width, FlxG.height, FlxColor.BLACK); }
 
-		add(bg);
+		bg.antialiasing = ClientPrefs.globalAntialiasing;
+		bg.screenCenter();
 
 		logoBl = new FlxSprite(titleJSON.titlex, titleJSON.titley);
 		logoBl.loadGraphic(Paths.image('teebin'));
@@ -149,15 +149,13 @@ class TitleState extends MusicBeatState
 		// logoBl.screenCenter();
 		// logoBl.color = FlxColor.BLACK;
 
-		gfDance = new FlxSprite(titleJSON.gfx, titleJSON.gfy);
-		gfDance.frames = Paths.getSparrowAtlas('gfDanceTitle');
+		teebDJ = new FlxSprite(titleJSON.teebx, titleJSON.teeby);
+		teebDJ.frames = Paths.getSparrowAtlas('teebDJ');
 
-		gfDance.animation.addByIndices('danceLeft', 'gfDance', [30, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14], "", 24, false);
-		gfDance.animation.addByIndices('danceRight', 'gfDance', [15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29], "", 24, false);
+		teebDJ.animation.addByPrefix('dance', 'TEEB_DANCE', 24, false);
+		teebDJ.antialiasing = ClientPrefs.globalAntialiasing;
 
-		gfDance.antialiasing = ClientPrefs.globalAntialiasing;
-
-		add(gfDance);
+		add(teebDJ);
 		add(logoBl);
 
 		titleText = new FlxSprite(titleJSON.startx, titleJSON.starty);
@@ -183,8 +181,7 @@ class TitleState extends MusicBeatState
 		add(credGroup);
 		textGroup = new FlxGroup();
 
-		blackScreen = new FlxSprite().makeGraphic(FlxG.width, FlxG.height, FlxColor.BLACK);
-		credGroup.add(blackScreen);
+		credGroup.add(bg);
 
 		credTextShit = new Alphabet(0, 0, "", true);
 		credTextShit.screenCenter();
@@ -193,13 +190,13 @@ class TitleState extends MusicBeatState
 
 		credTextShit.visible = false;
 
-		ngSpr = new FlxSprite(0, FlxG.height * 0.52).loadGraphic(Paths.image('newgrounds_logo'));
-		add(ngSpr);
-		ngSpr.visible = false;
-		ngSpr.setGraphicSize(Std.int(ngSpr.width * 0.8));
-		ngSpr.updateHitbox();
-		ngSpr.screenCenter(X);
-		ngSpr.antialiasing = true;
+		trollSpr = new FlxSprite(0, FlxG.height * .4).loadGraphic(Paths.image('torled'));
+		add(trollSpr);
+		trollSpr.visible = false;
+		trollSpr.setGraphicSize(Std.int(trollSpr.width * .6));
+		trollSpr.updateHitbox();
+		trollSpr.screenCenter(X);
+		trollSpr.antialiasing = true;
 
 		FlxTween.tween(credTextShit, {y: credTextShit.y + 20}, 2.9, {ease: FlxEase.quadInOut, type: PINGPONG});
 
@@ -273,7 +270,7 @@ class TitleState extends MusicBeatState
 				if(titleText != null) titleText.animation.play('press');
 
 				FlxG.camera.flash(FlxColor.WHITE, 1);
-				FlxG.sound.play(Paths.sound('confirmMenu'), 0.7);
+				FlxG.sound.play(Paths.sound('confirmMenu'), .7);
 
 				transitioning = true;
 				// FlxG.sound.music.stop();
@@ -358,69 +355,61 @@ class TitleState extends MusicBeatState
 	}
 
 	private var sickBeats:Int = 0; //Basically curBeat but won't be skipped if you hold the tab or resize the screen
-	private var lastBeatHit:Int = -1;
-
 	public static var closedState:Bool = false;
 
 	override function beatHit()
 	{
 		super.beatHit();
-		if (canZoomCamera() && lastBeatHit != curBeat)
-		{
-			var beatMod = curBeat % 2;
-			FlxG.camera.zoom += .045 / (beatMod == 1 ? 2 : 1);
 
-			lastBeatHit = curBeat;
-		}
+		if (logoBl != null) { var mult:Float = logoScale * logoBumpScale; logoBl.scale.set(mult, mult); logoBl.updateHitbox(); }
+		if (teebDJ != null) teebDJ.animation.play('dance', true);
 
-		if(logoBl != null) { var mult:Float = logoScale * logoBumpScale; logoBl.scale.set(mult, mult); logoBl.updateHitbox(); }
-		if(gfDance != null)
-		{
-			danceLeft = !danceLeft;
-			gfDance.animation.play(danceLeft ? 'danceRight' : 'danceLeft');
-		}
-
-		if(!closedState) {
+		if (!closedState) {
 			sickBeats++;
+			if (canZoomCamera())
+			{
+				var beatMod = sickBeats % 2;
+				FlxG.camera.zoom += .045 / (beatMod == 1 ? 2 : 1);
+			}
 			switch (sickBeats)
 			{
 				case 1: createCoolText(['Zion', FlxG.random.bool(5) ? 'Teebiscuit' : 'Teebicus', 'MotorcycIeMan', 'DubSurgeon', 'yellwbit'], -40);
-				case 5: addMoreText('present');
+				case 6: addMoreText('present', -40);
 
-				case 7: deleteCoolText();
+				case 8: deleteCoolText();
 
-				case 9: createCoolText(['A mod fabricated by']);
-				case 11: addMoreText('dumbasses');
+				case 10: createCoolText(['A mod fabricated by']);
+				case 12: addMoreText('dumbasses');
 
-				case 13: deleteCoolText();
+				case 14: deleteCoolText();
 
-				case 15: createCoolText(['In association', 'with'], -40);
-				case 17:
+				case 16: createCoolText(['In association', 'with'], -40);
+				case 18:
 				{
-					addMoreText('newgrounds', -40);
-					ngSpr.visible = true;
+					addMoreText('deez', FlxG.height * .275);
+					trollSpr.visible = true;
 				}
-				case 19:
+				case 20:
 				{
 					deleteCoolText();
-					ngSpr.visible = false;
+					trollSpr.visible = false;
 				}
 
-				case 21: createCoolText([curWacky1[0]]);
-				case 23: addMoreText(curWacky1[1]);
+				case 22: createCoolText([curWacky1[0]]);
+				case 24: addMoreText(curWacky1[1]);
 
-				case 25: deleteCoolText();
+				case 26: deleteCoolText();
 
-				case 27: createCoolText([curWacky2[0]]);
-				case 29: addMoreText(curWacky2[1]);
+				case 28: createCoolText([curWacky2[0]]);
+				case 30: addMoreText(curWacky2[1]);
 
-				case 31: deleteCoolText();
+				case 32: deleteCoolText();
 
-				case 33: addMoreText('Friday');
-				case 35: addMoreText('Night');
-				case 37: addMoreText('Teebin');
+				case 34: addMoreText('Friday');
+				case 36: addMoreText('Night');
+				case 38: addMoreText('Teebin');
 
-				case 39: skipIntro();
+				case 40: skipIntro();
 			}
 		}
 	}
@@ -431,7 +420,7 @@ class TitleState extends MusicBeatState
 	{
 		if (!skippedIntro)
 		{
-			remove(ngSpr);
+			remove(trollSpr);
 
 			FlxG.camera.flash(FlxColor.WHITE, 4);
 			remove(credGroup);
