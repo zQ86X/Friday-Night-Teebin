@@ -355,17 +355,9 @@ class PlayState extends MusicBeatState
 		storyDifficultyText = CoolUtil.difficulties[storyDifficulty];
 
 		// String that contains the mode defined here so it isn't necessary to call changePresence for each mode
-		if (isStoryMode)
-		{
-			detailsText = "Story Mode: " + WeekData.getCurrentWeek().weekName;
-		}
-		else
-		{
-			detailsText = "Freeplay";
-		}
-
+		detailsText = isStoryMode ? 'Story Mode: ${WeekData.getCurrentWeek().weekName}' : 'Freeplay';
 		// String for when the game is paused
-		detailsPausedText = "Paused - " + detailsText;
+		detailsPausedText = 'Paused - $detailsText';
 		#end
 
 		GameOverSubstate.resetVariables();
@@ -683,7 +675,7 @@ class PlayState extends MusicBeatState
 
 		#if desktop
 		// Updating Discord Rich Presence.
-		DiscordClient.changePresence(detailsText, SONG.song + " (" + storyDifficultyText + ")", iconP2.getCharacter());
+		DiscordClient.changePresence(detailsText, getFormattedSong(), iconP2.getCharacter());
 		#end
 
 		if(!ClientPrefs.controllerMode)
@@ -1047,7 +1039,7 @@ class PlayState extends MusicBeatState
 
 		#if desktop
 		// Updating Discord Rich Presence (with Time Left)
-		DiscordClient.changePresence(detailsText, SONG.song + " (" + storyDifficultyText + ")", iconP2.getCharacter(), true, songLength);
+		DiscordClient.changePresence(detailsText, getFormattedSong(), iconP2.getCharacter(), true, songLength);
 		#end
 	}
 
@@ -1243,6 +1235,16 @@ class PlayState extends MusicBeatState
 		return 0;
 	}
 
+	function getFormattedSong(?getRating:Bool = true):String
+	{
+		var start = '${SONG.song} ($storyDifficultyText)';
+		if (getRating)
+		{
+			var floored:String = ratingName == '?' ? '?' : '${Highscore.floorDecimal(ratingPercent * 100, 2)}% ($ratingName)';
+			start += ' | Score: $songScore | Combo Breaks: $songMisses | Accuracy: $floored';
+		}
+		return start;
+	}
 	function sortByShit(Obj1:Note, Obj2:Note):Int
 	{
 		return FlxSort.byValues(FlxSort.ASCENDING, Obj1.strumTime, Obj2.strumTime);
@@ -1348,14 +1350,7 @@ class PlayState extends MusicBeatState
 
 			paused = false;
 			#if desktop
-			if (startTimer.finished)
-			{
-				DiscordClient.changePresence(detailsText, SONG.song + " (" + storyDifficultyText + ")", iconP2.getCharacter(), true, songLength - Conductor.songPosition - ClientPrefs.noteOffset);
-			}
-			else
-			{
-				DiscordClient.changePresence(detailsText, SONG.song + " (" + storyDifficultyText + ")", iconP2.getCharacter());
-			}
+			DiscordClient.changePresence(detailsText, getFormattedSong(), iconP2.getCharacter(), startTimer.finished, songLength - Conductor.songPosition - ClientPrefs.noteOffset);
 			#end
 		}
 
@@ -1364,32 +1359,13 @@ class PlayState extends MusicBeatState
 
 	override public function onFocus():Void
 	{
-		#if desktop
-		if (health > 0 && !paused)
-		{
-			if (Conductor.songPosition > 0.0)
-			{
-				DiscordClient.changePresence(detailsText, SONG.song + " (" + storyDifficultyText + ")", iconP2.getCharacter(), true, songLength - Conductor.songPosition - ClientPrefs.noteOffset);
-			}
-			else
-			{
-				DiscordClient.changePresence(detailsText, SONG.song + " (" + storyDifficultyText + ")", iconP2.getCharacter());
-			}
-		}
-		#end
-
+		quickUpdatePresence();
 		super.onFocus();
 	}
 
 	override public function onFocusLost():Void
 	{
-		#if desktop
-		if (health > 0 && !paused)
-		{
-			DiscordClient.changePresence(detailsPausedText, SONG.song + " (" + storyDifficultyText + ")", iconP2.getCharacter());
-		}
-		#end
-
+		quickUpdatePresence();
 		super.onFocusLost();
 	}
 
@@ -1432,12 +1408,10 @@ class PlayState extends MusicBeatState
 		}
 
 		super.update(elapsed);
+		var ratingText:String = 'Score: $songScore | Combo Breaks: $songMisses | Rating: $ratingName';
 
-		if(ratingName == '?') {
-			scoreTxt.text = 'Score: ' + songScore + ' | Misses: ' + songMisses + ' | Rating: ' + ratingName;
-		} else {
-			scoreTxt.text = 'Score: ' + songScore + ' | Misses: ' + songMisses + ' | Rating: ' + ratingName + ' (' + Highscore.floorDecimal(ratingPercent * 100, 2) + '%)' + ' - ' + ratingFC;//peeps wanted no integer rating
-		}
+		if (ratingName != '?') ratingText += ' (${Highscore.floorDecimal(ratingPercent * 100, 2)}%) - $ratingFC'; //peeps wanted no integer rating
+		scoreTxt.text = ratingText;
 
 		if(botplayTxt.visible) {
 			botplaySine += 180 * elapsed;
@@ -1456,9 +1430,8 @@ class PlayState extends MusicBeatState
 			}
 			openSubState(new PauseSubState(boyfriend.getScreenPosition().x, boyfriend.getScreenPosition().y));
 			//}
-
 			#if desktop
-			DiscordClient.changePresence(detailsPausedText, SONG.song + " (" + storyDifficultyText + ")", iconP2.getCharacter());
+			DiscordClient.changePresence(detailsPausedText, getFormattedSong(), iconP2.getCharacter());
 			#end
 		}
 
@@ -1823,7 +1796,7 @@ class PlayState extends MusicBeatState
 
 			#if desktop
 			// Game Over doesn't get his own variable because it's only used here
-			DiscordClient.changePresence("Game Over - " + detailsText, SONG.song + " (" + storyDifficultyText + ")", iconP2.getCharacter());
+			DiscordClient.changePresence('Game Over - $detailsText', getFormattedSong(false), iconP2.getCharacter());
 			#end
 			isDead = true;
 			return true;
@@ -2465,8 +2438,14 @@ class PlayState extends MusicBeatState
 
 				rating.destroy();
 			},
-			startDelay: Conductor.crochet * 0.001
+			startDelay: Conductor.crochet / 1000
 		});
+	}
+	private function quickUpdatePresence(?hasLength:Bool = true)
+	{
+		#if desktop
+		if (health > 0 && !paused) DiscordClient.changePresence(detailsText, getFormattedSong(), iconP2.getCharacter(), hasLength && Conductor.songPosition > 0, songLength - Conductor.songPosition - ClientPrefs.noteOffset);
+		#end
 	}
 
 	private function onKeyPress(event:KeyboardEvent):Void
@@ -2671,6 +2650,7 @@ class PlayState extends MusicBeatState
 			var animToPlay:String = singAnimations[Std.int(Math.abs(daNote.noteData))] + 'miss' + daAlt;
 			char.playAnim(animToPlay, true);
 		}
+		quickUpdatePresence();
 	}
 
 	function noteMissPress(direction:Int = 1):Void //You pressed a key when there was no notes to press for this key
@@ -2713,6 +2693,8 @@ class PlayState extends MusicBeatState
 
 			if(boyfriend.hasMissAnimations) boyfriend.playAnim(singAnimations[Std.int(Math.abs(direction))] + 'miss', true);
 			vocals.volume = 0;
+
+			quickUpdatePresence();
 		}
 	}
 
@@ -2911,6 +2893,7 @@ class PlayState extends MusicBeatState
 				note.destroy();
 			}
 		}
+		quickUpdatePresence();
 	}
 
 	function getCameraDelta(leData:Int):FlxPoint
