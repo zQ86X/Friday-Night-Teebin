@@ -76,6 +76,7 @@ class Alphabet extends FlxSpriteGroup
 	{
 		for (i in 0...lettersArray.length) {
 			var letter = lettersArray[0];
+			letter.destroy();
 			remove(letter);
 			lettersArray.remove(letter);
 		}
@@ -207,7 +208,7 @@ class Alphabet extends FlxSpriteGroup
 		// trace(arrayShit);
 
 		if(speed <= 0) {
-			while(!finishedText) { 
+			while(!finishedText) {
 				timerCheck();
 			}
 			if(dialogueSound != null) dialogueSound.stop();

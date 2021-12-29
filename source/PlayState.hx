@@ -903,8 +903,8 @@ class PlayState extends MusicBeatState
 					coolTransition.animation.finishCallback = function(name:String):Void
 					{
 						// remove the transition after it's done playing
-						remove(coolTransition);
 						coolTransition.destroy();
+						remove(coolTransition);
 					};
 
 					notes.forEachAlive(function(note:Note) {
