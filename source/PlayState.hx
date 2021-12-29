@@ -662,11 +662,9 @@ class PlayState extends MusicBeatState
 		timeTxt.cameras = [camHUD];
 
 		startingSong = true;
-
-		var daSong:String = Paths.formatToSongPath(curSong);
 		if (isStoryMode && !seenCutscene)
 		{
-			switch (daSong)
+			switch (curSong)
 			{
 				case 'magic-hands' | 'amen-breaks' | 'slapfight': startDialogue(dialogueJson);
 				default:
@@ -1034,13 +1032,13 @@ class PlayState extends MusicBeatState
 		vocals.time = curTime;
 
 		Conductor.songPosition = curTime;
-
 		resyncVocals(true);
+
 		if (paused) {
 			FlxG.sound.music.pause();
 			vocals.pause();
 		}
-		if (Paths.formatToSongPath(curSong) != 'tutorial') camZooming = true;
+		if (curSong != 'tutorial') camZooming = true;
 		// Song duration in a float, useful for the time left feature
 		songLength = FlxG.sound.music.length;
 
