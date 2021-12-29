@@ -1,0 +1,10 @@
+{
+	"confirm_anim": "TEEB_IDLE",
+	"idle_anim": "TEEB_IDLE",
+	"position": [
+		220,
+		175
+	],
+	"scale": 0.4,
+	"image": "Menu_Teeb"
+}

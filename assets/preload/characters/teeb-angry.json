@@ -1,0 +1,78 @@
+{
+	"animations": [
+		{
+			"offsets": [
+				45,
+				-93
+			],
+			"loop": false,
+			"fps": 24,
+			"anim": "singLEFT",
+			"indices": [],
+			"name": "TEEB_ANGRY_LEFT"
+		},
+		{
+			"offsets": [
+				-20,
+				-111
+			],
+			"loop": false,
+			"fps": 24,
+			"anim": "singDOWN",
+			"indices": [],
+			"name": "TEEB_ANGRY_DOWN"
+		},
+		{
+			"offsets": [
+				-65,
+				-4
+			],
+			"loop": false,
+			"fps": 24,
+			"anim": "singUP",
+			"indices": [],
+			"name": "TEEB_ANGRY_UP"
+		},
+		{
+			"offsets": [
+				-90,
+				-105
+			],
+			"loop": false,
+			"fps": 24,
+			"anim": "singRIGHT",
+			"indices": [],
+			"name": "TEEB_ANGRY_RIGHT"
+		},
+		{
+			"loop": false,
+			"offsets": [
+				-10,
+				-120
+			],
+			"anim": "idle",
+			"fps": 24,
+			"name": "TEEB_ANGRY_IDLE",
+			"indices": []
+		}
+	],
+	"no_antialiasing": false,
+	"image": "characters/Teebicus_Angry_Assets",
+	"position": [
+		-120,
+		-30
+	],
+	"healthicon": "teeb-angry",
+	"flip_x": false,
+	"healthbar_colors": [
+		204,
+		0,
+		0
+	],
+	"camera_position": [
+		0,
+		300
+	],
+	"sing_duration": 6.1,
+	"scale": 0.7
+}

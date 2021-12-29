@@ -1,32 +1,37 @@
 {
 	"dialogue": [
 		{
-			"expression": "normal",
+			"expression": "talk",
 			"speed": 0.04,
 			"text": "#### ### ####",
 			"portrait": "teeb"
 		},
 		{
+			"expression": "talk",
 			"speed": 0.035,
 			"portrait": "teeb",
 			"text": "what the hell"
 		},
 		{
+			"expression": "excited",
 			"speed": 0.05,
 			"text": "Be bo bop",
 			"portrait": "bf"
 		},
 		{
+			"expression": "talk",
 			"speed": 0.04,
 			"text": "are you the protagonist from the popular\\nhit game funky friday.",
 			"portrait": "teeb"
 		},
 		{
+			"expression": "talk",
 			"speed": 0.05,
 			"text": "Bep",
 			"portrait": "bf"
 		},
 		{
+			"expression": "talk",
 			"speed": 0.04,
 			"text": "what are you saying",
 			"portrait": "teeb"

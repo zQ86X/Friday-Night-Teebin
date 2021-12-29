@@ -1,9 +1,8 @@
 {
-	"directory": "week7",
+	"directory": "weekTeeb",
 	"defaultZoom": 1,
-	"isPixelStage": false,
 
 	"boyfriend": [910, 100],
 	"girlfriend": [350, -10],
-	"opponent": [140, 100]
+	"opponent": [100, 100]
 }

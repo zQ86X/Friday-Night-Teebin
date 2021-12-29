@@ -1,0 +1,22 @@
+{
+	"songs": [
+		["Magic Hands", "teeb", [102, 102, 102]],
+		["Amen Breaks", "teeb", [102, 102, 102]],
+		["Slapfight", "teeb-angry", [204, 0, 0]]
+	],
+
+	"weekCharacters": [
+		"teeb",
+		"bf",
+		"gf"
+	],
+	"weekBackground": "teeb",
+
+	"storyName": "Teebical Hands",
+	"weekBefore": "tutorial",
+	"weekName": "Week Teeb",
+	"startUnlocked": true,
+
+	"hideStoryMode": false,
+	"hideFreeplay": false
+}

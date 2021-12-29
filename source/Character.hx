@@ -1,5 +1,6 @@
 package;
 
+import flixel.animation.FlxAnimation;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.animation.FlxBaseAnimation;
@@ -7,10 +8,6 @@ import flixel.graphics.frames.FlxAtlasFrames;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxSort;
 import Section.SwagSection;
-#if MODS_ALLOWED
-import sys.io.File;
-import sys.FileSystem;
-#end
 import openfl.utils.Assets;
 import haxe.Json;
 import haxe.format.JsonParser;
@@ -55,6 +52,7 @@ class Character extends FlxSprite
 	public var specialAnim:Bool = false;
 	public var animationNotes:Array<Dynamic> = [];
 	public var stunned:Bool = false;
+	public var startedDeath:Bool = false;
 	public var singDuration:Float = 4; //Multiplier of how long a character holds the sing pose
 	public var idleSuffix:String = '';
 	public var danceIdle:Bool = false; //Character use "danceLeft" and "danceRight" instead of "idle"
@@ -79,50 +77,144 @@ class Character extends FlxSprite
 	{
 		super(x, y);
 
+		this.isPlayer = isPlayer;
+		antialiasing = ClientPrefs.globalAntialiasing;
+
+		originalFlipX = flipX;
+		setCharacter(character);
+	}
+
+	override function update(elapsed:Float)
+	{
+		if(!debugMode && animation.curAnim != null)
+		{
+			var curAnim:FlxAnimation = animation.curAnim;
+			var animName:String = curAnim.name;
+
+			if (heyTimer > 0)
+			{
+				heyTimer -= elapsed;
+				if(heyTimer <= 0)
+				{
+					if (specialAnim && (animName == 'hey' || animName == 'cheer'))
+					{
+						specialAnim = false;
+						dance();
+					}
+					heyTimer = 0;
+				}
+			} else
+			{
+				if (specialAnim && curAnim.finished)
+				{
+					specialAnim = false;
+					dance();
+				}
+			}
+
+			if (animName.startsWith('sing')) { holdTimer += elapsed; }
+			else { if (isPlayer) holdTimer = 0; }
+
+			if (animName.endsWith('miss') && curAnim.finished) dance();
+			if (!isPlayer)
+			{
+				if (holdTimer >= Conductor.stepCrochet * .001 * singDuration)
+				{
+					dance();
+					holdTimer = 0;
+				}
+			}
+
+			var loopAnim:String = '${animName}-loop';
+
+			if(curAnim.finished && animation.getByName(loopAnim) != null) playAnim(loopAnim);
+			if (animName.toLowerCase().startsWith('firstdeath') && curAnim.finished && startedDeath) playAnim('deathLoop');
+		}
+		super.update(elapsed);
+	}
+
+	public var danced:Bool = false;
+
+	/**
+	 * FOR GF DANCING SHIT
+	 */
+	public function dance()
+	{
+		if (!debugMode && !specialAnim)
+		{
+			switch (danceIdle)
+			{
+				case true:
+				{
+					danced = !danced;
+					playAnim(danced ? 'danceRight$idleSuffix' : 'danceLeft$idleSuffix');
+
+					return;
+				}
+				default:
+				{
+					var idleFormat:String = 'idle$idleSuffix';
+					if(animation.getByName(idleFormat) != null) playAnim(idleFormat);
+				}
+			}
+		}
+	}
+
+	public function playAnim(AnimName:String, Force:Bool = false, Reversed:Bool = false, Frame:Int = 0):Void
+	{
+		specialAnim = false;
+		animation.play(AnimName, Force, Reversed, Frame);
+
+		var daOffset = animOffsets.get(AnimName);
+
+		if (animOffsets.exists(AnimName)) offset.set(daOffset[0], daOffset[1]);
+		else { offset.set(0, 0); }
+
+		if (danceIdle)
+		{
+			danced = switch (AnimName.toLowerCase())
+			{
+				case 'singright': false;
+				case 'singleft': true;
+
+				case 'singup' | 'singdown': !danced;
+				default: danced;
+			};
+		}
+	}
+
+	public function recalculateDanceIdle() {
+		danceIdle = (animation.getByName('danceLeft' + idleSuffix) != null && animation.getByName('danceRight' + idleSuffix) != null);
+	}
+	public function setCharacter(?character:String = 'bf')
+	{
 		#if (haxe >= "4.0.0")
 		animOffsets = new Map();
 		#else
 		animOffsets = new Map<String, Array<Dynamic>>();
 		#end
-		curCharacter = character;
-		this.isPlayer = isPlayer;
-		antialiasing = ClientPrefs.globalAntialiasing;
+		animation.destroyAnimations();
 
 		var library:String = null;
+		curCharacter = character;
+
 		switch (curCharacter)
 		{
 			//case 'your character name in case you want to hardcode him instead':
 
 			default:
 				var characterPath:String = 'characters/' + curCharacter + '.json';
-				#if MODS_ALLOWED
-				var path:String = Paths.modFolders(characterPath);
-				if (!FileSystem.exists(path)) {
-					path = Paths.getPreloadPath(characterPath);
-				}
-
-				if (!FileSystem.exists(path))
-				#else
 				var path:String = Paths.getPreloadPath(characterPath);
+
 				if (!Assets.exists(path))
-				#end
 				{
 					path = Paths.getPreloadPath('characters/' + DEFAULT_CHARACTER + '.json'); //If a character couldn't be found, change him to BF just to prevent a crash
 				}
 
-				#if MODS_ALLOWED
-				var rawJson = File.getContent(path);
-				#else
 				var rawJson = Assets.getText(path);
-				#end
-
 				var json:CharacterFile = cast Json.parse(rawJson);
-				#if MODS_ALLOWED
-				var txtToFind:String = Paths.getPath('images/' + json.image + '.txt', TEXT);
-				if(FileSystem.exists(txtToFind) || Assets.exists(txtToFind))
-				#else
+
 				if(Assets.exists(Paths.getPath('images/' + json.image + '.txt', TEXT)))
-				#end
 				{
 				//bozo forgot about the packer shits : P
 					frames = Paths.getPackerAtlas(json.image);
@@ -144,7 +236,7 @@ class Character extends FlxSprite
 
 				healthIcon = json.healthicon;
 				singDuration = json.sing_duration;
-				flipX = !!json.flip_x;
+				flipX = json.flip_x;
 				if(json.no_antialiasing) {
 					antialiasing = false;
 					noAntialiasing = true;
@@ -159,10 +251,11 @@ class Character extends FlxSprite
 				animationsArray = json.animations;
 				if(animationsArray != null && animationsArray.length > 0) {
 					for (anim in animationsArray) {
-						var animAnim:String = '' + anim.anim;
-						var animName:String = '' + anim.name;
+						var animAnim:String = anim.anim;
+						var animName:String = anim.name;
+						var animLoop:Bool = anim.loop;
 						var animFps:Int = anim.fps;
-						var animLoop:Bool = !!anim.loop; //Bruh
+
 						var animIndices:Array<Int> = anim.indices;
 						if(animIndices != null && animIndices.length > 0) {
 							animation.addByIndices(animAnim, animName, animIndices, "", animFps, animLoop);
@@ -179,139 +272,12 @@ class Character extends FlxSprite
 				}
 				//trace('Loaded file to character ' + curCharacter);
 		}
-		originalFlipX = flipX;
+		hasMissAnimations = animOffsets.exists('singLEFTmiss') || animOffsets.exists('singDOWNmiss') || animOffsets.exists('singUPmiss') || animOffsets.exists('singRIGHTmiss');
 
-		if(animOffsets.exists('singLEFTmiss') || animOffsets.exists('singDOWNmiss') || animOffsets.exists('singUPmiss') || animOffsets.exists('singRIGHTmiss')) hasMissAnimations = true;
 		recalculateDanceIdle();
 		dance();
 
-		if (isPlayer)
-		{
-			flipX = !flipX;
-
-			/*// Doesn't flip for BF, since his are already in the right place???
-			if (!curCharacter.startsWith('bf'))
-			{
-				// var animArray
-				if(animation.getByName('singLEFT') != null && animation.getByName('singRIGHT') != null)
-				{
-					var oldRight = animation.getByName('singRIGHT').frames;
-					animation.getByName('singRIGHT').frames = animation.getByName('singLEFT').frames;
-					animation.getByName('singLEFT').frames = oldRight;
-				}
-
-				// IF THEY HAVE MISS ANIMATIONS??
-				if (animation.getByName('singLEFTmiss') != null && animation.getByName('singRIGHTmiss') != null)
-				{
-					var oldMiss = animation.getByName('singRIGHTmiss').frames;
-					animation.getByName('singRIGHTmiss').frames = animation.getByName('singLEFTmiss').frames;
-					animation.getByName('singLEFTmiss').frames = oldMiss;
-				}
-			}*/
-		}
-	}
-
-	override function update(elapsed:Float)
-	{
-		if(!debugMode && animation.curAnim != null)
-		{
-			if(heyTimer > 0)
-			{
-				heyTimer -= elapsed;
-				if(heyTimer <= 0)
-				{
-					if(specialAnim && animation.curAnim.name == 'hey' || animation.curAnim.name == 'cheer')
-					{
-						specialAnim = false;
-						dance();
-					}
-					heyTimer = 0;
-				}
-			} else if(specialAnim && animation.curAnim.finished)
-			{
-				specialAnim = false;
-				dance();
-			}
-
-			if (!isPlayer)
-			{
-				if (animation.curAnim.name.startsWith('sing'))
-				{
-					holdTimer += elapsed;
-				}
-
-				if (holdTimer >= Conductor.stepCrochet * 0.001 * singDuration)
-				{
-					dance();
-					holdTimer = 0;
-				}
-			}
-
-			if(animation.curAnim.finished && animation.getByName(animation.curAnim.name + '-loop') != null)
-			{
-				playAnim(animation.curAnim.name + '-loop');
-			}
-		}
-		super.update(elapsed);
-	}
-
-	public var danced:Bool = false;
-
-	/**
-	 * FOR GF DANCING SHIT
-	 */
-	public function dance()
-	{
-		if (!debugMode && !specialAnim)
-		{
-			if(danceIdle)
-			{
-				danced = !danced;
-
-				if (danced)
-					playAnim('danceRight' + idleSuffix);
-				else
-					playAnim('danceLeft' + idleSuffix);
-			}
-			else if(animation.getByName('idle' + idleSuffix) != null) {
-					playAnim('idle' + idleSuffix);
-			}
-		}
-	}
-
-	public function playAnim(AnimName:String, Force:Bool = false, Reversed:Bool = false, Frame:Int = 0):Void
-	{
-		specialAnim = false;
-		animation.play(AnimName, Force, Reversed, Frame);
-
-		var daOffset = animOffsets.get(AnimName);
-		if (animOffsets.exists(AnimName))
-		{
-			offset.set(daOffset[0], daOffset[1]);
-		}
-		else
-			offset.set(0, 0);
-
-		if (curCharacter.startsWith('gf'))
-		{
-			if (AnimName == 'singLEFT')
-			{
-				danced = true;
-			}
-			else if (AnimName == 'singRIGHT')
-			{
-				danced = false;
-			}
-
-			if (AnimName == 'singUP' || AnimName == 'singDOWN')
-			{
-				danced = !danced;
-			}
-		}
-	}
-
-	public function recalculateDanceIdle() {
-		danceIdle = (animation.getByName('danceLeft' + idleSuffix) != null && animation.getByName('danceRight' + idleSuffix) != null);
+		if (isPlayer) flipX = !flipX;
 	}
 
 	public function addOffset(name:String, x:Float = 0, y:Float = 0)

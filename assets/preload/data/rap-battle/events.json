@@ -1,0 +1,39 @@
+{
+	"song": {
+		"speed": 3,
+		"stage": null,
+		"player1": "bf",
+		"player2": "swagster",
+		"player3": null,
+		"events": [
+			[
+				9142.85714285714,
+				[
+					[
+						"Set Zoom Type",
+						"3",
+						""
+					]
+				]
+			],
+			[
+				27428.5714285714,
+				[
+					[
+						"Add Camera Zoom",
+						".1",
+						".05"
+					]
+				]
+			]
+		],
+		"notes": [],
+		"splashSkin": null,
+		"validScore": false,
+		"gfVersion": "gf",
+		"bpm": 210,
+		"arrowSkin": null,
+		"needsVoices": true,
+		"song": "Rap Battle"
+	}
+}

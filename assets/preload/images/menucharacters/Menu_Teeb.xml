@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TextureAtlas imagePath="Menu_Teeb.png">
+	<!-- Created with Adobe Animate version 22.0.2.168 -->
+	<!-- http://www.adobe.com/products/animate.html -->
+	<SubTexture name="TEEB_IDLE0000" x="100" y="100" width="605" height="739" frameX="0" frameY="-15" frameWidth="605" frameHeight="756"/>
+	<SubTexture name="TEEB_IDLE0001" x="805" y="100" width="581" height="746" frameX="-8" frameY="-9" frameWidth="605" frameHeight="756"/>
+	<SubTexture name="TEEB_IDLE0002" x="1486" y="100" width="574" height="751" frameX="-14" frameY="-4" frameWidth="605" frameHeight="756"/>
+	<SubTexture name="TEEB_IDLE0003" x="2160" y="100" width="570" height="754" frameX="-17" frameY="-1" frameWidth="605" frameHeight="756"/>
+	<SubTexture name="TEEB_IDLE0004" x="2830" y="100" width="569" height="755" frameX="-19" frameY="0" frameWidth="605" frameHeight="756"/>
+	<SubTexture name="TEEB_IDLE0005" x="100" y="955" width="569" height="756" frameX="-19" frameY="0" frameWidth="605" frameHeight="756"/>
+	<SubTexture name="TEEB_IDLE0006" x="769" y="955" width="570" height="755" frameX="-18" frameY="0" frameWidth="605" frameHeight="756"/>
+	<SubTexture name="TEEB_IDLE0007" x="1439" y="955" width="570" height="754" frameX="-17" frameY="-1" frameWidth="605" frameHeight="756"/>
+	<SubTexture name="TEEB_IDLE0008" x="2109" y="955" width="570" height="754" frameX="-17" frameY="-1" frameWidth="605" frameHeight="756"/>
+	<SubTexture name="TEEB_IDLE0009" x="2109" y="955" width="570" height="754" frameX="-17" frameY="-1" frameWidth="605" frameHeight="756"/>
+	<SubTexture name="TEEB_IDLE0010" x="2109" y="955" width="570" height="754" frameX="-17" frameY="-1" frameWidth="605" frameHeight="756"/>
+	<SubTexture name="TEEB_IDLE0011" x="2109" y="955" width="570" height="754" frameX="-17" frameY="-1" frameWidth="605" frameHeight="756"/>
+	<SubTexture name="TEEB_IDLE0012" x="2109" y="955" width="570" height="754" frameX="-17" frameY="-1" frameWidth="605" frameHeight="756"/>
+	<SubTexture name="TEEB_IDLE0013" x="2109" y="955" width="570" height="754" frameX="-17" frameY="-1" frameWidth="605" frameHeight="756"/>
+</TextureAtlas>

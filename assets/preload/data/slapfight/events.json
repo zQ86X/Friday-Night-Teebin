@@ -1,0 +1,174 @@
+{
+	"song": {
+		"speed": 3,
+		"stage": null,
+		"player1": "bf",
+		"player2": "teeb-angry",
+		"player3": null,
+		"events": [
+			[
+				4800,
+				[
+					[
+						"Set Zoom Type",
+						"1",
+						""
+					]
+				]
+			],
+			[
+				14400,
+				[
+					[
+						"Set Zoom Type",
+						"0",
+						""
+					]
+				]
+			],
+			[
+				19200,
+				[
+					[
+						"Set Zoom Type",
+						"1",
+						""
+					]
+				]
+			],
+			[
+				24000,
+				[
+					[
+						"Change Character",
+						"dad",
+						"teeb"
+					],
+					[
+						"Flash Camera",
+						"",
+						""
+					],
+					[
+						"Add Camera Zoom",
+						".05",
+						".1"
+					]
+				]
+			],
+			[
+				33600,
+				[
+					[
+						"Change Character",
+						"dad",
+						"teeb-angry"
+					],
+					[
+						"Add Camera Zoom",
+						".05",
+						".1"
+					],
+					[
+						"Flash Camera",
+						"",
+						"0xFFFF0000"
+					]
+				]
+			],
+			[
+				38400,
+				[
+					[
+						"Set Zoom Type",
+						"0",
+						""
+					],
+					[
+						"Change Character",
+						"dad",
+						"teeb"
+					],
+					[
+						"Flash Camera",
+						"",
+						""
+					],
+					[
+						"Add Camera Zoom",
+						".05",
+						".1"
+					]
+				]
+			],
+			[
+				43200,
+				[
+					[
+						"Set Zoom Type",
+						"1",
+						""
+					],
+					[
+						"Change Character",
+						"dad",
+						"teeb-angry"
+					],
+					[
+						"Add Camera Zoom",
+						".05",
+						".1"
+					],
+					[
+						"Flash Camera",
+						"",
+						"0xFFFF0000"
+					]
+				]
+			],
+			[
+				62400,
+				[
+					[
+						"Set Zoom Type",
+						"0",
+						""
+					],
+					[
+						"Camera Follow Pos",
+						"200",
+						"325"
+					],
+					[
+						"Flash Camera",
+						"",
+						""
+					],
+					[
+						"Change Character Visibility",
+						"dad",
+						"false"
+					],
+					[
+						"Add Camera Zoom",
+						".3",
+						".2"
+					],
+					[
+						"Play Sound",
+						"teebDisappearSound",
+						""
+					]
+				]
+			]
+		],
+		"notes": [],
+		"splashSkin": null,
+		"validScore": false,
+		"gfVersion": "gf",
+		"bpm": 200,
+		"arrowSkin": null,
+		"needsVoices": true,
+		"song": "Slapfight"
+	}
+}

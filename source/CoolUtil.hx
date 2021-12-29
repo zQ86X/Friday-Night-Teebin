@@ -46,8 +46,28 @@ class CoolUtil
 		return difficulties[PlayState.storyDifficulty].toUpperCase();
 	}
 
-	inline public static function boundTo(value:Float, min:Float, max:Float):Float {
+	inline public static function boundTo(value:Float, min:Float, max:Float):Float
+	{
 		return Math.max(min, Math.min(max, value));
+	}
+	inline public static function repeat(value:Int, delta:Int, loop:Int):Int
+	{
+		var newValue:Int = (value + delta) % loop;
+		return newValue < 0 ? loop - 1 : newValue;
+	}
+
+	inline public static function boolToInt(value:Bool):Int
+	{
+		return value ? 1 : 0;
+	}
+	inline public static function getDelta(a:Bool, b:Bool):Int
+	{
+		return boolToInt(a) - boolToInt(b);
+	}
+
+	inline public static function wrapNoteData(leData:Int):Int
+	{
+		return Std.int(Math.abs(leData)) % 4;
 	}
 
 	public static function coolTextFile(path:String):Array<String>
@@ -107,18 +127,25 @@ class CoolUtil
 	public static function numberArray(max:Int, ?min = 0):Array<Int>
 	{
 		var dumbArray:Array<Int> = [];
-		for (i in min...max)
-		{
-			dumbArray.push(i);
-		}
+		for (i in min...max) dumbArray.push(i);
 		return dumbArray;
+	}
+
+	public static function precacheRawSound(sound:String)
+	{
+		if (!Assets.cache.hasSound(sound)) {
+			FlxG.sound.cache(sound);
+		}
+	}
+	public static function precacheAsset(asset:String):Void {
+		if (!Assets.cache.hasBitmapData(asset)) {
+			FlxG.bitmap.add(asset);
+		}
 	}
 
 	//uhhhh does this even work at all? i'm starting to doubt
 	public static function precacheSound(sound:String, ?library:String = null):Void {
-		if(!Assets.cache.hasSound(Paths.sound(sound, library))) {
-			FlxG.sound.cache(Paths.sound(sound, library));
-		}
+		precacheRawSound(Paths.sound(sound, library));
 	}
 
 	public static function browserLoad(site:String) {

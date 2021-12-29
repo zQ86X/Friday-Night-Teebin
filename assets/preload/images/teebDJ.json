@@ -1,0 +1,10 @@
+{
+	"titlex":-110,
+	"titley":-55,
+	"startx":100,
+	"starty":576,
+	"teebx":535,
+	"teeby":142,
+	"backgroundSprite":"stageBlurred",
+	"bpm":183
+}

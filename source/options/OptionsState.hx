@@ -97,11 +97,10 @@ class OptionsState extends MusicBeatState
 	override function update(elapsed:Float) {
 		super.update(elapsed);
 
-		if (controls.UI_UP_P) {
-			changeSelection(-1);
-		}
-		if (controls.UI_DOWN_P) {
-			changeSelection(1);
+		var delta:Int = CoolUtil.getDelta(controls.UI_DOWN_P, controls.UI_UP_P);
+		if (delta != 0)
+		{
+			changeSelection(delta);
 		}
 
 		if (controls.BACK) {
@@ -113,14 +112,9 @@ class OptionsState extends MusicBeatState
 			openSelectedSubstate(options[curSelected]);
 		}
 	}
-	
-	function changeSelection(change:Int = 0) {
-		curSelected += change;
-		if (curSelected < 0)
-			curSelected = options.length - 1;
-		if (curSelected >= options.length)
-			curSelected = 0;
 
+	function changeSelection(change:Int = 0) {
+		curSelected = CoolUtil.repeat(curSelected, change, options.length);
 		var bullShit:Int = 0;
 
 		for (item in grpOptions.members) {

@@ -25,7 +25,7 @@ import openfl.events.Event;
 import openfl.events.IOErrorEvent;
 import flash.net.FileFilter;
 import haxe.Json;
-import DialogueBoxPsych;
+import DialogueBox;
 import flixel.FlxCamera;
 import flixel.group.FlxSpriteGroup;
 import lime.system.Clipboard;
@@ -403,8 +403,8 @@ class DialogueCharacterEditorState extends MusicBeatState
 			daText.destroy();
 		}
 		daText = new Alphabet(0, 0, DEFAULT_TEXT, false, true, 0.05, 0.7);
-		daText.x = DialogueBoxPsych.DEFAULT_TEXT_X;
-		daText.y = DialogueBoxPsych.DEFAULT_TEXT_Y;
+		daText.x = DialogueBox.DEFAULT_TEXT_X;
+		daText.y = DialogueBox.DEFAULT_TEXT_Y;
 		hudGroup.add(daText);
 	}
 
@@ -417,12 +417,12 @@ class DialogueCharacterEditorState extends MusicBeatState
 			char.setGraphicSize(Std.int(char.width * DialogueCharacter.DEFAULT_SCALE * character.jsonFile.scale));
 			char.updateHitbox();
 		}
-		character.x = DialogueBoxPsych.LEFT_CHAR_X;
-		character.y = DialogueBoxPsych.DEFAULT_CHAR_Y;
+		character.x = DialogueBox.LEFT_CHAR_X;
+		character.y = DialogueBox.DEFAULT_CHAR_Y;
 
 		switch(character.jsonFile.dialogue_pos) {
 			case 'right':
-				character.x = FlxG.width - character.width + DialogueBoxPsych.RIGHT_CHAR_X;
+				character.x = FlxG.width - character.width + DialogueBox.RIGHT_CHAR_X;
 
 			case 'center':
 				character.x = FlxG.width / 2;
@@ -456,7 +456,7 @@ class DialogueCharacterEditorState extends MusicBeatState
 				anim = 'center';
 		}
 		box.animation.play(anim, true);
-		DialogueBoxPsych.updateBoxOffsets(box);
+		DialogueBox.updateBoxOffsets(box);
 	}
 
 	override function getEvent(id:String, sender:Dynamic, data:Dynamic, ?params:Array<Dynamic>) {
@@ -633,7 +633,7 @@ class DialogueCharacterEditorState extends MusicBeatState
 
 			if(FlxG.keys.justPressed.ESCAPE) {
 				MusicBeatState.switchState(new editors.MasterEditorMenu());
-				FlxG.sound.playMusic(Paths.music('freakyMenu'), 1);
+				FlxG.sound.playMusic(Paths.music('mainmenuteebmod'), 1);
 				transitioning = true;
 			}
 
