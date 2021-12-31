@@ -356,6 +356,8 @@ class PlayState extends MusicBeatState
 
 		// String that contains the mode defined here so it isn't necessary to call changePresence for each mode
 		detailsText = isStoryMode ? 'Story Mode: ${WeekData.getCurrentWeek().weekName}' : 'Freeplay';
+		detailsText += ' - ${getFormattedSong(false)}';
+
 		// String for when the game is paused
 		detailsPausedText = 'Paused - $detailsText';
 		#end
@@ -1240,8 +1242,8 @@ class PlayState extends MusicBeatState
 		var start = '${SONG.song} ($storyDifficultyText)';
 		if (getRating)
 		{
-			var floored:String = ratingName == '?' ? '?' : '${Highscore.floorDecimal(ratingPercent * 100, 2)}% ($ratingName)';
-			start += ' | Score: $songScore | Combo Breaks: $songMisses | Accuracy: $floored';
+			var floored:String = ratingName == '?' ? '?' : '$ratingName (${Highscore.floorDecimal(ratingPercent * 100, 2)}%)';
+			start = 'Score: $songScore | Combo Breaks: $songMisses | Rating: $floored';
 		}
 		return start;
 	}
@@ -1365,7 +1367,7 @@ class PlayState extends MusicBeatState
 
 	override public function onFocusLost():Void
 	{
-		quickUpdatePresence();
+		quickUpdatePresence('PAUSED - ', false);
 		super.onFocusLost();
 	}
 
@@ -2441,10 +2443,10 @@ class PlayState extends MusicBeatState
 			startDelay: Conductor.crochet / 1000
 		});
 	}
-	private function quickUpdatePresence(?hasLength:Bool = true)
+	private function quickUpdatePresence(?startString:String = "", ?hasLength:Bool = true)
 	{
 		#if desktop
-		if (health > 0 && !paused) DiscordClient.changePresence(detailsText, getFormattedSong(), iconP2.getCharacter(), hasLength && Conductor.songPosition > 0, songLength - Conductor.songPosition - ClientPrefs.noteOffset);
+		if (health > 0 && !paused) DiscordClient.changePresence(detailsText, '$startString${getFormattedSong()}', iconP2.getCharacter(), hasLength && Conductor.songPosition > 0, songLength - Conductor.songPosition - ClientPrefs.noteOffset);
 		#end
 	}
 
