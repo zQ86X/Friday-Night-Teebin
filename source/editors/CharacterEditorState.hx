@@ -911,10 +911,10 @@ class CharacterEditorState extends MusicBeatState
 
 		if(char.animationsArray != null && char.animationsArray.length > 0) {
 			for (anim in char.animationsArray) {
-				var animAnim:String = '' + anim.anim;
-				var animName:String = '' + anim.name;
+				var animAnim:String = anim.anim;
+				var animName:String = anim.name;
 				var animFps:Int = anim.fps;
-				var animLoop:Bool = !!anim.loop; //Bruh
+				var animLoop:Bool = anim.loop;
 				var animIndices:Array<Int> = anim.indices;
 				if(animIndices != null && animIndices.length > 0) {
 					char.animation.addByIndices(animAnim, animName, animIndices, "", animFps, animLoop);
@@ -1077,10 +1077,10 @@ class CharacterEditorState extends MusicBeatState
 	function reloadGhost() {
 		ghostChar.frames = char.frames;
 		for (anim in char.animationsArray) {
-			var animAnim:String = '' + anim.anim;
-			var animName:String = '' + anim.name;
+			var animAnim:String = anim.anim;
+			var animName:String = anim.name;
 			var animFps:Int = anim.fps;
-			var animLoop:Bool = !!anim.loop; //Bruh
+			var animLoop:Bool = anim.loop;
 			var animIndices:Array<Int> = anim.indices;
 			if(animIndices != null && animIndices.length > 0) {
 				ghostChar.animation.addByIndices(animAnim, animName, animIndices, "", animFps, animLoop);
