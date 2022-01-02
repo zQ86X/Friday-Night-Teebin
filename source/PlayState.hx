@@ -843,7 +843,6 @@ class PlayState extends MusicBeatState
 				}
 			}
 			doof.nextDialogueThing = startNextDialogue;
-			doof.skipDialogueThing = skipDialogue;
 			doof.cameras = [camHUD];
 			add(doof);
 		} else {
@@ -1014,8 +1013,6 @@ class PlayState extends MusicBeatState
 		dialogueCount++;
 	}
 
-	function skipDialogue() { }
-
 	var previousFrameTime:Float = 0;
 	var songTime:Float = 0;
 
@@ -1029,11 +1026,11 @@ class PlayState extends MusicBeatState
 
 		var curTime:Float = FlxG.sound.music.time;
 
-		FlxG.sound.music.play(true);
-		vocals.play(true);
+		FlxG.sound.music.play(true, curTime);
+		vocals.play(true, curTime);
 
-		FlxG.sound.music.time = curTime;
-		vocals.time = curTime;
+		// FlxG.sound.music.time = curTime;
+		// vocals.time = curTime;
 
 		Conductor.songPosition = curTime;
 		resyncVocals(true);
@@ -2159,16 +2156,12 @@ class PlayState extends MusicBeatState
 
 				if (storyPlaylist.length <= 0)
 				{
-					FlxG.sound.playMusic(Paths.music('mainmenuteebmod'));
-
+					TitleState.playTitleMusic();
 					cancelMusicFadeTween();
-					CustomFadeTransition.nextCamera = camOther;
-					if(FlxTransitionableState.skipNextTransIn) {
-						CustomFadeTransition.nextCamera = null;
-					}
+
+					CustomFadeTransition.nextCamera = if (FlxTransitionableState.skipNextTransIn) camOther else null;
 					MusicBeatState.switchState(new StoryMenuState());
 
-					// if ()
 					if(!ClientPrefs.getGameplaySetting('practice', false) && !ClientPrefs.getGameplaySetting('botplay', false)) {
 						StoryMenuState.weekCompleted.set(WeekData.weeksList[storyWeek], true);
 
@@ -2210,8 +2203,10 @@ class PlayState extends MusicBeatState
 				if(FlxTransitionableState.skipNextTransIn) {
 					CustomFadeTransition.nextCamera = null;
 				}
+
 				MusicBeatState.switchState(new FreeplayState());
-				FlxG.sound.playMusic(Paths.music('mainmenuteebmod'));
+				TitleState.playTitleMusic();
+
 				changedDifficulty = false;
 			}
 			transitioning = true;

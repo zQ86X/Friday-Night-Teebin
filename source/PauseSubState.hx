@@ -124,18 +124,13 @@ class PauseSubState extends MusicBeatSubstate
 
 	override function update(elapsed:Float)
 	{
-		if (pauseMusic.volume < 0.5)
-			pauseMusic.volume += 0.01 * elapsed;
-
+		pauseMusic.volume = Math.min(pauseMusic.volume + (.01 * elapsed), .5);
 		super.update(elapsed);
 
 		var accepted = controls.ACCEPT;
 		var delta:Int = CoolUtil.getDelta(controls.UI_DOWN_P, controls.UI_UP_P);
-		if (delta != 0)
-		{
-			changeSelection(delta);
-		}
 
+		if (delta != 0) changeSelection(delta);
 		if (accepted)
 		{
 			var daSelected:String = menuItems[curSelected];
@@ -179,10 +174,10 @@ class PauseSubState extends MusicBeatSubstate
 					} else {
 						MusicBeatState.switchState(new FreeplayState());
 					}
-					FlxG.sound.playMusic(Paths.music('mainmenuteebmod'));
+					TitleState.playTitleMusic();
+
 					PlayState.changedDifficulty = false;
 					PlayState.chartingMode = false;
-
 				case 'BACK':
 					menuItems = menuItemsOG;
 					regenMenu();

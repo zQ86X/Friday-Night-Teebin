@@ -50,6 +50,7 @@ class TitleState extends MusicBeatState
 	public static var volumeUpKeys:Array<FlxKey> = [FlxKey.NUMPADPLUS, FlxKey.PLUS];
 
 	public static var initialized:Bool = false;
+	private static var titleJSON:TitleData;
 
 	var blackScreen:FlxSprite;
 	var credGroup:FlxGroup;
@@ -61,7 +62,6 @@ class TitleState extends MusicBeatState
 	var curWacky2:Array<String> = [];
 
 	var lastKeysPressed:Array<FlxKey> = [];
-	var titleJSON:TitleData;
 
 	var logoScale:Float = .375;
 	var logoBumpScale:Float = 1.065;
@@ -120,12 +120,17 @@ class TitleState extends MusicBeatState
 	var teebDJ:FlxSprite;
 	var titleText:FlxSprite;
 
+	public static function playTitleMusic(?volume:Float = 1)
+	{
+		FlxG.sound.playMusic(Paths.music('mainmenuteebmod'), volume);
+		if (titleJSON != null) Conductor.changeBPM(titleJSON.bpm);
+	}
 	function startIntro()
 	{
 		if (!initialized)
 		{
 			if(FlxG.sound.music == null) {
-				FlxG.sound.playMusic(Paths.music('mainmenuteebmod'), 0);
+				playTitleMusic(0);
 				FlxG.sound.music.fadeIn(4, 0, 0.7);
 			}
 		}

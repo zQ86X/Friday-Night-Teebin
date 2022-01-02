@@ -221,8 +221,8 @@ class MainMenuState extends MusicBeatState
 		if (canZoomCamera() && lastBeatHit != curBeat)
 		{
 			var beatMod = curBeat % 2;
-			camGame.zoom += .03 / (beatMod == 1 ? 2 : 1);
 
+			camGame.zoom += .03 / (beatMod == 1 ? 2 : 1);
 			lastBeatHit = curBeat;
 		}
 	}
