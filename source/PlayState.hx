@@ -411,7 +411,7 @@ class PlayState extends MusicBeatState
 				stageFront.updateHitbox();
 				add(stageFront);
 
-				if(!ClientPrefs.lowQuality) {
+				if (!ClientPrefs.lowQuality) {
 					var stageLight:BGSprite = new BGSprite('stage_light', null, -125, -100, 0.9, 0.9);
 					stageLight.setGraphicSize(Std.int(stageLight.width * 1.1));
 					stageLight.updateHitbox();
@@ -441,7 +441,7 @@ class PlayState extends MusicBeatState
 				add(bg);
 				add(stageFront);
 
-				teebCrown = new BGSprite("Crown", "weekTeeb", -275, -100);
+				if (!ClientPrefs.lowQuality) teebCrown = new BGSprite("Crown", "weekTeeb", -275, -100);
 			}
 			case 'swagster': // Week 2
 			{
