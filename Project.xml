@@ -55,7 +55,6 @@
 		<library name="songs"         preload="true" />
 		<library name="shared"        preload="true" />
 		<library name="weekTeeb"      preload="true" />
-		<library name="weekFinal"     preload="true" />
 		<library name="weekSwagster"  preload="true" />
 	</section>
 
@@ -63,7 +62,6 @@
 		<library name="songs"         preload="false" />
 		<library name="shared"        preload="false" />
 		<library name="weekTeeb"      preload="false" />
-		<library name="weekFinal"     preload="false" />
 		<library name="weekSwagster"  preload="false" />
 	</section>
 

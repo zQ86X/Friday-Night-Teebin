@@ -3,7 +3,7 @@
 	"difficulties": "Normal",
 	"hideFreeplay": false,
 	"weekBackground": "",
-	"weekBefore": "weekTeeb",
+	"weekBefore": "weekSwagster",
 	"startUnlocked": false,
 	"weekCharacters": [
 		"teeb",
@@ -12,15 +12,15 @@
 	],
 	"songs": [
 		[
-			"True Finale",
+			"Set 1",
 			"teeb",
 			[
-				102,
-				102,
-				102
+				255,
+				255,
+				255
 			]
 		]
 	],
 	"hideStoryMode": true,
-	"weekName": "Week Finale"
+	"weekName": "Cartoon Sound Effects"
 }
