@@ -403,10 +403,10 @@ class PlayState extends MusicBeatState
 		{
 			case 'stage': // Tutorial
 			{
-				var bg:BGSprite = new BGSprite('stageback', null, -600, -200, 0.9, 0.9);
+				var bg:BGSprite = new BGSprite('stageback', null, -600, -200);
 				add(bg);
 
-				var stageFront:BGSprite = new BGSprite('stagefront', null, -650, 600, 0.9, 0.9);
+				var stageFront:BGSprite = new BGSprite('stagefront', null, -650, 600);
 				stageFront.setGraphicSize(Std.int(stageFront.width * 1.1));
 				stageFront.updateHitbox();
 				add(stageFront);
