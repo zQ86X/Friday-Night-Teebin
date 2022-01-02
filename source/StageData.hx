@@ -23,6 +23,7 @@ class StageData {
 		{
 			case 'magic-hands' | 'amen-breaks' | 'slapfight' | 'true-finale': 'teeb';
 			case 'saturday-swaggin' | 'cool-transition' | 'rap-battle': 'swagster';
+
 			default: 'stage';
 		} : 'stage';
 

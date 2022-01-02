@@ -445,8 +445,18 @@ class PlayState extends MusicBeatState
 			}
 			case 'swagster': // Week 2
 			{
-				var stageFront:BGSprite = new BGSprite("Foreground", "weekSwagster", -250, -200);
-				var bg:BGSprite = new BGSprite("Background", "weekSwagster", -250, -200);
+				var prefix:String = switch (songName)
+				{
+					case 'cool-transition': 'dusk';
+					case 'rap-battle': 'night';
+
+					default: 'day';
+				};
+
+				var stageFront:BGSprite = new BGSprite('$prefix/Foreground', "weekSwagster", -250, -200);
+				var bg:BGSprite = new BGSprite('$prefix/Background', "weekSwagster", -250, -200);
+
+				bg.scrollFactor.set(.5, .5);
 
 				add(bg);
 				add(stageFront);
