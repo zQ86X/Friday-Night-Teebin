@@ -2827,9 +2827,9 @@ class PlayState extends MusicBeatState
 
 			if (!isSus)
 			{
-				combo += 1;
+				combo = Std.int(Math.min(combo + 1, 9999));
+
 				popUpScore(note);
-				if(combo > 9999) combo = 9999;
 			}
 			health += note.hitHealth * healthGain;
 
