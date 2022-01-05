@@ -39,7 +39,7 @@ class DiscordClient
 			details: "In the Menus",
 			state: null,
 			largeImageKey: 'iconog',
-			largeImageText: "Teeb Engine"
+			largeImageText: "Art by @yellwbit on Twitter"
 		});
 	}
 
