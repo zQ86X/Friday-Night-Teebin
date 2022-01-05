@@ -1,5 +1,6 @@
 package;
 
+import flixel.animation.FlxAnimation;
 import haxe.macro.Expr.Case;
 #if desktop
 import Discord.DiscordClient;
@@ -862,6 +863,24 @@ class PlayState extends MusicBeatState
 	public var countdownSet:FlxSprite;
 	public var countdownGo:FlxSprite;
 
+	private function charDance(char:Character, beat:Int)
+	{
+		var curAnim:FlxAnimation = char.animation.curAnim;
+		var speed:Int = (char.curCharacter.startsWith("gf") || char.danceIdle) ? gfSpeed : 2;
+
+		var canDance:Bool = curAnim != null && beat % speed == 0 && !char.stunned && !curAnim.name.startsWith("sing");
+		if (canDance) char.dance();
+	}
+	private function bfDance()
+	{
+		var curAnim:FlxAnimation = boyfriend.animation.curAnim;
+		if (curAnim != null)
+		{
+			var animName = curAnim.name;
+			if (boyfriend.holdTimer > ((Conductor.stepCrochet / 1000) * boyfriend.singDuration) && (animName.startsWith("sing") && !animName.endsWith("miss"))) boyfriend.dance();
+		}
+	}
+
 	public function startCountdown():Void
 	{
 		if(startedCountdown) return;
@@ -925,12 +944,11 @@ class PlayState extends MusicBeatState
 				var swagCounter:Int = 0;
 				startTimer = new FlxTimer().start(Conductor.crochet / 1000, function(tmr:FlxTimer)
 				{
-					if (tmr.loopsLeft % gfSpeed == 0 && !gf.stunned && gf.animation.curAnim.name != null && !gf.animation.curAnim.name.startsWith("sing")) gf.dance();
-					if(tmr.loopsLeft % 2 == 0) {
-						if (boyfriend.animation.curAnim != null && !boyfriend.animation.curAnim.name.startsWith('sing') && !boyfriend.stunned) boyfriend.dance();
-						if (dad.animation.curAnim != null && !dad.animation.curAnim.name.startsWith('sing') && !dad.stunned) dad.dance();
-					}
-					else if(dad.danceIdle && dad.animation.curAnim != null && !dad.stunned && !dad.curCharacter.startsWith('gf') && !dad.animation.curAnim.name.startsWith("sing")) dad.dance();
+					var loopsLeft:Int = tmr.loopsLeft;
+
+					charDance(gf, loopsLeft);
+					charDance(boyfriend, loopsLeft);
+					charDance(dad, loopsLeft);
 
 					var introAssets:Map<String, Array<String>> = new Map<String, Array<String>>();
 					introAssets.set('default', ['ready', 'set', 'go']);
@@ -1665,11 +1683,8 @@ class PlayState extends MusicBeatState
 		checkEventNote();
 
 		if (!inCutscene) {
-			if(!cpuControlled) {
-				keyShit();
-			} else if(boyfriend.holdTimer > Conductor.stepCrochet * 0.001 * boyfriend.singDuration && boyfriend.animation.curAnim.name.startsWith('sing') && !boyfriend.animation.curAnim.name.endsWith('miss')) {
-				boyfriend.dance();
-			}
+			if(!cpuControlled) { keyShit(); }
+			else { bfDance(); }
 		}
 
 		#if debug
@@ -2596,10 +2611,7 @@ class PlayState extends MusicBeatState
 					goodNoteHit(daNote);
 				}
 			});
-
-			if (boyfriend.holdTimer > Conductor.stepCrochet * 0.001 * boyfriend.singDuration && boyfriend.animation.curAnim.name.startsWith('sing')
-			&& !boyfriend.animation.curAnim.name.endsWith('miss'))
-				boyfriend.dance();
+			bfDance();
 		}
 
 		// TO DO: Find a better way to handle controller inputs, this should work for now
@@ -2822,33 +2834,14 @@ class PlayState extends MusicBeatState
 			health += note.hitHealth * healthGain;
 
 			if(!note.noAnimation) {
-				var daAlt = '';
-				if(note.noteType == 'Alt Animation') daAlt = '-alt';
+				var daAlt:String = note.noteType == "Alt Animation" ? "-alt" : "";
 
 				var animToPlay:String = singAnimations[leData];
+				var charNote:Character = note.gfNote ? gf : boyfriend;
 
-				//if (note.isSustainNote){ wouldn't this be fun : P. i think it would be swell
+				charNote.playAnim('$animToPlay$daAlt', true);
+				charNote.holdTimer = 0;
 
-					//if(note.gfNote) {
-					//  var anim = animToPlay +"-hold" + daAlt;
-					//	if(gf.animation.getByName(anim) == null)anim = animToPlay + daAlt;
-					//	gf.playAnim(anim, true);
-					//	gf.holdTimer = 0;
-					//} else {
-					//  var anim = animToPlay +"-hold" + daAlt;
-					//	if(boyfriend.animation.getByName(anim) == null)anim = animToPlay + daAlt;
-					//	boyfriend.playAnim(anim, true);
-					//	boyfriend.holdTimer = 0;
-					//}
-				//}else{
-					if(note.gfNote) {
-						gf.playAnim(animToPlay + daAlt, true);
-						gf.holdTimer = 0;
-					} else {
-						boyfriend.playAnim(animToPlay + daAlt, true);
-						boyfriend.holdTimer = 0;
-					}
-				//}
 				if(note.noteType == 'Hey!') {
 					if(boyfriend.animOffsets.exists('hey')) {
 						boyfriend.playAnim('hey', true);
@@ -3032,12 +3025,10 @@ class PlayState extends MusicBeatState
 		iconP1.updateHitbox();
 		iconP2.updateHitbox();
 
-		if (curBeat % gfSpeed == 0 && !gf.stunned && gf.animation.curAnim.name != null && !gf.animation.curAnim.name.startsWith("sing")) gf.dance();
-		if(curBeat % 2 == 0)
-		{
-			if (boyfriend.animation.curAnim.name != null && !boyfriend.animation.curAnim.name.startsWith("sing") && !boyfriend.stunned) boyfriend.dance();
-			if (dad.animation.curAnim.name != null && !dad.animation.curAnim.name.startsWith("sing") && !dad.stunned) dad.dance();
-		} else { if (dad.danceIdle && dad.animation.curAnim.name != null && !dad.curCharacter.startsWith('gf') && !dad.animation.curAnim.name.startsWith("sing") && !dad.stunned) dad.dance(); }
+		charDance(gf, curBeat);
+		charDance(boyfriend, curBeat);
+		charDance(dad, curBeat);
+
 		lastBeatHit = curBeat;
 	}
 
