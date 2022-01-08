@@ -210,7 +210,6 @@ class PlayState extends MusicBeatState
 
 	var coolTransition:FlxSprite;
 
-	var cameraFollowing:Bool = false;
 	var cameraOffset:Float = 25;
 
 	var opponentDelta:FlxPoint;
@@ -1426,9 +1425,15 @@ class PlayState extends MusicBeatState
 			iconP1.swapOldIcon();
 		}*/
 		if(!inCutscene) {
+			var curBar:Int = Std.int(curStep / 16);
+			var curNote:SwagSection = SONG.notes[curBar];
+
 			var lerpVal:Float = CoolUtil.boundTo(elapsed * 2.4 * cameraSpeed, 0, 1);
 
-			var point:FlxPoint = cameraFollowing ? playerDelta : opponentDelta;
+			cancelCameraDelta(boyfriend);
+			cancelCameraDelta(dad);
+
+			var point:FlxPoint = (curNote != null && curNote.mustHitSection) ? playerDelta : opponentDelta;
 			var multiplier:Float = ClientPrefs.reducedMotion ? 0 : cameraOffset;
 
 			camFollowPos.setPosition(FlxMath.lerp(camFollowPos.x, camFollow.x + (point.x * multiplier), lerpVal), FlxMath.lerp(camFollowPos.y, camFollow.y + (point.y * multiplier), lerpVal));
@@ -2776,9 +2781,7 @@ class PlayState extends MusicBeatState
 		}
 
 		var leData:Int = CoolUtil.wrapNoteData(note.noteData);
-
 		opponentDelta = getCameraDelta(leData);
-		setCameraFollowing(false);
 
 		StrumPlayAnim(true, leData, time);
 		note.hitByOpponent = true;
@@ -2875,7 +2878,6 @@ class PlayState extends MusicBeatState
 			note.wasGoodHit = true;
 			vocals.volume = 1;
 
-			setCameraFollowing(true);
 			var shakeDiv:Dynamic = switch (curSong)
 			{
 				case 'slapfight': [ Math.PI / 2, 1 ];
@@ -2898,6 +2900,18 @@ class PlayState extends MusicBeatState
 		quickUpdatePresence();
 	}
 
+	function cancelCameraDelta(char:Character)
+	{
+		if (!char.animation.name.startsWith('sing'))
+		{
+			var deltaCancel:FlxPoint = switch (char.isPlayer)
+			{
+				case true: playerDelta;
+				default: opponentDelta;
+			};
+			deltaCancel.set();
+		}
+	}
 	function getCameraDelta(leData:Int):FlxPoint
 	{
 		return new FlxPoint(switch (leData)
@@ -2913,13 +2927,6 @@ class PlayState extends MusicBeatState
 
 			default: 0;
 		});
-	}
-	function setCameraFollowing(mustHit:Bool)
-	{
-		var curBar:Int = Std.int(curStep / 16);
-		var curNote:SwagSection = SONG.notes[curBar];
-
-		if (curNote != null && curNote.mustHitSection == mustHit) cameraFollowing = mustHit;
 	}
 	function spawnNoteSplashOnNote(note:Note) {
 		if(ClientPrefs.noteSplashes && note != null) {
@@ -2988,16 +2995,7 @@ class PlayState extends MusicBeatState
 		var curBar:Int = Std.int(curStep / 16);
 		var curNote:SwagSection = SONG.notes[curBar];
 
-		if (curNote != null)
-		{
-			if (curNote.changeBPM) Conductor.changeBPM(curNote.bpm);
-			if (cameraFollowing != curNote.mustHitSection)
-			{
-				var setting:FlxPoint = cameraFollowing ? playerDelta : opponentDelta;
-				setting.set();
-			}
-			cameraFollowing = curNote.mustHitSection;
-		}
+		if (curNote != null && curNote.changeBPM) Conductor.changeBPM(curNote.bpm);
 
 		if (generatedMusic && curNote != null && !endingSong && !isCameraOnForcedPos) moveCameraSection(curBar);
 		switch (curSong)
