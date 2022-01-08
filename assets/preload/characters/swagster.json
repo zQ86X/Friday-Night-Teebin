@@ -65,9 +65,9 @@
 	"healthicon": "swagster",
 	"flip_x": false,
 	"healthbar_colors": [
-		37,
-		37,
-		37
+		94,
+		89,
+		94
 	],
 	"camera_position": [
 		-80,
