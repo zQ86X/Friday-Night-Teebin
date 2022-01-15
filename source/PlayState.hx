@@ -1501,22 +1501,24 @@ class PlayState extends MusicBeatState
 			MusicBeatState.switchState(new CharacterEditorState(SONG.player2));
 		}
 
-		var elapsedTicks:Float = elapsed * 1000;
+		var elapsedMult:Float = FlxG.elapsed * 1000;
+		var elapsedTicks:Int = FlxG.game.ticks;
+
 		if (startingSong)
 		{
 			if (startedCountdown)
 			{
-				Conductor.songPosition += elapsedTicks;
+				Conductor.songPosition += elapsedMult;
 				if (Conductor.songPosition >= 0) startSong(elapsedTicks);
 			}
 		}
 		else
 		{
-			Conductor.songPosition += elapsedTicks;
+			Conductor.songPosition += elapsedMult;
 			if (!paused)
 			{
-				songTime += elapsedTicks;
-				previousFrameTime += elapsedTicks;
+				songTime += elapsedTicks - previousFrameTime;
+				previousFrameTime = elapsedTicks;
 
 				// Interpolation type beat
 				if (Conductor.lastSongPos != Conductor.songPosition)
