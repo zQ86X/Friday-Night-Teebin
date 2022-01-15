@@ -2771,11 +2771,11 @@ class PlayState extends MusicBeatState
 			case 'amen-breaks': [ 2, false, 1 ];
 			default: null;
 		}
-		if (drainDiv != null && (drainDiv[2] == null || drainDiv[2] <= storyDifficulty))
+		if (drainDiv != null && (drainDiv[2] == null || drainDiv[2] <= storyDifficulty) && !note.isSustainNote)
 		{
 			var divider:Float = drainDiv[0];
 
-			if (!note.isSustainNote && health > fixedDrainCap) health = Math.max(health - (fixedDrain / divider), fixedDrainCap);
+			if (health > fixedDrainCap) health = Math.max(health - (fixedDrain / divider), fixedDrainCap);
 			if (!ClientPrefs.reducedMotion) camGame.shake(1 / (120 * divider), 1 / (5 * divider), null, false);
 
 			if (drainDiv[1] == true)
