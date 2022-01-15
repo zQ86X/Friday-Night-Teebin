@@ -164,6 +164,8 @@ class DialogueBox extends FlxSpriteGroup
 	var offsetPos:Float = -600;
 
 	var textBoxTypes:Array<String> = ['normal', 'angry'];
+
+	var curCharacter:String = "";
 	//var charPositionList:Array<String> = ['left', 'center', 'right'];
 
 	public function new(dialogueList:DialogueFile, ?song:String = null)
@@ -231,13 +233,11 @@ class DialogueBox extends FlxSpriteGroup
 			var x:Float = LEFT_CHAR_X;
 			var y:Float = DEFAULT_CHAR_Y;
 			var char:DialogueCharacter = new DialogueCharacter(x + offsetPos, y, individualChar);
-
 			char.setGraphicSize(Std.int(char.width * DialogueCharacter.DEFAULT_SCALE * char.jsonFile.scale));
 			char.updateHitbox();
-
 			char.antialiasing = ClientPrefs.globalAntialiasing;
 			char.scrollFactor.set();
-
+			char.alpha = 0;
 			add(char);
 
 			var saveY:Bool = false;
@@ -357,7 +357,7 @@ class DialogueBox extends FlxSpriteGroup
 									char.x += scrollSpeed * elapsed;
 									if(char.x > char.startingPos - offsetPos) char.x = char.startingPos - offsetPos;
 							}
-							char.alpha = Math.max(char.alpha - 3 * elapsed, 0);
+							char.alpha = Math.max(char.alpha - (3 * elapsed), 0);
 						} else {
 							switch(char.jsonFile.dialogue_pos) {
 								case 'left':
@@ -370,8 +370,7 @@ class DialogueBox extends FlxSpriteGroup
 									char.x -= scrollSpeed * elapsed;
 									if(char.x < char.startingPos) char.x = char.startingPos;
 							}
-							char.alpha += 3 * elapsed;
-							if(char.alpha > 1) char.alpha = 1;
+							char.alpha = Math.min(char.alpha + (3 * elapsed), 1);
 						}
 					}
 				}

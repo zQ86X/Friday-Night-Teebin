@@ -502,8 +502,8 @@ class PlayState extends MusicBeatState
 			gf.visible = false;
 		}
 
-		var fileJS:String = Paths.json('$songName/dialogue'); //Checks for json/Psych Engine dialogue
-		if (OpenFlAssets.exists(fileJS)) dialogueJson = DialogueBox.parseDialogue(fileJS);
+		var file:String = Paths.json('$songName/dialogue'); //Checks for json/Psych Engine dialogue
+		if (OpenFlAssets.exists(file)) dialogueJson = DialogueBox.parseDialogue(file);
 
 		Conductor.songPosition = -5000;
 
@@ -1261,16 +1261,6 @@ class PlayState extends MusicBeatState
 		return 0;
 	}
 
-	function getFormattedSong(?getRating:Bool = true):String
-	{
-		var start = '${SONG.song} ($storyDifficultyText)';
-		if (getRating)
-		{
-			var floored:String = ratingName == '?' ? '?' : '$ratingName (${Highscore.floorDecimal(ratingPercent * 100, 2)}%)';
-			start = 'Score: $songScore | Combo Breaks: $songMisses | Rating: $floored';
-		}
-		return start;
-	}
 	function sortByShit(Obj1:Note, Obj2:Note):Int
 	{
 		return FlxSort.byValues(FlxSort.ASCENDING, Obj1.strumTime, Obj2.strumTime);
@@ -2469,6 +2459,19 @@ class PlayState extends MusicBeatState
 			},
 			startDelay: Conductor.crochet / 1000
 		});
+	}
+
+	public function getFormattedSong(?getRating:Bool = true)
+	{
+		#if desktop
+		var start = '${SONG.song} ($storyDifficultyText)';
+		if (getRating)
+		{
+			var floored:String = ratingName == '?' ? '?' : '$ratingName (${Highscore.floorDecimal(ratingPercent * 100, 2)}%)';
+			start = 'Score: $songScore | Combo Breaks: $songMisses | Rating: $floored';
+		}
+		return start;
+		#end
 	}
 	private function quickUpdatePresence(?startString:String = "", ?hasLength:Bool = true)
 	{

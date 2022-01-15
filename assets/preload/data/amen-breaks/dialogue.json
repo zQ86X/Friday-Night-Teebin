@@ -4,34 +4,43 @@
     "dialogue": [
         {
             "portrait": "teeb",
+			"speed": 0.04,
             "expression": "talk",
             "text": "you ruined my streak"
         },
 		{
 			"expression": "talk",
+			"speed": 0.04,
 			"portrait": "bf",
 			"text": "Bop beboop"
 		},
         {
 			"expression": "talk",
+			"speed": 0.04,
             "portrait": "teeb",
             "text": "i literally cannot understand you"
         },
         {
 			"expression": "talk",
+			"speed": 0.04,
             "portrait": "bf",
             "text": "Be"
         },
 		{
 			"expression": "talk",
+            "portrait": "bf",
+			"speed": 0.04,
 			"text": "Bop"
 		},
 		{
 			"expression": "excited",
+            "portrait": "bf",
+			"speed": 0.04,
 			"text": "(You fucking suck)"
 		},
         {
             "portrait": "teeb",
+			"speed": 0.04,
             "expression": "sad",
             "text": "ok thats just too far"
         }

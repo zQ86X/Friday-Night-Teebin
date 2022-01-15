@@ -2,21 +2,25 @@
 	"dialogue": [
 		{
 			"expression": "talk",
+			"speed": 0.04,
 			"text": "thats it.",
 			"portrait": "teeb-angry"
 		},
 		{
 			"expression": "talk",
+			"speed": 0.04,
 			"text": "you're going to be mere atoms after i'm\\ndone with you.",
 			"portrait": "teeb-angry"
 		},
 		{
 			"expression": "talk",
+			"speed": 0.04,
 			"text": "literally demolished. eviscerated.",
 			"portrait": "teeb-angry"
 		},
 		{
 			"expression": "talk",
+			"speed": 0.04,
 			"text": "say your goodbyes.",
 			"portrait": "teeb-angry"
 		}
