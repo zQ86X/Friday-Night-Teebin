@@ -1030,13 +1030,13 @@ class PlayState extends MusicBeatState
 		dialogueCount++;
 	}
 
-	var previousFrameTime:Float = 0;
+	var previousFrameTime:Int = 0;
 	var songTime:Float = 0;
 
-	function startSong(gameTicks:Float):Void
+	function startSong():Void
 	{
 		startingSong = false;
-		previousFrameTime = gameTicks;
+		previousFrameTime = FlxG.game.ticks;
 
 		FlxG.sound.playMusic(Paths.inst(PlayState.SONG.song), 1, false);
 		FlxG.sound.music.onComplete = finishSong;
@@ -1509,7 +1509,7 @@ class PlayState extends MusicBeatState
 			if (startedCountdown)
 			{
 				Conductor.songPosition += elapsedMult;
-				if (Conductor.songPosition >= 0) startSong(elapsedTicks);
+				if (Conductor.songPosition >= 0) startSong();
 			}
 		}
 		else
