@@ -1,8 +1,8 @@
 {
 	"directory": "weekSwagster",
-	"defaultZoom": 1.05,
+	"defaultZoom": 1.1,
 
-	"boyfriend": [910, -20],
-	"girlfriend": [350, -75],
-	"opponent": [100, -20]
+	"boyfriend": [970, -20],
+	"girlfriend": [410, -75],
+	"opponent": [160, -20]
 }

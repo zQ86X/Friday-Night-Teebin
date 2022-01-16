@@ -1,66 +1,66 @@
 {
 	"animations": [
 		{
+			"loop": false,
 			"offsets": [
-				0,
-				-100
+				10,
+				-110
 			],
-			"indices": [],
+			"anim": "singLEFT",
 			"fps": 24,
-			"anim": "idle",
-			"loop": true,
-			"name": "SWAGSTER_IDLE"
+			"name": "SWAGSTER_LEFT",
+			"indices": []
 		},
 		{
+			"loop": false,
+			"offsets": [
+				-102,
+				-126
+			],
+			"anim": "singDOWN",
+			"fps": 24,
+			"name": "SWAGSTER_DOWN",
+			"indices": []
+		},
+		{
+			"loop": false,
+			"offsets": [
+				-5,
+				-94
+			],
+			"anim": "singUP",
+			"fps": 24,
+			"name": "SWAGSTER_UP",
+			"indices": []
+		},
+		{
+			"loop": false,
+			"offsets": [
+				30,
+				-120
+			],
+			"anim": "idle",
+			"fps": 24,
+			"name": "SWAGSTER_IDLE",
+			"indices": []
+		},
+		{
+			"loop": false,
 			"offsets": [
 				-90,
-				-105
+				-145
 			],
-			"indices": [],
-			"fps": 24,
 			"anim": "singRIGHT",
-			"loop": false,
-			"name": "SWAGSTER_RIGHT"
-		},
-		{
-			"offsets": [
-				15,
-				-123
-			],
-			"indices": [],
 			"fps": 24,
-			"anim": "singLEFT",
-			"loop": false,
-			"name": "SWAGSTER_LEFT"
-		},
-		{
-			"offsets": [
-				-105,
-				-85
-			],
-			"indices": [],
-			"fps": 24,
-			"anim": "singDOWN",
-			"loop": false,
-			"name": "SWAGSTER_DOWN"
-		},
-		{
-			"offsets": [
-				-20,
-				-45
-			],
-			"indices": [],
-			"fps": 24,
-			"anim": "singUP",
-			"loop": false,
-			"name": "SWAGSTER_UP"
+			"name": "SWAGSTER_RIGHT",
+			"indices": []
 		}
 	],
 	"no_antialiasing": false,
 	"image": "characters/Swagster_Assets",
 	"position": [
-		0,
-		100
+		-120,
+		-30
 	],
 	"healthicon": "swagster",
 	"flip_x": false,
@@ -70,9 +70,9 @@
 		94
 	],
 	"camera_position": [
-		-80,
-		170
+		-20,
+		300
 	],
 	"sing_duration": 6.1,
-	"scale": 1
+	"scale": 0.7
 }
