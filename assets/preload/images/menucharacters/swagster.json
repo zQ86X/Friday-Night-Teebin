@@ -1,0 +1,10 @@
+{
+	"idle_anim": "SWAGSTER_MENU_IDLE",
+	"confirm_anim": "TEEB_IDLE",
+	"position": [
+		300,
+		200
+	],
+	"scale": 0.4,
+	"image": "Menu_Swagster"
+}
